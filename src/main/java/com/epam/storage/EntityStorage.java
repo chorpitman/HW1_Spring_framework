@@ -34,20 +34,18 @@ public class EntityStorage {
         return null;
     }
 
-    //todo impl
     public User update(User user) {
-        for (String mapKey : userMap.keySet()) {
-            if (mapKey == USER_NS + user.getId()) {
-                userMap.put(USER_NS + user.getId(), user);
-                return user;
-            }
-        }
-        return (User) userMap.get(user);
+        return (User) userMap.put(USER_NS + user.getId(), user);
     }
 
-    //todo impl
     public boolean deleteUser(long userId) {
-        return userMap.isEmpty();
+        for (String user : userMap.keySet()) {
+            if (user == USER_NS + userId) {
+                userMap.remove(user);
+                return true;
+            }
+        }
+        return false;
     }
 
     //Todo pagination impl
@@ -79,24 +77,32 @@ public class EntityStorage {
     public Event getEventById(long id) {
         return (Event) userMap.get(EVENT_NS + id);
     }
-
+     // TODO: 16.05.2016
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
         return null;
     }
 
+    // TODO: 16.05.2016
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
         return null;
     }
 
+    // TODO: 16.05.2016 how-to autogenerate event
     public Event createEvent(Event event) {
         return (Event) userMap.put(EVENT_NS + event.getId(), event);
     }
 
     public Event updateEvent(Event event) {
-        return (Event) userMap.get(event);
+        return (Event) userMap.put(USER_NS + event.getId(), event);
     }
 
     public boolean deleteEvent(long eventId) {
+        for (String event : userMap.keySet()) {
+            if (event == EVENT_NS + eventId) {
+                userMap.remove(event);
+                return true;
+            }
+        }
         return false;
     }
 }
