@@ -12,17 +12,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User createUser(User user) {
-        return storage.addUser(user);
-    }
-
-    @Override
-    public User getById(long userId) {
-        return storage.getUser(userId);
-    }
-
-    @Override
-    public User getUserByEmail(String email) {
-        return storage.getUserByEmail(email);
+        return storage.createUser(user);
     }
 
     @Override
@@ -34,8 +24,19 @@ public class UserDaoImpl implements UserDao {
     public boolean deleteUser(long userId) {
         return storage.deleteUser(userId);
     }
+
+    @Override
+    public User getUserById(long userId) {
+        return storage.getUserById(userId);
+    }
+
     @Override
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
         return storage.getUsersByName(name, pageSize, pageNum);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return storage.getUserByEmail(email);
     }
 }
