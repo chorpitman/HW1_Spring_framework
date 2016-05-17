@@ -55,24 +55,27 @@ public class EntityStorage {
                 matchingUserList.add(((User) user));
             }
         }
-
         //Находим максимальное количество страниц
         int maxPageSize = 0;
-        if (matchingUserList.size() % pageSize == 0)
+        if ((matchingUserList.size()) % pageSize == 0)
             maxPageSize = matchingUserList.size() / pageSize;
         else {
             maxPageSize = matchingUserList.size() / pageSize + 1;
         }
+
         //Находим начальную страницу
         int startPage = 0;
         if (maxPageSize >= 1) {
             startPage = 1;
         }
 
-        int indexFrom = 0;
-        int indexTo = 0;
+        //Находим начальный индекс элемента для добавления в возвращаемую коллекцию
+        int indexFrom = (pageNum - 1) * (pageSize + 1);
 
-        return matchingUserList.subList(indexFrom, indexTo);
+        //Находим последний индекс элемента для добавления в возвращаемую коллекцию
+        int indexTo = pageNum * pageSize;
+
+        return matchingUserList.subList(indexFrom-1, indexTo-1);
     }
 
     //EVENT
