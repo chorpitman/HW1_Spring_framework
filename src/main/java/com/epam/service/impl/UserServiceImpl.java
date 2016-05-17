@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
 
     //impl methods
     public User getUserById(long userId) {
-        return userDao.getById(userId);
+        return userDao.getUserById(userId);
     }
 
     public User getUserByEmail(String email) {
