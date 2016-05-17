@@ -3,9 +3,16 @@ package com.epam.model.impl;
 import com.epam.model.User;
 
 public class UserImpl implements User {
+    private static long counterId = 0;
     private long id;
     private String name;
     private String email;
+
+    public UserImpl( String name, String email) {
+        this.id = counterId++;
+        this.name = name;
+        this.email = email;
+    }
 
     public long getId() {
         return id;

@@ -5,10 +5,17 @@ import com.epam.model.Event;
 import java.util.Date;
 
 public class EventImpl implements Event {
+    private static long counterId = 0;
 
     private long id;
     private String title;
     private Date date;
+
+    public EventImpl(String title, Date date) {
+        this.id = counterId++;
+        this.title = title;
+        this.date = date;
+    }
 
     @Override
     public long getId() {
