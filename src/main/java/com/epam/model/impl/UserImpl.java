@@ -46,4 +46,17 @@ public class UserImpl implements User {
                 ", email='" + email + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserImpl user = (UserImpl) o;
+
+        if (id != user.id) return false;
+        if (!name.equals(user.name)) return false;
+        return email.equals(user.email);
+
+    }
 }

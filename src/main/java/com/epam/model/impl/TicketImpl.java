@@ -73,4 +73,19 @@ public class TicketImpl implements Ticket {
                 ", place=" + place +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TicketImpl ticket = (TicketImpl) o;
+
+        if (id != ticket.id) return false;
+        if (place != ticket.place) return false;
+        if (category != ticket.category) return false;
+        if (!event.equals(ticket.event)) return false;
+        return user.equals(ticket.user);
+
+    }
 }
