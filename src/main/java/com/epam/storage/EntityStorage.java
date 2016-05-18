@@ -1,7 +1,9 @@
 package com.epam.storage;
 
 import com.epam.model.Event;
+import com.epam.model.Ticket;
 import com.epam.model.User;
+import com.epam.model.impl.TicketImpl;
 
 import java.util.*;
 
@@ -11,21 +13,21 @@ public class EntityStorage {
     private static final String EVENT_NS = "event:";
     private static final String TICKET_NS = "ticket:";
 
-    private Map<String, Object> userMap = new HashMap<>(); //String key user:1, Value User
+    private Map<String, Object> storage = new HashMap<>(); //String key user:1, Value User
 
     //USER
     public User createUser(User user) {
-        return (User) userMap.put(USER_NS + user.getId(), user);
+        return (User) storage.put(USER_NS + user.getId(), user);
     }
 
     public User update(User user) {
-        return (User) userMap.put(USER_NS + user.getId(), user);
+        return (User) storage.put(USER_NS + user.getId(), user);
     }
 
     public boolean deleteUser(long userId) {
-        for (String user : userMap.keySet()) {
+        for (String user : storage.keySet()) {
             if (user == USER_NS + userId) {
-                userMap.remove(user);
+                storage.remove(user);
                 return true;
             }
         }
@@ -33,11 +35,11 @@ public class EntityStorage {
     }
 
     public User getUserById(long id) {
-        return (User) userMap.get(USER_NS + id);
+        return (User) storage.get(USER_NS + id);
     }
 
     public User getUserByEmail(String email) {
-        for (Object user : userMap.values()) {
+        for (Object user : storage.values()) {
             if (((User) user).getEmail() == email) {
                 return (User) user;
             }
@@ -48,7 +50,7 @@ public class EntityStorage {
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
         //получаю всех юзеров с искомым именем
         List<User> eventList = new ArrayList<>();
-        for (Object user : userMap.values()) {
+        for (Object user : storage.values()) {
             if (((User) user).getName().equals(name)) {
                 eventList.add(((User) user));
             }
@@ -86,17 +88,17 @@ public class EntityStorage {
 
     //EVENT
     public Event createEvent(Event event) {
-        return (Event) userMap.put(EVENT_NS + event.getId(), event);
+        return (Event) storage.put(EVENT_NS + event.getId(), event);
     }
 
     public Event updateEvent(Event event) {
-        return (Event) userMap.put(USER_NS + event.getId(), event);
+        return (Event) storage.put(USER_NS + event.getId(), event);
     }
 
     public boolean deleteEvent(long eventId) {
-        for (String event : userMap.keySet()) {
+        for (String event : storage.keySet()) {
             if (event == EVENT_NS + eventId) {
-                userMap.remove(event);
+                storage.remove(event);
                 return true;
             }
         }
@@ -104,12 +106,12 @@ public class EntityStorage {
     }
 
     public Event getEventById(long id) {
-        return (Event) userMap.get(EVENT_NS + id);
+        return (Event) storage.get(EVENT_NS + id);
     }
 
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
         List<Event> eventList = new ArrayList<>();
-        for (Object event : userMap.values()) {
+        for (Object event : storage.values()) {
             if (((Event) event).getTitle() == title) {
                 eventList.add(((Event) event));
             }
@@ -147,7 +149,7 @@ public class EntityStorage {
 
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
         List<Event> eventList = new ArrayList<>();
-        for (Object event : userMap.values()) {
+        for (Object event : storage.values()) {
             if (((Event) event).getDate() == day) {
                 eventList.add(((Event) event));
             }
@@ -179,4 +181,54 @@ public class EntityStorage {
     }
 
     //TICKETS
+    public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {
+        Ticket ticket = new TicketImpl();
+        ticket.setUserId(userId);
+        ticket.setEventId(eventId);
+        ticket.setPlace(place);
+        ticket.setCategory(category);
+        storage.put(TICKET_NS + ticket.getId(), ticket);
+        return ticket;
+    }
+
+    public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
+        long userId = user.getId();
+        List<Ticket> ticketList = new ArrayList<>();
+
+        for (Object ticket : storage.values()) {
+            if (((Ticket) ticket).getUserId() == userId) {
+                ticketList.add((Ticket) ticket);
+            }
+        }
+
+        if (pageSize == 0 || pageNum == 0) {
+            System.out.println("Wrong param");
+            return Collections.emptyList();
+        }
+
+        int maxPage = (ticketList.size() + pageSize - 1) / pageSize;
+        //Условие
+
+        if (pageNum > maxPage) {
+            System.out.println("Wrong param - page size");
+            return Collections.emptyList();
+        }
+
+        int start = (pageNum - 1) * pageSize;
+
+        int finish = pageNum * pageSize;
+        if (finish > ticketList.size()) {
+            finish = ticketList.size();
+        }
+
+        return ticketList.subList(start, finish);
+    }
+
+    public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
+        return null;
+    }
+
+    public boolean cancelTicket(long ticketId) {
+        return false;
+    }
 }
