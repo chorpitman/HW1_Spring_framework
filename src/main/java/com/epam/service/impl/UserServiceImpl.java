@@ -22,9 +22,9 @@ public class UserServiceImpl implements UserService {
     public User getUserByEmail(String email) {
         return userDao.getUserByEmail(email);
     }
-    //Todo pagination impl
+
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
-        return null;
+        return userDao.getUsersByName(name, pageSize, pageNum);
     }
 
     public User createUser(User user) {
