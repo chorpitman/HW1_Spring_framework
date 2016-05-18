@@ -13,6 +13,7 @@ public class EntityStorage {
     private static final String EVENT_NS = "event:";
     private static final String TICKET_NS = "ticket:";
 
+    //DB
     private Map<String, Object> storage = new HashMap<>(); //String key user:1, Value User
 
     //USER
@@ -26,7 +27,7 @@ public class EntityStorage {
 
     public boolean deleteUser(long userId) {
         for (String user : storage.keySet()) {
-            if (user == USER_NS + userId) {
+            if (user.equals(USER_NS + userId)) {
                 storage.remove(user);
                 return true;
             }
@@ -40,7 +41,7 @@ public class EntityStorage {
 
     public User getUserByEmail(String email) {
         for (Object user : storage.values()) {
-            if (((User) user).getEmail() == email) {
+            if (((User) user).getEmail().equals(email)) {
                 return (User) user;
             }
         }
@@ -97,7 +98,7 @@ public class EntityStorage {
 
     public boolean deleteEvent(long eventId) {
         for (String event : storage.keySet()) {
-            if (event == EVENT_NS + eventId) {
+            if (event.equals(EVENT_NS + eventId)) {
                 storage.remove(event);
                 return true;
             }
@@ -112,7 +113,7 @@ public class EntityStorage {
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
         List<Event> eventList = new ArrayList<>();
         for (Object event : storage.values()) {
-            if (((Event) event).getTitle() == title) {
+            if (((Event) event).getTitle().equals(title)) {
                 eventList.add(((Event) event));
             }
         }
@@ -207,8 +208,8 @@ public class EntityStorage {
         }
 
         int maxPage = (ticketList.size() + pageSize - 1) / pageSize;
-        //Условие
 
+        //Условие
         if (pageNum > maxPage) {
             System.out.println("Wrong param - page size");
             return Collections.emptyList();
@@ -225,10 +226,46 @@ public class EntityStorage {
     }
 
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
-        return null;
+        //get event id
+        long eventId = event.getId();
+        List<Ticket> ticketList = new ArrayList<>();
+
+        for (Object ticket : storage.values()) {
+            if (((Ticket) ticket).getEventId() == eventId) {
+                ticketList.add(((Ticket) ticket));
+            }
+        }
+
+        if (pageSize == 0 || pageNum == 0) {
+            System.out.println("Wrong param");
+            return Collections.emptyList();
+        }
+
+        int maxPage = (ticketList.size() + pageSize - 1) / pageSize;
+
+        //Условие
+        if (pageNum > maxPage) {
+            System.out.println("Wrong param - page size");
+            return Collections.emptyList();
+        }
+
+        int start = (pageNum - 1) * pageSize;
+
+        int finish = pageNum * pageSize;
+        if (finish > ticketList.size()) {
+            finish = ticketList.size();
+        }
+
+        return ticketList.subList(start, finish);
     }
 
     public boolean cancelTicket(long ticketId) {
+        for (Object ticket : storage.values()) {
+            if (((Ticket) ticket).getId() == ticketId) {
+                storage.remove(ticket);
+                return true;
+            }
+        }
         return false;
     }
 }
