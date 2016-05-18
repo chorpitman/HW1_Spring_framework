@@ -14,31 +14,31 @@ public class EventDaoImpl implements EventDao {
 
     @Override
     public Event getEventById(long eventId) {
-        return null;
+        return storage.getEventById(eventId);
     }
 
     @Override
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
-        return null;
+        return storage.getEventsByTitle(title, pageSize, pageNum);
     }
 
     @Override
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
-        return null;
+        return storage.getEventsForDay(day, pageSize, pageNum);
     }
 
     @Override
     public Event createEvent(Event event) {
-        return null;
+        return storage.createEvent(event);
     }
 
     @Override
     public Event updateEvent(Event event) {
-        return null;
+        return storage.updateEvent(event);
     }
 
     @Override
     public boolean deleteEvent(long eventId) {
-        return false;
+        return storage.deleteEvent(eventId);
     }
 }
