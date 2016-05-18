@@ -47,7 +47,7 @@ public class EntityStorage {
 
 
     //Todo pagination impl
-    public List<User> getUsersByName(String name, int pageSize, int pageNum) {
+    public List<User> getUsersByName(HashMap<Integer, Object> map, String name, int pageSize, int pageNum) {
         //получаю всех юзеров с искомым именем
         List<User> matchingUserList = new ArrayList<>();
         for (Object user : userMap.values()) {
@@ -55,12 +55,24 @@ public class EntityStorage {
                 matchingUserList.add(((User) user));
             }
         }
+
+        if (pageSize == 0 || name.isEmpty() || pageNum == 0) {
+            System.out.println("Wrong param");
+            return Collections.emptyList();
+        }
+
         //Находим максимальное количество страниц
         int maxPageSize = 0;
         if ((matchingUserList.size()) % pageSize == 0)
             maxPageSize = matchingUserList.size() / pageSize;
         else {
             maxPageSize = matchingUserList.size() / pageSize + 1;
+        }
+
+        //Условие
+        if (pageNum > maxPageSize) {
+            System.out.println("Wrong param - page size");
+            return Collections.emptyList();
         }
 
         //Находим начальную страницу
@@ -70,12 +82,14 @@ public class EntityStorage {
         }
 
         //Находим начальный индекс элемента для добавления в возвращаемую коллекцию
-        int indexFrom = (pageNum - 1) * (pageSize + 1);
+        int indexFrom = (pageNum - 1) * pageSize + 1;
 
         //Находим последний индекс элемента для добавления в возвращаемую коллекцию
         int indexTo = pageNum * pageSize;
-
-        return matchingUserList.subList(indexFrom-1, indexTo-1);
+        if (indexTo > matchingUserList.size()) {
+            indexTo = matchingUserList.size();
+        }
+        return matchingUserList.subList(indexFrom - 1, indexTo);
     }
 
     //EVENT
@@ -103,12 +117,70 @@ public class EntityStorage {
 
     // TODO: 16.05.2016 pagination
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
-        return null;
+        List<Event> eventList = new ArrayList<>();
+        for (Object event : userMap.values()) {
+            if (((Event) event).getTitle() == title) {
+                eventList.add(((Event) event));
+            }
+        }
+
+        //Находим максимальное количество страниц
+        int maxPageSize = 0;
+        if ((eventList.size()) % pageSize == 0)
+            maxPageSize = eventList.size() / pageSize;
+        else {
+            maxPageSize = eventList.size() / pageSize + 1;
+        }
+
+        //Находим начальную страницу
+        int startPage = 0;
+        if (maxPageSize >= 1) {
+            startPage = 1;
+        }
+
+        //Находим начальный индекс элемента для добавления в возвращаемую коллекцию
+        int indexFrom = (pageNum - 1) * pageSize + 1;
+
+        //Находим последний индекс элемента для добавления в возвращаемую коллекцию
+        int indexTo = pageNum * pageSize;
+        if (indexTo > eventList.size()) {
+            indexTo = eventList.size();
+        }
+        return eventList.subList(indexFrom, indexTo);
     }
 
     // TODO: 16.05.2016 pagination
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
-        return null;
+        List<Event> eventDayList = new ArrayList<>();
+        for (Object event : userMap.values()) {
+            if (((Event) event).getDate() == day) {
+                eventDayList.add(((Event) event));
+            }
+        }
+
+        //Находим максимальное количество страниц
+        int maxPageSize = 0;
+        if ((eventDayList.size()) % pageSize == 0)
+            maxPageSize = eventDayList.size() / pageSize;
+        else {
+            maxPageSize = eventDayList.size() / pageSize + 1;
+        }
+
+        //Находим начальную страницу
+        int startPage = 0;
+        if (maxPageSize >= 1) {
+            startPage = 1;
+        }
+
+        //Находим начальный индекс элемента для добавления в возвращаемую коллекцию
+        int indexFrom = (pageNum - 1) * pageSize + 1;
+
+        //Находим последний индекс элемента для добавления в возвращаемую коллекцию
+        int indexTo = pageNum * pageSize;
+        if (indexTo > eventDayList.size()) {
+            indexTo = eventDayList.size();
+        }
+        return eventDayList.subList(indexFrom, indexTo);
     }
 
     //TICKETS
