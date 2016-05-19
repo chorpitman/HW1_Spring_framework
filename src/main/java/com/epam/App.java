@@ -9,7 +9,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class App {
     public static void main(String[] args) {
-        ApplicationContext appCtx = new ClassPathXmlApplicationContext("context.xml");
+        ApplicationContext appCtx = new ClassPathXmlApplicationContext("app-context.xml");
         BookingFacade facade = appCtx.getBean("bookingFacade", BookingFacade.class);
 
         User user = appCtx.getBean("user", User.class);

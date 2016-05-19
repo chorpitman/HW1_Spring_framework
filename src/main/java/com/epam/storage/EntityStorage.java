@@ -8,6 +8,8 @@ import com.epam.model.impl.TicketImpl;
 import java.util.*;
 
 //Like DB
+//Use annotation Component if you don't define the bean in the Application Context
+//@Component
 public class EntityStorage {
     private static final String USER_NS = "user:";
     private static final String EVENT_NS = "event:";
@@ -18,20 +20,28 @@ public class EntityStorage {
 
     //USER
     public User createUser(User user) {
-        return (User) storage.put(USER_NS + user.getId(), user);
+        storage.put(USER_NS + user.getId(), user);
+        return (User) storage.get(USER_NS + user.getId());
     }
 
     public User update(User user) {
-        return (User) storage.put(USER_NS + user.getId(), user);
+        storage.put(USER_NS + user.getId(), user);
+        return (User) storage.get(USER_NS + user.getId());
     }
 
     public boolean deleteUser(long userId) {
-        for (String user : storage.keySet()) {
-            if (user.equals(USER_NS + userId)) {
+        for (Object user : storage.values()) {
+            if (((User) user).getId() == userId) {
                 storage.remove(user);
                 return true;
             }
         }
+        /*for (String user : storage.keySet()) {
+            if (user.equals(USER_NS + userId)) {
+                storage.remove(user);
+                return true;
+            }
+        }*/
         return false;
     }
 
