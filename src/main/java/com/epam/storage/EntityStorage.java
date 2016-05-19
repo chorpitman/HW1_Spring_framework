@@ -36,6 +36,7 @@ public class EntityStorage {
                 return true;
             }
         }
+
         /*for (String user : storage.keySet()) {
             if (user.equals(USER_NS + userId)) {
                 storage.remove(user);
