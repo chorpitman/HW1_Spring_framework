@@ -8,7 +8,11 @@ public class UserImpl implements User {
     private String name;
     private String email;
 
-    public UserImpl( String name, String email) {
+    public UserImpl() {
+        this.id = counterId++;
+    }
+
+    public UserImpl(String name, String email) {
         this.id = counterId++;
         this.name = name;
         this.email = email;

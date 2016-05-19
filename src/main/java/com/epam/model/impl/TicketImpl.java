@@ -12,6 +12,9 @@ public class TicketImpl implements Ticket {
     private User user;
     private int place;
 
+
+
+
     @Override
     public long getId() {
         return id;
