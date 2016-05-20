@@ -30,19 +30,12 @@ public class EntityStorage {
     }
 
     public boolean deleteUser(long userId) {
-        for (Object user : storage.values()) {
-            if (((User) user).getId() == userId) {
-                storage.remove(user);
-                return true;
-            }
-        }
-
-        /*for (String user : storage.keySet()) {
+        for (String user : storage.keySet()) {
             if (user.equals(USER_NS + userId)) {
                 storage.remove(user);
                 return true;
             }
-        }*/
+        }
         return false;
     }
 
@@ -100,7 +93,8 @@ public class EntityStorage {
 
     //EVENT
     public Event createEvent(Event event) {
-        return (Event) storage.put(EVENT_NS + event.getId(), event);
+        storage.put(EVENT_NS + event.getId(), event);
+        return (Event) storage.get(EVENT_NS + event.getId());
     }
 
     public Event updateEvent(Event event) {

@@ -11,8 +11,12 @@ public class EventImpl implements Event {
     private String title;
     private Date date;
 
+    public EventImpl() {
+        this.id = ++counterId;
+    }
+
     public EventImpl(String title, Date date) {
-        this.id = counterId++;
+        this.id = ++counterId;
         this.title = title;
         this.date = date;
     }

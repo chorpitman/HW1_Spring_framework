@@ -5,15 +5,25 @@ import com.epam.model.Ticket;
 import com.epam.model.User;
 
 public class TicketImpl implements Ticket {
-    private Category category;
+    private static long counterId = 0;
 
     private long id;
     private Event event;
     private User user;
     private int place;
+    private Category category;
 
+    public TicketImpl() {
+        this.id = ++counterId;
+    }
 
-
+    public TicketImpl(Category category, long id, Event event, User user, int place) {
+        this.id = ++counterId;
+        this.event = event;
+        this.user = user;
+        this.place = place;
+        this.category = category;
+    }
 
     @Override
     public long getId() {

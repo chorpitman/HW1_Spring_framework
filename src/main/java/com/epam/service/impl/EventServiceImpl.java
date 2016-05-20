@@ -8,7 +8,11 @@ import java.util.Date;
 import java.util.List;
 
 public class EventServiceImpl implements EventService {
-    EventDao eventDao;
+    private EventDao eventDao;
+
+    public void setEventDao(EventDao eventDao) {
+        this.eventDao = eventDao;
+    }
 
     @Override
     public Event getEventById(long eventId) {

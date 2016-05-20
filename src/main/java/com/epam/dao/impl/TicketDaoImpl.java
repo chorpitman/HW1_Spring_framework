@@ -10,7 +10,7 @@ import java.util.List;
 
 public class TicketDaoImpl implements TicketDao {
 
-    EntityStorage storage;
+    private EntityStorage storage;
 
     @Override
     public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {

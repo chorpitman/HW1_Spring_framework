@@ -14,15 +14,29 @@
               <property name="email" value="joe@gmail.com"/>
        </bean>
 
+       <bean id="event" class="com.epam.model.impl.EventImpl">
+              <property name="id" value="1"/>
+              <property name="title" value="box"/>
+              <property name="date">
+                     <bean class="java.util.Date"/>
+              </property>
+       </bean>
+
        <bean id="storage" class="com.epam.storage.EntityStorage">
+
        </bean>
 
        <!-- DAO -->
        <bean id="userDao" class="com.epam.dao.impl.UserDaoImpl"/>
+       <bean id="eventDao" class="com.epam.dao.impl.EventDaoImpl"/>
 
        <!-- Services -->
        <bean id="userService" class="com.epam.service.impl.UserServiceImpl">
               <property name="userDao" ref="userDao"/>
+       </bean>
+
+       <bean id="eventService" class="com.epam.service.impl.EventServiceImpl">
+              <property name="eventDao" ref="eventDao"/>
        </bean>
 
        <!-- Facades -->

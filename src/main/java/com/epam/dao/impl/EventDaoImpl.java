@@ -3,6 +3,7 @@ package com.epam.dao.impl;
 import com.epam.dao.EventDao;
 import com.epam.model.Event;
 import com.epam.storage.EntityStorage;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,10 @@ public class EventDaoImpl implements EventDao {
 
     private EntityStorage storage;
 
+    @Autowired
+    public void setStorage(EntityStorage storage) {
+        this.storage = storage;
+    }
 
     @Override
     public Event getEventById(long eventId) {
