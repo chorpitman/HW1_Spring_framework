@@ -11,6 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 
 import static org.junit.Assert.*;
@@ -34,7 +36,9 @@ public class EventServiceTest {
     @Test
     public void testCreateEvent() throws Exception {
         Event createdEvent = eventService.createEvent(event);
+        assertNotNull(event);
         assertNotNull(createdEvent);
+        assertEquals(event, createdEvent);
 
         assertNotSame(0, createdEvent.getId());
         assertNotSame(0, createdEvent.getTitle());
@@ -46,29 +50,46 @@ public class EventServiceTest {
     }
 
     @Test
-    public void updateEvent() throws Exception {
-        final String eventTitle= "figure skating";
-        final Date date = new Date();
-        event.setTitle(eventTitle);
-        event.setDate(date);
+    public void testUpdateEvent() throws Exception {
+        long eventId = event.getId();
+        eventService.createEvent(event);
+        Event createdEvent = eventService.getEventById(eventId);
+        String newTitle = "box";
+        Date newDate = new Date();
 
-        Event updEvent = eventService.updateEvent(event);
- //       assertEquals(eventTitle, updEvent.getTitle());
-        assertEquals(date, updEvent.getDate());
+        createdEvent.setTitle(newTitle);
+        createdEvent.setDate(newDate);
+
+        eventService.updateEvent(createdEvent);
+        assertEquals(newTitle, event.getTitle());
+        assertEquals(newDate, event.getDate());
     }
 
     @Test
-    public void deleteEvent() throws Exception {
+    public void testDeleteEvent() throws Exception {
         long idEvent = event.getId();
         eventService.createEvent(event);
-        eventService.deleteEvent(event.getId());
+        eventService.deleteEvent(idEvent);
         assertEquals(null, eventService.getEventById(idEvent));
+    }
+
+    @Test
+    public void testGetEventsForDay() throws Exception {
+    }
+
+    @Test
+    public void testGetEventsByTitle() throws Exception {
+        String title = event.getTitle();
+        Event createdEvent = eventService.createEvent(event);
+
+        assertEquals(Collections.emptyList(), eventService.getEventsByTitle(title, 0, 0));
+        assertEquals(Collections.emptyList(), eventService.getEventsByTitle(title, 1, 0));
+        assertEquals(Collections.emptyList(), eventService.getEventsByTitle(title, 0, 1));
+        assertEquals(Arrays.asList(event), eventService.getEventsByTitle(title, 1, 1));
     }
 
     @Test
     public void getEventsForDay() throws Exception {
 
     }
-
-
 }

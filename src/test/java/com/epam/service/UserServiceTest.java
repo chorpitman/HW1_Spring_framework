@@ -11,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUser() {
+        // TODO: 20.05.2016 Спросить у саши, почему я не кладу юзера в сторадж?
         final String name = "Jack";
         final String email = "Jack@i.ua";
         user.setName(name);
@@ -57,7 +59,7 @@ public class UserServiceTest {
         long idUser = user.getId();
         userService.createUser(user);
         userService.deleteUser(user.getId());
-        assertEquals(true, userService.getUserById(idUser));
+        assertEquals(null, userService.getUserById(idUser));
     }
 
     @Test
@@ -68,18 +70,15 @@ public class UserServiceTest {
         assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 0, 0));
         assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 1, 0));
 
+        //check result of logic
+        assertEquals(Arrays.asList(user), userService.getUsersByName(user.getName(), 1, 1));
+
         //test logic
         List<User> resultUserList = userService.getUsersByName(user.getName(), 1, 1);
         assertEquals(1, resultUserList.size());
 
-        //test retusrned name
-        String name = "";
-        for (User user1 : resultUserList) {
-            if (user1.getName() == user.getName()) {
-                name = user1.getName();
-            }
-        }
-        assertNotSame("Jack", name);
-        assertEquals("Joe", name);
+        //check name
+        User user = resultUserList.get(0);
+        assertEquals(user.getName(), user.getName());
     }
 }
