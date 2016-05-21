@@ -15,7 +15,7 @@
        </bean>
 
        <bean id="event" class="com.epam.model.impl.EventImpl">
-              <property name="id" value="1"/>
+              <property name="id" value="5"/>
               <property name="title" value="box"/>
               <property name="date">
                      <bean class="java.util.Date"/>

@@ -6,7 +6,6 @@ import java.util.Date;
 
 public class EventImpl implements Event {
     private static long counterId = 0;
-
     private long id;
     private String title;
     private Date date;
