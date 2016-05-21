@@ -79,6 +79,7 @@ public class EventServiceTest {
 
     @Test
     public void testGetEventsByTitle() throws Exception {
+        // TODO: 21.05.2016  Подумать над механизмом как можно очищать сторадже
         String title = event.getTitle();
         Event createdEvent = eventService.createEvent(event);
 
@@ -90,6 +91,11 @@ public class EventServiceTest {
 
     @Test
     public void getEventsForDay() throws Exception {
-
+        Date date = event.getDate();
+        Event createdEvent = eventService.createEvent(event);
+        assertEquals(Collections.emptyList(), eventService.getEventsForDay(date, 0, 0));
+        assertEquals(Collections.emptyList(), eventService.getEventsForDay(date, 1, 0));
+        assertEquals(Collections.emptyList(), eventService.getEventsForDay(date, 0, 1));
+        assertEquals(Arrays.asList(event), eventService.getEventsForDay(date, 1, 1));
     }
 }
