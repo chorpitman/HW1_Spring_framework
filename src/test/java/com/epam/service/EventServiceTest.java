@@ -3,6 +3,7 @@ package com.epam.service;
 import com.epam.config.ServiceTestConfig;
 import com.epam.model.Event;
 import com.epam.model.impl.EventImpl;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,11 @@ public class EventServiceTest {
     @Before
     public void init() {
         event = new EventImpl("golf", new Date());
+    }
+
+    @After
+    public void cleanStorage() {
+        eventService.deleteEvent(event.getId());
     }
 
     @Test
@@ -71,10 +77,6 @@ public class EventServiceTest {
         eventService.createEvent(event);
         eventService.deleteEvent(idEvent);
         assertEquals(null, eventService.getEventById(idEvent));
-    }
-
-    @Test
-    public void testGetEventsForDay() throws Exception {
     }
 
     @Test

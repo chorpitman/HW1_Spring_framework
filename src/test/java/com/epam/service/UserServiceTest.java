@@ -3,6 +3,7 @@ package com.epam.service;
 import com.epam.config.ServiceTestConfig;
 import com.epam.model.User;
 import com.epam.model.impl.UserImpl;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +30,11 @@ public class UserServiceTest {
     @Before
     public void init() {
         user = new UserImpl("Joe", "Joe@i.ua");
+    }
+
+    @After
+    public void cleanStorage() {
+        userService.deleteUser(user.getId());
     }
 
     @Test
