@@ -9,7 +9,11 @@ import com.epam.service.TicketService;
 import java.util.List;
 
 public class TicketServiceImpl implements TicketService {
-    TicketDao ticketDao;
+    private TicketDao ticketDao;
+
+    public void setTicketDao(TicketDao ticketDao) {
+        this.ticketDao = ticketDao;
+    }
 
     @Override
     public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {

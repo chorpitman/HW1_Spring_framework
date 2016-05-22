@@ -7,16 +7,16 @@ import java.util.List;
 
 public interface EventDao {
 
-    public Event getEventById(long eventId);
+    Event getEventById(long eventId);
 
-    public List<Event> getEventsByTitle(String title, int pageSize, int pageNum);
+    List<Event> getEventsByTitle(String title, int pageSize, int pageNum);
 
-    public List<Event> getEventsForDay(Date day, int pageSize, int pageNum);
+    List<Event> getEventsForDay(Date day, int pageSize, int pageNum);
 
-    public Event createEvent(Event event);
+    Event createEvent(Event event);
 
-    public Event updateEvent(Event event);
+    Event updateEvent(Event event);
 
-    public boolean deleteEvent(long eventId);
+    boolean deleteEvent(long eventId);
 
 }

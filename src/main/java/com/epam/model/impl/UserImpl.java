@@ -18,26 +18,32 @@ public class UserImpl implements User {
         this.email = email;
     }
 
+    @Override
     public long getId() {
         return id;
     }
 
+    @Override
     public void setId(long id) {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public String getEmail() {
         return email;
     }
 
+    @Override
     public void setEmail(String email) {
         this.email = email;
     }
@@ -59,8 +65,7 @@ public class UserImpl implements User {
         UserImpl user = (UserImpl) o;
 
         if (id != user.id) return false;
-        if (!name.equals(user.name)) return false;
-        return email.equals(user.email);
-
+        if (name != null ? !name.equals(user.name) : user.name != null) return false;
+        return email != null ? email.equals(user.email) : user.email == null;
     }
 }

@@ -17,7 +17,7 @@ public class TicketImpl implements Ticket {
         this.id = ++counterId;
     }
 
-    public TicketImpl(Category category, long id, Event event, User user, int place) {
+    public TicketImpl(Category category, Event event, User user, int place) {
         this.id = ++counterId;
         this.event = event;
         this.user = user;
@@ -42,7 +42,7 @@ public class TicketImpl implements Ticket {
 
     @Override
     public void setEventId(long eventId) {
-        event.setId(eventId);
+//        event.setId(eventId);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class TicketImpl implements Ticket {
 
     @Override
     public void setUserId(long userId) {
-        user.setId(userId);
+//        user.setId(userId);
     }
 
     @Override

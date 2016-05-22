@@ -12,7 +12,7 @@ import java.util.*;
 //@Component
 public class EntityStorage {
     private static final String USER_NS = "user:";
-    private static final String EVENT_NS = "event:";
+    private static final String EVENT_NS = "ticket:";
     private static final String TICKET_NS = "ticket:";
 
     //DB
@@ -231,7 +231,7 @@ public class EntityStorage {
     }
 
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
-        //get event id
+        //get ticket id
         long eventId = event.getId();
         List<Ticket> ticketList = new ArrayList<>();
 
@@ -265,8 +265,8 @@ public class EntityStorage {
     }
 
     public boolean cancelTicket(long ticketId) {
-        for (Object ticket : storage.values()) {
-            if (((Ticket) ticket).getId() == ticketId) {
+        for (String ticket : storage.keySet()) {
+            if (ticket.equals(EVENT_NS + ticketId)) {
                 storage.remove(ticket);
                 return true;
             }

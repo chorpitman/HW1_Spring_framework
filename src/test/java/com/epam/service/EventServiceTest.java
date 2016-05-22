@@ -81,7 +81,6 @@ public class EventServiceTest {
 
     @Test
     public void testGetEventsByTitle() throws Exception {
-        // TODO: 21.05.2016  Подумать над механизмом как можно очищать сторадже
         String title = event.getTitle();
         Event createdEvent = eventService.createEvent(event);
 
