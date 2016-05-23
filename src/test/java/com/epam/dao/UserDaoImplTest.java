@@ -14,44 +14,39 @@ import org.springframework.context.annotation.Profile;
 @ImportResource("classpath:app-context.xml")
 @Profile("test")
 public class UserDaoImplTest {
-    private User user;
 
     @Autowired
     private EntityStorage storage;
 
-    @Before
-    public void init() {
-        user = new UserImpl("Oleg", "a@i.ua");
-    }
 
     @Test
     public void testCreateUser() throws Exception {
-        storage.createUser(user);
-
+        User user = new UserImpl("sdas", "ddddd");
+            storage.createUser(user);
     }
 
-    @Test
-    public void testUpdate() throws Exception {
+//    @Test
+//    public void testUpdate() throws Exception {
+//
+//    }
 
-    }
+//    @Test
+//    public void testDeleteUser() throws Exception {
+//
+//    }
 
-    @Test
-    public void testDeleteUser() throws Exception {
-
-    }
-
-    @Test
-    public void testGetUserById() throws Exception {
-
-    }
-
-    @Test
-    public void testGetUsersByName() throws Exception {
-
-    }
-
-    @Test
-    public void testGetUserByEmail() throws Exception {
-
-    }
+//    @Test
+//    public void testGetUserById() throws Exception {
+//
+//    }
+//
+//    @Test
+//    public void testGetUsersByName() throws Exception {
+//
+//    }
+//
+//    @Test
+//    public void testGetUserByEmail() throws Exception {
+//
+//    }
 }

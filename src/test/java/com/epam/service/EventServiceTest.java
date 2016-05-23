@@ -47,8 +47,6 @@ public class EventServiceTest {
         assertEquals(event, createdEvent);
 
         assertNotSame(0, createdEvent.getId());
-        assertNotSame(0, createdEvent.getTitle());
-        assertNotSame(0, createdEvent.getDate());
 
         assertEquals(event.getId(), createdEvent.getId());
         assertEquals(event.getTitle(), createdEvent.getTitle());

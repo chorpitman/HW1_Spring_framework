@@ -49,9 +49,9 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUser() {
-        // TODO: 20.05.2016 Спросить у саши, почему я не кладу юзера в сторадж?
         final String name = "Jack";
         final String email = "Jack@i.ua";
+        userService.createUser(user);
         user.setName(name);
         user.setEmail(email);
 

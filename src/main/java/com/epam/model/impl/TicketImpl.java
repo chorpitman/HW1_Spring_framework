@@ -1,15 +1,13 @@
 package com.epam.model.impl;
 
-import com.epam.model.Event;
 import com.epam.model.Ticket;
-import com.epam.model.User;
 
 public class TicketImpl implements Ticket {
     private static long counterId = 0;
 
     private long id;
-    private Event event;
-    private User user;
+    private long eventId;
+    private long userId;
     private int place;
     private Category category;
 
@@ -17,10 +15,10 @@ public class TicketImpl implements Ticket {
         this.id = ++counterId;
     }
 
-    public TicketImpl(Category category, Event event, User user, int place) {
+    public TicketImpl(Category category, long eventId, long userId, int place) {
         this.id = ++counterId;
-        this.event = event;
-        this.user = user;
+        this.eventId = eventId;
+        this.userId = userId;
         this.place = place;
         this.category = category;
     }
@@ -37,22 +35,23 @@ public class TicketImpl implements Ticket {
 
     @Override
     public long getEventId() {
-        return event.getId();
+        return eventId;
     }
 
     @Override
     public void setEventId(long eventId) {
 //        event.setId(eventId);
+        this.eventId = eventId;
     }
 
     @Override
     public long getUserId() {
-        return user.getId();
+        return userId;
     }
 
     @Override
     public void setUserId(long userId) {
-//        user.setId(userId);
+        this.userId = userId;
     }
 
     @Override
@@ -81,8 +80,8 @@ public class TicketImpl implements Ticket {
         return "TicketImpl{" +
                 "category=" + category +
                 ", id=" + id +
-                ", event=" + event +
-                ", user=" + user +
+                ", event=" + eventId +
+                ", user=" + userId +
                 ", place=" + place +
                 '}';
     }
@@ -95,10 +94,10 @@ public class TicketImpl implements Ticket {
         TicketImpl ticket = (TicketImpl) o;
 
         if (id != ticket.id) return false;
+        if (eventId != ticket.eventId) return false;
+        if (userId != ticket.userId) return false;
         if (place != ticket.place) return false;
-        if (category != ticket.category) return false;
-        if (!event.equals(ticket.event)) return false;
-        return user.equals(ticket.user);
+        return category == ticket.category;
 
     }
 }
