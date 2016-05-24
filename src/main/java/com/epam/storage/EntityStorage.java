@@ -8,11 +8,9 @@ import com.epam.model.impl.TicketImpl;
 import java.util.*;
 
 //Like DB
-//Use annotation Component if you don't define the bean in the Application Context
-//@Component
 public class EntityStorage {
     private static final String USER_NS = "user:";
-    private static final String EVENT_NS = "ticket:";
+    private static final String EVENT_NS = "event:";
     private static final String TICKET_NS = "ticket:";
 
     //DB
@@ -202,8 +200,10 @@ public class EntityStorage {
         List<Ticket> ticketList = new ArrayList<>();
 
         for (Object ticket : storage.values()) {
-            if (((Ticket) ticket).getUserId() == userId) {
-                ticketList.add((Ticket) ticket);
+            if (ticket instanceof Ticket) {
+                if (((Ticket) ticket).getUserId() == userId) {
+                    ticketList.add((Ticket) ticket);
+                }
             }
         }
 
@@ -214,7 +214,6 @@ public class EntityStorage {
 
         int maxPage = (ticketList.size() + pageSize - 1) / pageSize;
 
-        //Условие
         if (pageNum > maxPage) {
             System.out.println("Wrong param - page size");
             return Collections.emptyList();
@@ -231,13 +230,14 @@ public class EntityStorage {
     }
 
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
-        //get ticket id
         long eventId = event.getId();
         List<Ticket> ticketList = new ArrayList<>();
 
         for (Object ticket : storage.values()) {
-            if (((Ticket) ticket).getEventId() == eventId) {
-                ticketList.add(((Ticket) ticket));
+            if (ticket instanceof Ticket) {
+                if (((Ticket) ticket).getEventId() == eventId) {
+                    ticketList.add(((Ticket) ticket));
+                }
             }
         }
 
@@ -248,7 +248,6 @@ public class EntityStorage {
 
         int maxPage = (ticketList.size() + pageSize - 1) / pageSize;
 
-        //Условие
         if (pageNum > maxPage) {
             System.out.println("Wrong param - page size");
             return Collections.emptyList();

@@ -4,6 +4,8 @@ import com.epam.facade.BookingFacade;
 import com.epam.model.Event;
 import com.epam.model.Ticket;
 import com.epam.model.User;
+import com.epam.service.EventService;
+import com.epam.service.TicketService;
 import com.epam.service.UserService;
 
 import java.util.Date;
@@ -12,6 +14,8 @@ import java.util.List;
 public class BookingFacadeImpl implements BookingFacade {
 
     private UserService userService;
+    private EventService eventService;
+    private TicketService ticketService;
 
     //constructor
     public BookingFacadeImpl(UserService userService) {
@@ -20,27 +24,27 @@ public class BookingFacadeImpl implements BookingFacade {
 
     // START EVENT
     public Event getEventById(long eventId) {
-        return null;
+        return eventService.getEventById(eventId);
     }
 
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
-        return null;
+        return eventService.getEventsByTitle(title, pageSize, pageNum);
     }
 
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
-        return null;
+        return eventService.getEventsForDay(day, pageSize, pageNum);
     }
 
     public Event createEvent(Event event) {
-        return null;
+        return eventService.createEvent(event);
     }
 
     public Event updateEvent(Event event) {
-        return null;
+        return eventService.updateEvent(event);
     }
 
     public boolean deleteEvent(long eventId) {
-        return false;
+        return eventService.deleteEvent(eventId);
     }
 
     // START USER
@@ -49,11 +53,11 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     public User getUserByEmail(String email) {
-        return null;
+        return userService.getUserByEmail(email);
     }
 
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
-        return null;
+        return userService.getUsersByName(name, pageSize, pageNum);
     }
 
     public User createUser(User user) {
@@ -61,27 +65,27 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     public User updateUser(User user) {
-        return null;
+        return userService.updateUser(user);
     }
 
     public boolean deleteUser(long userId) {
-        return false;
+        return userService.deleteUser(userId);
     }
 
     // START Ticket
     public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {
-        return null;
+        return ticketService.bookTicket(userId, eventId, place, category);
     }
 
     public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
-        return null;
+        return ticketService.getBookedTickets(user, pageSize, pageNum);
     }
 
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
-        return null;
+        return ticketService.getBookedTickets(event, pageSize, pageNum);
     }
 
     public boolean cancelTicket(long ticketId) {
-        return false;
+        return ticketService.cancelTicket(ticketId);
     }
 }

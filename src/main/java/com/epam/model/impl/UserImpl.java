@@ -4,6 +4,7 @@ import com.epam.model.User;
 
 public class UserImpl implements User {
     private static long counterId = 0;
+
     private long id;
     private String name;
     private String email;

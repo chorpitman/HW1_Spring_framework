@@ -82,6 +82,8 @@ public class EventServiceTest {
         String title = event.getTitle();
         Event createdEvent = eventService.createEvent(event);
 
+        assertEquals(title, createdEvent.getTitle());
+
         assertEquals(Collections.emptyList(), eventService.getEventsByTitle(title, 0, 0));
         assertEquals(Collections.emptyList(), eventService.getEventsByTitle(title, 1, 0));
         assertEquals(Collections.emptyList(), eventService.getEventsByTitle(title, 0, 1));
@@ -92,6 +94,8 @@ public class EventServiceTest {
     public void getEventsForDay() throws Exception {
         Date date = event.getDate();
         Event createdEvent = eventService.createEvent(event);
+
+        assertEquals(date, createdEvent.getDate());
         assertEquals(Collections.emptyList(), eventService.getEventsForDay(date, 0, 0));
         assertEquals(Collections.emptyList(), eventService.getEventsForDay(date, 1, 0));
         assertEquals(Collections.emptyList(), eventService.getEventsForDay(date, 0, 1));
