@@ -18,8 +18,10 @@ public class BookingFacadeImpl implements BookingFacade {
     private TicketService ticketService;
 
     //constructor
-    public BookingFacadeImpl(UserService userService) {
+    public BookingFacadeImpl(UserService userService, EventService eventService, TicketService ticketService) {
         this.userService = userService;
+        this.eventService = eventService;
+        this.ticketService = ticketService;
     }
 
     // START EVENT

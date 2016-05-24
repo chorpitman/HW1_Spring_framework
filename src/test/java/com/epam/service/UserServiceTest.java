@@ -48,6 +48,27 @@ public class UserServiceTest {
     }
 
     @Test
+    public void testGetUserById() {
+        long userId = user.getId();
+        assertNotNull(userId);
+
+        User createdUser = userService.createUser(user);
+        assertNotSame(null, createdUser.getId());
+        assertEquals(userId, createdUser.getId());
+    }
+
+    @Test
+    public void testGetUserByEmail() {
+        String userEmail = user.getEmail();
+        assertNotNull(userEmail);
+
+        User createdUser = userService.createUser(user);
+        assertNotSame(null, createdUser.getEmail());
+        assertEquals(userEmail, createdUser.getEmail());
+
+    }
+
+    @Test
     public void testUpdateUser() {
         final String name = "Jack";
         final String email = "Jack@i.ua";

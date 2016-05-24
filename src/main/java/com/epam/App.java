@@ -1,9 +1,13 @@
 package com.epam;
 
 import com.epam.facade.BookingFacade;
+import com.epam.facade.impl.BookingFacadeImpl;
 import com.epam.model.Ticket;
 import com.epam.model.User;
 import com.epam.model.impl.TicketImpl;
+import com.epam.service.impl.EventServiceImpl;
+import com.epam.service.impl.TicketServiceImpl;
+import com.epam.service.impl.UserServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -18,6 +22,8 @@ public class App {
 
         System.out.println(createdUser);
         System.out.println(foundUser);
+
+        BookingFacade bookingFacade = new BookingFacadeImpl(new UserServiceImpl(), new EventServiceImpl(), new TicketServiceImpl());
 
 //        TEST ENUM
 //        Ticket ticket = new TicketImpl();

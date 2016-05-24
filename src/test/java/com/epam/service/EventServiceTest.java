@@ -40,6 +40,16 @@ public class EventServiceTest {
     }
 
     @Test
+    public void testGetEventById() {
+        long evendID = event.getId();
+        assertNotSame(null, evendID);
+
+        Event createdEvent = eventService.createEvent(event);
+        assertNotSame(null, createdEvent.getId());
+        assertEquals(evendID, createdEvent.getId());
+    }
+
+    @Test
     public void testCreateEvent() throws Exception {
         Event createdEvent = eventService.createEvent(event);
         assertNotNull(event);
@@ -91,7 +101,7 @@ public class EventServiceTest {
     }
 
     @Test
-    public void getEventsForDay() throws Exception {
+    public void testGetEventsForDay() throws Exception {
         Date date = event.getDate();
         Event createdEvent = eventService.createEvent(event);
 
