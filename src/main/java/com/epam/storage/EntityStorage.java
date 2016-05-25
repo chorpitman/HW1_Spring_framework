@@ -6,6 +6,7 @@ import com.epam.model.User;
 import com.epam.model.impl.TicketImpl;
 
 import java.util.*;
+import org.apache.log4j.Logger;
 
 //Like DB
 public class EntityStorage {
@@ -59,7 +60,6 @@ public class EntityStorage {
             }
         }
         if (pageSize == 0 || name.isEmpty() || pageNum == 0) {
-            System.out.println("Wrong param");
             return Collections.emptyList();
         }
         //Находим максимальное количество страниц
@@ -71,7 +71,6 @@ public class EntityStorage {
         }
         //Условие
         if (pageNum > maxPageSize) {
-            System.out.println("Wrong param - page size");
             return Collections.emptyList();
         }
         //Находим начальную страницу
@@ -121,7 +120,6 @@ public class EntityStorage {
             }
         }
         if (pageSize == 0 || title.isEmpty() || pageNum == 0) {
-            System.out.println("Wrong param");
             return Collections.emptyList();
         }
         //Находим максимальное количество страниц
@@ -133,8 +131,7 @@ public class EntityStorage {
         }
         //Условие
         if (pageNum > maxPageSize) {
-            System.out.println("Wrong param - page size");
-            return Collections.emptyList();
+            Collections.emptyList();
         }
         //Находим начальную страницу
         int startPage = 0;
@@ -159,7 +156,6 @@ public class EntityStorage {
             }
         }
         if (pageSize == 0 || pageNum == 0) {
-            System.out.println("Wrong param");
             return Collections.emptyList();
         }
         int maxPageSize = 0;
@@ -169,7 +165,6 @@ public class EntityStorage {
             maxPageSize = eventList.size() / pageSize + 1;
         }
         if (pageNum > maxPageSize) {
-            System.out.println("Wrong param - page size");
             return Collections.emptyList();
         }
         int startPage = 0;
@@ -198,7 +193,6 @@ public class EntityStorage {
     public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
         long userId = user.getId();
         List<Ticket> ticketList = new ArrayList<>();
-
         for (Object ticket : storage.values()) {
             if (ticket instanceof Ticket) {
                 if (((Ticket) ticket).getUserId() == userId) {
@@ -208,14 +202,12 @@ public class EntityStorage {
         }
 
         if (pageSize == 0 || pageNum == 0) {
-            System.out.println("Wrong param");
             return Collections.emptyList();
         }
 
         int maxPage = (ticketList.size() + pageSize - 1) / pageSize;
 
         if (pageNum > maxPage) {
-            System.out.println("Wrong param - page size");
             return Collections.emptyList();
         }
 
@@ -242,14 +234,12 @@ public class EntityStorage {
         }
 
         if (pageSize == 0 || pageNum == 0) {
-            System.out.println("Wrong param");
             return Collections.emptyList();
         }
 
         int maxPage = (ticketList.size() + pageSize - 1) / pageSize;
 
         if (pageNum > maxPage) {
-            System.out.println("Wrong param - page size");
             return Collections.emptyList();
         }
 
@@ -259,7 +249,6 @@ public class EntityStorage {
         if (finish > ticketList.size()) {
             finish = ticketList.size();
         }
-
         return ticketList.subList(start, finish);
     }
 
