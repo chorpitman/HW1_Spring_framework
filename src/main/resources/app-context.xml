@@ -52,7 +52,7 @@
         <property name="ticketDao" ref="ticketDao"/>
     </bean>
 
-    <!-- Facades: constructor way-->
+    <!-- Facades: constructor way injection-->
     <bean id="bookingFacade" class="com.epam.facade.impl.BookingFacadeImpl">
         <constructor-arg ref="userService"/>
         <constructor-arg ref="eventService"/>

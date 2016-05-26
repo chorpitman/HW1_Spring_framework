@@ -50,7 +50,9 @@ public class BookingFacadeImplTest {
     public void testGetEventById() throws Exception {
         Event event = new EventImpl("figure skating", new Date());
         when(mockEventService.getEventById(event.getId())).thenReturn(event);
-        assertEquals(event, bookingFacade.getEventById(event.getId()));
+        Event recievedEvent = bookingFacade.getEventById(event.getId());
+        assertEquals(event.getId(), recievedEvent.getId());
+        assertEquals(event, recievedEvent);
     }
 
     @Test
@@ -105,16 +107,17 @@ public class BookingFacadeImplTest {
 
         assertEquals(createdEvent.getTitle(), eventTitle);
         assertEquals(createdEvent.getDate(), event.getDate());
+        assertEquals(createdEvent.getId(), event.getId());
     }
 
     @Test
     public void testUpdateEvent() throws Exception {
         String eventTitle = "hockey";
-
         Event event = new EventImpl(eventTitle, new Date());
         Event eventUpdt = new EventImpl(eventTitle + " with ball", new Date());
 
         when(mockEventService.createEvent(event)).thenReturn(event);
+
         Event createdEvent = bookingFacade.createEvent(event);
         assertNotNull(event);
         assertNotNull(createdEvent);
@@ -145,11 +148,11 @@ public class BookingFacadeImplTest {
     public void testGetUserById() throws Exception {
         String name = "Joshua Bloch";
         String email = "Joshua_Bloch@i.ua";
-
         User user = new UserImpl(name, email);
-        when(mockUserService.getUserById(user.getId())).thenReturn(user);
 
+        when(mockUserService.getUserById(user.getId())).thenReturn(user);
         User receivedUser = bookingFacade.getUserById(user.getId());
+
         assertNotNull(receivedUser);
         assertEquals(receivedUser, user);
         assertEquals(receivedUser.getEmail(), email);
@@ -161,8 +164,10 @@ public class BookingFacadeImplTest {
         String name = "Joshua Bloch";
         String email = "Joshua_Bloch@i.ua";
         User user = new UserImpl(name, email);
+
         when(mockUserService.getUserByEmail(email)).thenReturn(user);
         User receivedUser = bookingFacade.getUserByEmail(email);
+
         assertEquals(receivedUser.getEmail(), email);
     }
 
@@ -193,10 +198,10 @@ public class BookingFacadeImplTest {
 
         when(mockUserService.createUser(user)).thenReturn(user);
         User createdUser = bookingFacade.createUser(user);
+
         assertNotNull(user);
         assertNotNull(createdUser);
         assertEquals(user, createdUser);
-
         assertEquals(createdUser.getName(), userName);
         assertEquals(createdUser.getEmail(), userEmail);
     }
@@ -205,19 +210,20 @@ public class BookingFacadeImplTest {
     public void testUpdateUser() throws Exception {
         String userName = "Joshua Bloch";
         String userEmail = "Joshua_Bloch@i.ua";
-
         User user = new UserImpl(userName, userEmail);
         User userUpd = new UserImpl(userName + " Ivanovich", userEmail + ".com");
 
         when(mockUserService.createUser(user)).thenReturn(user);
 
         User createdUser = bookingFacade.createUser(user);
+
         assertNotNull(user);
         assertNotNull(createdUser);
         assertEquals(user, createdUser);
 
         when(bookingFacade.updateUser(userUpd)).thenReturn(userUpd);
         User receivedUser = bookingFacade.updateUser(userUpd);
+
         assertNotNull(receivedUser);
         assertNotSame(createdUser, receivedUser);
         assertEquals(userUpd.getId(), receivedUser.getId());
@@ -227,7 +233,6 @@ public class BookingFacadeImplTest {
 
     @Test
     public void testDeleteUser() throws Exception {
-        //todo спросить у саши как тут проверить
         when(mockUserService.deleteUser(0L)).thenReturn(Boolean.FALSE);
         assertEquals(bookingFacade.deleteUser(0L), false);
 
@@ -244,7 +249,6 @@ public class BookingFacadeImplTest {
 
         when(mockTicketService.bookTicket(user.getId(), event.getId(), 1, Ticket.Category.STANDARD)).thenReturn(ticket);
         assertEquals(bookingFacade.bookTicket(user.getId(), event.getId(), 1, Ticket.Category.STANDARD), ticket);
-
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -259,10 +263,7 @@ public class BookingFacadeImplTest {
     public void getBookedByUserTicket() throws Exception {
         User user = new UserImpl("Joshua Bloch", "Joshua_Bloch@i.ua");
         Event event = new EventImpl("hockey", new Date());
-        Ticket ticket = new TicketImpl(Ticket.Category.STANDARD, event.getId(), user.getId(), 1);
-
-//        when(mockTicketService.bookTicket(user.getId(), event.getId(), 1, Ticket.Category.STANDARD)).thenReturn(ticket);
-//        assertEquals(bookingFacade.bookTicket(user.getId(), event.getId(), 1, Ticket.Category.STANDARD), ticket);
+        Ticket ticket = new TicketImpl(Ticket.Category.BAR, event.getId(), user.getId(), 1);
 
         when(mockTicketService.getBookedTickets(user, 1, 1)).thenReturn(Arrays.asList(ticket));
 
@@ -276,7 +277,7 @@ public class BookingFacadeImplTest {
     public void getBookedTicketsByEventTickets() throws Exception {
         User user = new UserImpl("Joshua Bloch", "Joshua_Bloch@i.ua");
         Event event = new EventImpl("hockey", new Date());
-        Ticket ticket = new TicketImpl(Ticket.Category.STANDARD, event.getId(), user.getId(), 1);
+        Ticket ticket = new TicketImpl(Ticket.Category.PREMIUM, event.getId(), user.getId(), 1);
 
         when(mockTicketService.getBookedTickets(event, 1, 1)).thenReturn(Arrays.asList(ticket));
 

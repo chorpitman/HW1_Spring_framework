@@ -14,17 +14,23 @@ public class EntityStorage {
     private static final String TICKET_NS = "ticket:";
 
     //DB
-    private Map<String, Object> storage = new HashMap<>(); //String key user:1, Value User
+    private Map<String, Object> storage = new HashMap<>();
 
     //USER
     public User createUser(User user) {
-        storage.put(USER_NS + user.getId(), user);
-        return (User) storage.get(USER_NS + user.getId());
+        if (user != null) {
+            storage.put(USER_NS + user.getId(), user);
+            return (User) storage.get(USER_NS + user.getId());
+        }
+        throw new IllegalArgumentException("wrong param");
     }
 
     public User update(User user) {
-        storage.put(USER_NS + user.getId(), user);
-        return (User) storage.get(USER_NS + user.getId());
+        if (user != null) {
+            storage.put(USER_NS + user.getId(), user);
+            return (User) storage.get(USER_NS + user.getId());
+        }
+        return null;
     }
 
     public boolean deleteUser(long userId) {
@@ -40,7 +46,10 @@ public class EntityStorage {
     }
 
     public User getUserById(long id) {
-        return (User) storage.get(USER_NS + id);
+        if (id > 0) {
+            return (User) storage.get(USER_NS + id);
+        }
+        return null;
     }
 
     public User getUserByEmail(String email) {
@@ -92,12 +101,18 @@ public class EntityStorage {
 
     //EVENT
     public Event createEvent(Event event) {
-        storage.put(EVENT_NS + event.getId(), event);
-        return (Event) storage.get(EVENT_NS + event.getId());
+        if (event != null){
+            storage.put(EVENT_NS + event.getId(), event);
+            return (Event) storage.get(EVENT_NS + event.getId());
+        }
+        return null;
     }
 
     public Event updateEvent(Event event) {
-        return (Event) storage.put(USER_NS + event.getId(), event);
+        if (event != null) {
+            return (Event) storage.put(USER_NS + event.getId(), event);
+        }
+        return null;
     }
 
     public boolean deleteEvent(long eventId) {
@@ -113,7 +128,10 @@ public class EntityStorage {
     }
 
     public Event getEventById(long id) {
-        return (Event) storage.get(EVENT_NS + id);
+        if (id > 0) {
+            return (Event) storage.get(EVENT_NS + id);
+        }
+        return null;
     }
 
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
