@@ -84,6 +84,7 @@ public class EventServiceTest {
         long idEvent = event.getId();
         eventService.createEvent(event);
         eventService.deleteEvent(idEvent);
+        assertEquals(eventService.deleteEvent(0), false);
         assertEquals(null, eventService.getEventById(idEvent));
     }
 

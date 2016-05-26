@@ -6,7 +6,6 @@ import com.epam.model.User;
 import com.epam.model.impl.TicketImpl;
 
 import java.util.*;
-import org.apache.log4j.Logger;
 
 //Like DB
 public class EntityStorage {
@@ -29,10 +28,12 @@ public class EntityStorage {
     }
 
     public boolean deleteUser(long userId) {
-        for (String user : storage.keySet()) {
-            if (user.equals(USER_NS + userId)) {
-                storage.remove(user);
-                return true;
+        if (userId > 0) {
+            for (String user : storage.keySet()) {
+                if (user.equals(USER_NS + userId)) {
+                    storage.remove(user);
+                    return true;
+                }
             }
         }
         return false;
@@ -52,15 +53,16 @@ public class EntityStorage {
     }
 
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
+        if (pageSize == 0 || name.isEmpty() || pageNum == 0) {
+            return Collections.emptyList();
+        }
+
         //получаю всех юзеров с искомым именем
         List<User> eventList = new ArrayList<>();
         for (Object user : storage.values()) {
             if (((User) user).getName().equals(name)) {
                 eventList.add(((User) user));
             }
-        }
-        if (pageSize == 0 || name.isEmpty() || pageNum == 0) {
-            return Collections.emptyList();
         }
         //Находим максимальное количество страниц
         int maxPageSize = 0;
@@ -99,10 +101,12 @@ public class EntityStorage {
     }
 
     public boolean deleteEvent(long eventId) {
-        for (String event : storage.keySet()) {
-            if (event.equals(EVENT_NS + eventId)) {
-                storage.remove(event);
-                return true;
+        if (eventId > 0) {
+            for (String event : storage.keySet()) {
+                if (event.equals(EVENT_NS + eventId)) {
+                    storage.remove(event);
+                    return true;
+                }
             }
         }
         return false;
@@ -113,14 +117,14 @@ public class EntityStorage {
     }
 
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
+        if (pageSize == 0 || title.isEmpty() || pageNum == 0) {
+            return Collections.emptyList();
+        }
         List<Event> eventList = new ArrayList<>();
         for (Object event : storage.values()) {
             if (((Event) event).getTitle().equals(title)) {
                 eventList.add(((Event) event));
             }
-        }
-        if (pageSize == 0 || title.isEmpty() || pageNum == 0) {
-            return Collections.emptyList();
         }
         //Находим максимальное количество страниц
         int maxPageSize = 0;
@@ -149,14 +153,14 @@ public class EntityStorage {
     }
 
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
+        if (pageSize == 0 || pageNum == 0) {
+            return Collections.emptyList();
+        }
         List<Event> eventList = new ArrayList<>();
         for (Object event : storage.values()) {
             if (((Event) event).getDate() == day) {
                 eventList.add(((Event) event));
             }
-        }
-        if (pageSize == 0 || pageNum == 0) {
-            return Collections.emptyList();
         }
         int maxPageSize = 0;
         if ((eventList.size()) % pageSize == 0)
@@ -181,6 +185,10 @@ public class EntityStorage {
 
     //TICKETS
     public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {
+        if (userId <= 0 || eventId <= 0 || place <= 0 || category == null) {
+            throw new IllegalArgumentException("wrong param");
+        }
+
         Ticket ticket = new TicketImpl();
         ticket.setUserId(userId);
         ticket.setEventId(eventId);
@@ -191,6 +199,10 @@ public class EntityStorage {
     }
 
     public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
+        if (pageSize == 0 || pageNum == 0) {
+            return Collections.emptyList();
+        }
+
         long userId = user.getId();
         List<Ticket> ticketList = new ArrayList<>();
         for (Object ticket : storage.values()) {
@@ -199,10 +211,6 @@ public class EntityStorage {
                     ticketList.add((Ticket) ticket);
                 }
             }
-        }
-
-        if (pageSize == 0 || pageNum == 0) {
-            return Collections.emptyList();
         }
 
         int maxPage = (ticketList.size() + pageSize - 1) / pageSize;
@@ -222,6 +230,10 @@ public class EntityStorage {
     }
 
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
+        if (pageSize == 0 || pageNum == 0) {
+            return Collections.emptyList();
+        }
+
         long eventId = event.getId();
         List<Ticket> ticketList = new ArrayList<>();
 
@@ -231,10 +243,6 @@ public class EntityStorage {
                     ticketList.add(((Ticket) ticket));
                 }
             }
-        }
-
-        if (pageSize == 0 || pageNum == 0) {
-            return Collections.emptyList();
         }
 
         int maxPage = (ticketList.size() + pageSize - 1) / pageSize;
@@ -253,10 +261,12 @@ public class EntityStorage {
     }
 
     public boolean cancelTicket(long ticketId) {
-        for (String ticket : storage.keySet()) {
-            if (ticket.equals(EVENT_NS + ticketId)) {
-                storage.remove(ticket);
-                return true;
+        if (ticketId > 0) {
+            for (String ticket : storage.keySet()) {
+                if (ticket.equals(EVENT_NS + ticketId)) {
+                    storage.remove(ticket);
+                    return true;
+                }
             }
         }
         return false;

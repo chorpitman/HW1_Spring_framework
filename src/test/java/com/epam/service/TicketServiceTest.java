@@ -58,7 +58,7 @@ public class TicketServiceTest {
         ticketService.cancelTicket(ticket.getId());
     }
 
-    @Test
+    @Test()
     public void testBookTicket() throws Exception {
         Ticket bokedTicket = ticketService.bookTicket(user.getId(), event.getId(), ticket.getPlace(), ticket.getCategory());
 
@@ -72,8 +72,19 @@ public class TicketServiceTest {
         assertEquals(Ticket.Category.PREMIUM, bokedTicketCategory);
         assertEquals(ticket.getPlace(), bokedPlace);
 
-
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testBookTicketException() throws Exception {
+        ticketService.bookTicket(0, 0, 0, ticket.getCategory());
+        ticketService.bookTicket(0, 0, 1, ticket.getCategory());
+        ticketService.bookTicket(0, 1, 0, ticket.getCategory());
+        ticketService.bookTicket(1, 0, 0, ticket.getCategory());
+        ticketService.bookTicket(1, 1, 0, ticket.getCategory());
+        ticketService.bookTicket(1, 0, 1, ticket.getCategory());
+        ticketService.bookTicket(0, 1, 1, ticket.getCategory());
+    }
+
 
     @Test
     public void testGetBookedByUserTickets() throws Exception {
@@ -81,9 +92,9 @@ public class TicketServiceTest {
         List<Ticket> bookedTickets = ticketService.getBookedTickets(user, 1, 1);
 
         assertEquals(Arrays.asList(bookedTicket), bookedTickets);
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 0, 0 ));
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 1, 0 ));
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 0, 1 ));
+        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 0, 0));
+        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 1, 0));
+        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 0, 1));
     }
 
     @Test
@@ -92,16 +103,16 @@ public class TicketServiceTest {
         List<Ticket> bookedTickets = ticketService.getBookedTickets(event, 1, 1);
 
         assertEquals(Arrays.asList(bookedTicket), bookedTickets);
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 0, 0 ));
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 1, 0 ));
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 1, 0 ));
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(event, 0, 1 ));
+        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 0, 0));
+        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 1, 0));
+        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 1, 0));
+        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(event, 0, 1));
     }
 
     @Test
     public void testCancelTicket() throws Exception {
         long ticketID = ticket.getId();
-        ticketService.bookTicket(user.getId(), event.getId(), ticket.getPlace(),ticket.getCategory());
+        ticketService.bookTicket(user.getId(), event.getId(), ticket.getPlace(), ticket.getCategory());
         ticketService.cancelTicket(ticketID);
     }
 }

@@ -32,7 +32,6 @@
 
     <!--storage-->
     <bean id="storage" class="com.epam.storage.EntityStorage">
-
     </bean>
 
     <!-- DAO -->
@@ -40,7 +39,7 @@
     <bean id="eventDao" class="com.epam.dao.impl.EventDaoImpl"/>
     <bean id="ticketDao" class="com.epam.dao.impl.TicketDaoImpl"/>
 
-    <!-- Services -->
+    <!-- Services: setter injection -->
     <bean id="userService" class="com.epam.service.impl.UserServiceImpl">
         <property name="userDao" ref="userDao"/>
     </bean>
@@ -53,7 +52,7 @@
         <property name="ticketDao" ref="ticketDao"/>
     </bean>
 
-    <!-- Facades -->
+    <!-- Facades: constructor way-->
     <bean id="bookingFacade" class="com.epam.facade.impl.BookingFacadeImpl">
         <constructor-arg ref="userService"/>
         <constructor-arg ref="eventService"/>
