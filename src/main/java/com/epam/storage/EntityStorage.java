@@ -4,8 +4,12 @@ import com.epam.model.Event;
 import com.epam.model.Ticket;
 import com.epam.model.User;
 import com.epam.model.impl.TicketImpl;
+import com.epam.utils.Pagination;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 //Like DB
 public class EntityStorage {
@@ -62,46 +66,13 @@ public class EntityStorage {
     }
 
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
-        if (pageSize == 0 || name.isEmpty() || pageNum == 0) {
-            return Collections.emptyList();
-        }
-
-        //получаю всех юзеров с искомым именем
-        List<User> eventList = new ArrayList<>();
-        for (Object user : storage.values()) {
-            if (((User) user).getName().equals(name)) {
-                eventList.add(((User) user));
-            }
-        }
-        //Находим максимальное количество страниц
-        int maxPageSize = 0;
-        if ((eventList.size()) % pageSize == 0)
-            maxPageSize = eventList.size() / pageSize;
-        else {
-            maxPageSize = eventList.size() / pageSize + 1;
-        }
-        //Условие
-        if (pageNum > maxPageSize) {
-            return Collections.emptyList();
-        }
-        //Находим начальную страницу
-        int startPage = 0;
-        if (maxPageSize >= 1) {
-            startPage = 1;
-        }
-        //Находим начальный индекс элемента для добавления в возвращаемую коллекцию
-        int indexFrom = (pageNum - 1) * pageSize + 1;
-        //Находим последний индекс элемента для добавления в возвращаемую коллекцию
-        int indexTo = pageNum * pageSize;
-        if (indexTo > eventList.size()) {
-            indexTo = eventList.size();
-        }
-        return eventList.subList(indexFrom - 1, indexTo);
+        return Pagination.usersPagination(storage, name, pageSize, pageNum);
     }
+
 
     //EVENT
     public Event createEvent(Event event) {
-        if (event != null){
+        if (event != null) {
             storage.put(EVENT_NS + event.getId(), event);
             return (Event) storage.get(EVENT_NS + event.getId());
         }
@@ -135,70 +106,11 @@ public class EntityStorage {
     }
 
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
-        if (pageSize == 0 || title.isEmpty() || pageNum == 0) {
-            return Collections.emptyList();
-        }
-        List<Event> eventList = new ArrayList<>();
-        for (Object event : storage.values()) {
-            if (((Event) event).getTitle().equals(title)) {
-                eventList.add(((Event) event));
-            }
-        }
-        //Находим максимальное количество страниц
-        int maxPageSize = 0;
-        if ((eventList.size()) % pageSize == 0)
-            maxPageSize = eventList.size() / pageSize;
-        else {
-            maxPageSize = eventList.size() / pageSize + 1;
-        }
-        //Условие
-        if (pageNum > maxPageSize) {
-            Collections.emptyList();
-        }
-        //Находим начальную страницу
-        int startPage = 0;
-        if (maxPageSize >= 1) {
-            startPage = 1;
-        }
-        //Находим начальный индекс элемента для добавления в возвращаемую коллекцию
-        int indexFrom = (pageNum - 1) * pageSize + 1;
-        //Находим последний индекс элемента для добавления в возвращаемую коллекцию
-        int indexTo = pageNum * pageSize;
-        if (indexTo > eventList.size()) {
-            indexTo = eventList.size();
-        }
-        return eventList.subList(indexFrom - 1, indexTo);
+        return Pagination.eventsPaginationByTitle(storage, title, pageSize, pageNum);
     }
 
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
-        if (pageSize == 0 || pageNum == 0) {
-            return Collections.emptyList();
-        }
-        List<Event> eventList = new ArrayList<>();
-        for (Object event : storage.values()) {
-            if (((Event) event).getDate() == day) {
-                eventList.add(((Event) event));
-            }
-        }
-        int maxPageSize = 0;
-        if ((eventList.size()) % pageSize == 0)
-            maxPageSize = eventList.size() / pageSize;
-        else {
-            maxPageSize = eventList.size() / pageSize + 1;
-        }
-        if (pageNum > maxPageSize) {
-            return Collections.emptyList();
-        }
-        int startPage = 0;
-        if (maxPageSize >= 1) {
-            startPage = 1;
-        }
-        int indexFrom = (pageNum - 1) * pageSize + 1;
-        int indexTo = pageNum * pageSize;
-        if (indexTo > eventList.size()) {
-            indexTo = eventList.size();
-        }
-        return eventList.subList(indexFrom - 1, indexTo);
+        return Pagination.eventsPaginationForDay(storage, day, pageSize, pageNum);
     }
 
     //TICKETS
@@ -217,65 +129,11 @@ public class EntityStorage {
     }
 
     public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
-        if (pageSize == 0 || pageNum == 0) {
-            return Collections.emptyList();
-        }
-
-        long userId = user.getId();
-        List<Ticket> ticketList = new ArrayList<>();
-        for (Object ticket : storage.values()) {
-            if (ticket instanceof Ticket) {
-                if (((Ticket) ticket).getUserId() == userId) {
-                    ticketList.add((Ticket) ticket);
-                }
-            }
-        }
-
-        int maxPage = (ticketList.size() + pageSize - 1) / pageSize;
-
-        if (pageNum > maxPage) {
-            return Collections.emptyList();
-        }
-
-        int start = (pageNum - 1) * pageSize;
-
-        int finish = pageNum * pageSize;
-        if (finish > ticketList.size()) {
-            finish = ticketList.size();
-        }
-
-        return ticketList.subList(start, finish);
+        return Pagination.bookTicketByUserPagination(storage, user, pageSize, pageNum);
     }
 
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
-        if (pageSize == 0 || pageNum == 0) {
-            return Collections.emptyList();
-        }
-
-        long eventId = event.getId();
-        List<Ticket> ticketList = new ArrayList<>();
-
-        for (Object ticket : storage.values()) {
-            if (ticket instanceof Ticket) {
-                if (((Ticket) ticket).getEventId() == eventId) {
-                    ticketList.add(((Ticket) ticket));
-                }
-            }
-        }
-
-        int maxPage = (ticketList.size() + pageSize - 1) / pageSize;
-
-        if (pageNum > maxPage) {
-            return Collections.emptyList();
-        }
-
-        int start = (pageNum - 1) * pageSize;
-
-        int finish = pageNum * pageSize;
-        if (finish > ticketList.size()) {
-            finish = ticketList.size();
-        }
-        return ticketList.subList(start, finish);
+        return Pagination.bookTicketByEventPagination(storage, event, pageSize, pageNum);
     }
 
     public boolean cancelTicket(long ticketId) {

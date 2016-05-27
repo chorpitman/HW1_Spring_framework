@@ -30,9 +30,8 @@
     <!--<property name="place" value="1"/>-->
     <!--</bean>-->
 
-    <!--storage-->
-    <bean id="storage" class="com.epam.storage.EntityStorage">
-    </bean>
+    <!--Storage-->
+    <bean id="storage" class="com.epam.storage.EntityStorage"/>
 
     <!-- DAO -->
     <bean id="userDao" class="com.epam.dao.impl.UserDaoImpl"/>

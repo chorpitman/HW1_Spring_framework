@@ -21,12 +21,12 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
-        return eventDao.getEventsByTitle(title,pageSize,pageNum);
+        return eventDao.getEventsByTitle(title, pageSize, pageNum);
     }
 
     @Override
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
-        return eventDao.getEventsForDay(day,pageSize,pageNum);
+        return eventDao.getEventsForDay(day, pageSize, pageNum);
     }
 
     @Override

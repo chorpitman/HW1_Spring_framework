@@ -16,13 +16,13 @@ public class TicketDaoImpl implements TicketDao {
 
     @Autowired
     public void setStorage(EntityStorage storage) {
-        logger.info("@Autowired storage into TicketDaoImpl " +storage);
+        logger.info("@Autowired storage into TicketDaoImpl " + storage);
         this.storage = storage;
     }
 
     @Override
     public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {
-        logger.debug("bookTicket " + " userId:" + userId + " eventId:" + eventId + " place" + place + " category" +category);
+        logger.debug("bookTicket " + " userId:" + userId + " eventId:" + eventId + " place" + place + " category" + category);
         return storage.bookTicket(userId, eventId, place, category);
     }
 

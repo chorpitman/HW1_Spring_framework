@@ -45,7 +45,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
-        log.debug("getUsersByName:" + name + " " + "pageSize:" + pageSize + " pageNum:" +pageNum);
+        log.debug("getUsersByName:" + name + " " + "pageSize:" + pageSize + " pageNum:" + pageNum);
         return storage.getUsersByName(name, pageSize, pageNum);
     }
 
