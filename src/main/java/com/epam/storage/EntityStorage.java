@@ -4,7 +4,9 @@ import com.epam.model.Event;
 import com.epam.model.Ticket;
 import com.epam.model.User;
 import com.epam.model.impl.TicketImpl;
+import com.epam.utils.CollectionUtils;
 import com.epam.utils.Pagination;
+import com.epam.utils.IPredicate;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -66,7 +68,13 @@ public class EntityStorage {
     }
 
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
-        return Pagination.usersPagination(storage, name, pageSize, pageNum);
+        List<User> userList = CollectionUtils.filter(storage.values(), name, User.class, new IPredicate<User, String>() {
+            @Override
+            public boolean apply(User type, String value) {
+                return type.getName().equals(value);
+            }
+        });
+        return Pagination.getData(userList, pageSize, pageNum);
     }
 
 
@@ -106,11 +114,23 @@ public class EntityStorage {
     }
 
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
-        return Pagination.eventsPaginationByTitle(storage, title, pageSize, pageNum);
+        List<Event> eventList = CollectionUtils.filter(storage.values(), title, Event.class, new IPredicate<Event, String>() {
+            @Override
+            public boolean apply(Event type, String value) {
+                return type.getTitle().equals(value);
+            }
+        });
+        return Pagination.getData(eventList, pageSize, pageNum);
     }
 
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
-        return Pagination.eventsPaginationForDay(storage, day, pageSize, pageNum);
+        List<Event> eventList = CollectionUtils.filter(storage.values(), day, Event.class, new IPredicate<Event, Date>() {
+            @Override
+            public boolean apply(Event type, Date value) {
+                return type.getDate().equals(value);
+            }
+        });
+        return Pagination.getData(eventList, pageSize, pageNum);
     }
 
     //TICKETS
@@ -129,11 +149,19 @@ public class EntityStorage {
     }
 
     public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
-        return Pagination.bookTicketByUserPagination(storage, user, pageSize, pageNum);
+        List<Ticket> ticketList = CollectionUtils.filter(storage.values(), user.getId(), Ticket.class, new IPredicate<Ticket, Long>() {
+            @Override
+            public boolean apply(Ticket type, Long value) {
+                return type.getUserId() == value;
+            }
+        });
+        return Pagination.getData(ticketList, pageSize, pageNum);
     }
 
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
-        return Pagination.bookTicketByEventPagination(storage, event, pageSize, pageNum);
+        List<Ticket> ticketList = CollectionUtils.filter(storage.values(), event.getId(), Ticket.class, (type, value) -> type.getEventId() == value);
+
+        return Pagination.getData(ticketList, pageSize, pageNum);
     }
 
     public boolean cancelTicket(long ticketId) {
