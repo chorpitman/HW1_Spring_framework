@@ -6,9 +6,6 @@ import com.epam.service.UserServiceTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-/**
- * Created by Oleg_Chorpita on 5/24/2016.
- */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         UserServiceTest.class,
@@ -17,5 +14,5 @@ import org.junit.runners.Suite;
 })
 
 
-public class TesAllServices {
+public class TestAllServices {
 }

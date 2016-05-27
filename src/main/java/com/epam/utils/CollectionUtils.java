@@ -4,9 +4,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by oleksandr_kramskyi on 5/27/2016.
- */
 public class CollectionUtils {
 
     private CollectionUtils() {

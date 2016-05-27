@@ -43,7 +43,7 @@ public class TicketServiceTest {
     private EventService eventService;
 
     @Before
-    public void init() throws Exception {
+    public void init() {
         user = new UserImpl("Joe", "Joe@gmail.com");
         userService.createUser(user);
 
@@ -54,12 +54,12 @@ public class TicketServiceTest {
     }
 
     @After
-    public void cleanStorage() throws Exception {
+    public void cleanStorage() {
         ticketService.cancelTicket(ticket.getId());
     }
 
     @Test()
-    public void testBookTicket() throws Exception {
+    public void testBookTicket() {
         Ticket bokedTicket = ticketService.bookTicket(user.getId(), event.getId(), ticket.getPlace(), ticket.getCategory());
 
         long bokedEventId = bokedTicket.getEventId();
@@ -75,7 +75,7 @@ public class TicketServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testBookTicketException() throws Exception {
+    public void testBookTicketException() {
         ticketService.bookTicket(0, 0, 0, ticket.getCategory());
         ticketService.bookTicket(0, 0, 1, ticket.getCategory());
         ticketService.bookTicket(0, 1, 0, ticket.getCategory());
@@ -87,7 +87,7 @@ public class TicketServiceTest {
 
 
     @Test
-    public void testGetBookedByUserTickets() throws Exception {
+    public void testGetBookedByUserTickets() {
         Ticket bookedTicket = ticketService.bookTicket(user.getId(), event.getId(), ticket.getPlace(), ticket.getCategory());
         List<Ticket> bookedTickets = ticketService.getBookedTickets(user, 1, 1);
 
@@ -98,7 +98,7 @@ public class TicketServiceTest {
     }
 
     @Test
-    public void testGetBookedByEventTickets() throws Exception {
+    public void testGetBookedByEventTickets() {
         Ticket bookedTicket = ticketService.bookTicket(user.getId(), event.getId(), ticket.getPlace(), ticket.getCategory());
         List<Ticket> bookedTickets = ticketService.getBookedTickets(event, 1, 1);
 
@@ -110,7 +110,7 @@ public class TicketServiceTest {
     }
 
     @Test
-    public void testCancelTicket() throws Exception {
+    public void testCancelTicket() {
         long ticketID = ticket.getId();
         ticketService.bookTicket(user.getId(), event.getId(), ticket.getPlace(), ticket.getCategory());
         ticketService.cancelTicket(ticketID);

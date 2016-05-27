@@ -50,7 +50,7 @@ public class EventServiceTest {
     }
 
     @Test
-    public void testCreateEvent() throws Exception {
+    public void testCreateEvent() {
         Event createdEvent = eventService.createEvent(event);
         assertNotNull(event);
         assertNotNull(createdEvent);
@@ -64,7 +64,7 @@ public class EventServiceTest {
     }
 
     @Test
-    public void testUpdateEvent() throws Exception {
+    public void testUpdateEvent() {
         long eventId = event.getId();
         eventService.createEvent(event);
         Event createdEvent = eventService.getEventById(eventId);
@@ -80,7 +80,7 @@ public class EventServiceTest {
     }
 
     @Test
-    public void testDeleteEvent() throws Exception {
+    public void testDeleteEvent() {
         long idEvent = event.getId();
         eventService.createEvent(event);
         eventService.deleteEvent(idEvent);
@@ -89,7 +89,7 @@ public class EventServiceTest {
     }
 
     @Test
-    public void testGetEventsByTitle() throws Exception {
+    public void testGetEventsByTitle() {
         String title = event.getTitle();
         Event createdEvent = eventService.createEvent(event);
 
@@ -102,7 +102,7 @@ public class EventServiceTest {
     }
 
     @Test
-    public void testGetEventsForDay() throws Exception {
+    public void testGetEventsForDay() {
         Date date = event.getDate();
         Event createdEvent = eventService.createEvent(event);
 
