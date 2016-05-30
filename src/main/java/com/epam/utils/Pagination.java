@@ -5,11 +5,11 @@ import java.util.List;
 
 public class Pagination {
 
-    // TODO what is necessary???
+    private Pagination() {
+    }
 
-    // TODO rename the method?
     public static <T> List<T> getData(List<T> entityList, int pageSize, int pageNum) {
-        if (pageSize == 0 || pageNum == 0) {//FIXME recheck the condition!!!
+        if (pageSize <= 0 || pageNum <= 0 ) {
             return Collections.emptyList();
         }
 
