@@ -4,7 +4,6 @@ import com.epam.dao.EventDao;
 import com.epam.model.Event;
 import com.epam.storage.EntityStorage;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.List;

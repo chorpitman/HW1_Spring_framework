@@ -118,6 +118,6 @@ public class BookingFacadeImpl implements BookingFacade {
         if (ticketId <= 0) {
             return false;
         }
-            return ticketService.cancelTicket(ticketId);
+        return ticketService.cancelTicket(ticketId);
     }
 }
