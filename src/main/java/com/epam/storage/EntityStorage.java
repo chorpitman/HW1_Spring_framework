@@ -12,12 +12,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+//FIXME this bean should be injected using auto-wiring
 //Like DB
 public class EntityStorage {
     //DB
     private Map<String, Object> storage = new HashMap<>();
 
+    //TODO move private methods to the end of the file
     //Prefix
     private <T> String getIdPrefix(T t) {
         return t.getClass().getInterfaces()[0].getSimpleName().toLowerCase() + ":";
@@ -29,7 +30,7 @@ public class EntityStorage {
 
     //USER
     public User createUser(User user) {
-        if (user != null) {
+        if (user != null) {//FIXME move ALL validation to facade!!!
             storage.put(getIdPrefix(user) + user.getId(), user);
             return (User) storage.get(getIdPrefix(user) + user.getId());
         }

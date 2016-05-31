@@ -12,7 +12,5 @@ import org.junit.runners.Suite;
         EventServiceTest.class,
         TicketServiceTest.class
 })
-
-
 public class TestAllServices {
 }
