@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//FIXME this bean should be injected using auto-wiring
 //Like DB
 public class EntityStorage {
 
