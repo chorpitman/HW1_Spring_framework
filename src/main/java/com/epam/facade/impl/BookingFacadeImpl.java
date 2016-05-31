@@ -8,6 +8,7 @@ import com.epam.service.EventService;
 import com.epam.service.TicketService;
 import com.epam.service.UserService;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -118,6 +119,11 @@ public class BookingFacadeImpl implements BookingFacade {
         if (ticketId <= 0) {
             return false;
         }
-            return ticketService.cancelTicket(ticketId);
+        return ticketService.cancelTicket(ticketId);
+    }
+
+    @Override
+    public void rechargeAccount(User user, BigDecimal amount) {
+
     }
 }

@@ -2,38 +2,85 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/jdbc
+       http://www.springframework.org/schema/jdbc/spring-jdbc-4.2.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd">
 
     <context:annotation-config/>
     <context:component-scan base-package="com.epam"/>
+    <context:property-placeholder location="db.properties"/>
 
-     <!--Storage-->
+    <!--DATA SOURCE MYSQL-->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${db.driver}"/>
+        <property name="url" value="${db.url}"/>
+        <property name="username" value="${db.user}"/>
+        <property name="password" value="${db.password}"/>
+    </bean>
+
+    <!--DATA SOURCE H2 IN MEMORY-->
+    <bean id="dbInMemory" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--JDBC Template-->
+    <bean id="nameJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+        <!--<constructor-arg ref="dataSource"/>-->
+        <constructor-arg ref="dbInMemory"/>
+    </bean>
+
+
+    <!--Storage-->
     <bean id="entityStorage" class="com.epam.storage.EntityStorage"/>
+
 
     <!-- DAO -->
     <bean id="userDao" class="com.epam.dao.impl.UserDaoImpl" autowire="byType"/>
+    <!--<property name="jdbcTemplate" ref="nameJdbcTemplate"/>-->
+
     <bean id="eventDao" class="com.epam.dao.impl.EventDaoImpl" autowire="byType"/>
+
     <bean id="ticketDao" class="com.epam.dao.impl.TicketDaoImpl" autowire="byType"/>
 
-    <!-- Services: setter injection -->
-    <bean id="userService" class="com.epam.service.impl.UserServiceImpl">
-        <property name="userDao" ref="userDao"/>
+    <bean id="accountDao" class="com.epam.dao.impl.UserAccountDaoImpl" autowire="byType"/>
+
+
+    <!-- SERVICES: setter injection -->
+    <bean id="userService" class="com.epam.service.impl.UserServiceImpl" autowire="byType">
+        <!--<property name="userDao" ref="userDao"/>-->
     </bean>
 
     <bean id="eventService" class="com.epam.service.impl.EventServiceImpl">
-        <property name="eventDao" ref="eventDao"/>
+        <!--<property name="eventDao" ref="eventDao"/>-->
     </bean>
 
     <bean id="ticketService" class="com.epam.service.impl.TicketServiceImpl">
-        <property name="ticketDao" ref="ticketDao"/>
+        <!--<property name="ticketDao" ref="ticketDao"/>-->
     </bean>
 
-    <!-- Facades: constructor way injection-->
+    <bean id="userAccount" class="com.epam.service.impl.UserAccountServiceImpl">
+
+    </bean>
+
+    <!-- FACADES: constructor way injection-->
     <bean id="bookingFacade" class="com.epam.facade.impl.BookingFacadeImpl">
         <constructor-arg ref="userService"/>
         <constructor-arg ref="eventService"/>
         <constructor-arg ref="ticketService"/>
+        <!--<constructor-arg ref="userAccount"/>-->
     </bean>
+
+    <jdbc:initialize-database data-source="dbInMemory">
+        <jdbc:script location="classpath:ddl-InMemory.sql"/>
+        <jdbc:script location="classpath:dml.sql"/>
+    </jdbc:initialize-database>
 
 </beans>

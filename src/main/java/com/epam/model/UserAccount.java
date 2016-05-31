@@ -1,7 +1,17 @@
 package com.epam.model;
 
-/**
- * Created by Oleg_Chorpita on 5/30/2016.
- */
-public class UserAccount {
+import java.math.BigDecimal;
+
+public interface UserAccount {
+    long getId();
+
+    void setId(long id);
+
+    long getUserId();
+
+    void setUserId(long id);
+
+    BigDecimal getAmount();
+
+    void setAmount(BigDecimal amount);
 }

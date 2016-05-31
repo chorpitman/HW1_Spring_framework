@@ -1,19 +1,27 @@
 package com.epam.service.impl;
 
+import com.epam.dao.UserAccountDao;
 import com.epam.dao.UserDao;
 import com.epam.model.User;
+import com.epam.model.impl.UserAccountImpl;
 import com.epam.service.UserService;
 import org.apache.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
+    private static Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
     private UserDao userDao;
-    private static Logger log = Logger.getLogger(UserServiceImpl.class.getName());
+    private UserAccountDao userAccountDao;
 
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
+    }
+
+    public void setUserAccountDao(UserAccountDao userAccountDao) {
+        this.userAccountDao = userAccountDao;
     }
 
     //impl methods
@@ -31,7 +39,10 @@ public class UserServiceImpl implements UserService {
     }
 
     public User createUser(User user) {
-        return userDao.createUser(user);
+        User createdUser = userDao.createUser(user);
+        long idCreatedUser = createdUser.getId();
+        userAccountDao.createUserAccount(new UserAccountImpl(idCreatedUser, new BigDecimal(0)));
+        return createdUser;
     }
 
     public User updateUser(User user) {
