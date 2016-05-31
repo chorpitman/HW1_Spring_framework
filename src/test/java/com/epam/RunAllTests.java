@@ -14,5 +14,5 @@ import org.junit.runners.Suite;
         TicketServiceTest.class,
         BookingFacadeImplTest.class
 })
-public class RunAllTests {//FIXME why do you have two Suit Tests (TestAllServices)???
+public class RunAllTests {
 }

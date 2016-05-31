@@ -12,54 +12,32 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 //FIXME this bean should be injected using auto-wiring
 //Like DB
 public class EntityStorage {
-    //DB
-    private Map<String, Object> storage = new HashMap<>();
-
-    //TODO move private methods to the end of the file
-    //Prefix
-    private <T> String getIdPrefix(T t) {
-        return t.getClass().getInterfaces()[0].getSimpleName().toLowerCase() + ":";
-    }
-
-    private <T> String getIdPrefix(Class<T> clazz) {
-        return clazz.getSimpleName().toLowerCase() + ":";
-    }
 
     //USER
     public User createUser(User user) {
-        if (user != null) {//FIXME move ALL validation to facade!!!
-            storage.put(getIdPrefix(user) + user.getId(), user);
-            return (User) storage.get(getIdPrefix(user) + user.getId());
-        }
-        throw new IllegalArgumentException("wrong param");
+        storage.put(getIdPrefix(user) + user.getId(), user);
+        return (User) storage.get(getIdPrefix(user) + user.getId());
     }
 
     public User update(User user) {
-        if (user != null) {
-            storage.put(getIdPrefix(user) + user.getId(), user);
-            return (User) storage.get(getIdPrefix(user) + user.getId());
-        }
-        return null;
+        storage.put(getIdPrefix(user) + user.getId(), user);
+        return (User) storage.get(getIdPrefix(user) + user.getId());
     }
 
     public boolean deleteUser(long userId) {
-        if (userId > 0) {
-            if (storage.containsKey(getIdPrefix(User.class) + userId)) {
-                storage.remove(getIdPrefix(User.class) + userId);
-                return true;
-            }
+        if (storage.containsKey(getIdPrefix(User.class) + userId)) {
+            storage.remove(getIdPrefix(User.class) + userId);
+            return true;
         }
         return false;
     }
 
     public User getUserById(long id) {
-        if (id > 0) {
-            return (User) storage.get(getIdPrefix(User.class) + id);
-        }
-        return null;
+        return (User) storage.get(getIdPrefix(User.class) + id);
     }
 
     public User getUserByEmail(String email) {
@@ -84,35 +62,24 @@ public class EntityStorage {
 
     //EVENT
     public Event createEvent(Event event) {
-        if (event != null) {
-            storage.put(getIdPrefix(event) + event.getId(), event);
-            return (Event) storage.get(getIdPrefix(event) + event.getId());
-        }
-        return null;
+        storage.put(getIdPrefix(event) + event.getId(), event);
+        return (Event) storage.get(getIdPrefix(event) + event.getId());
     }
 
     public Event updateEvent(Event event) {
-        if (event != null) {
-            return (Event) storage.put(getIdPrefix(event), event);
-        }
-        return null;
+        return (Event) storage.put(getIdPrefix(event), event);
     }
 
     public boolean deleteEvent(long eventId) {
-        if (eventId > 0) {
-            if (storage.containsKey(getIdPrefix(Event.class) + eventId)) {
-                storage.remove(getIdPrefix(Event.class) + eventId);
-                return true;
-            }
+        if (storage.containsKey(getIdPrefix(Event.class) + eventId)) {
+            storage.remove(getIdPrefix(Event.class) + eventId);
+            return true;
         }
         return false;
     }
 
     public Event getEventById(long id) {
-        if (id > 0) {
-            return (Event) storage.get(getIdPrefix(Event.class) + id);
-        }
-        return null;
+        return (Event) storage.get(getIdPrefix(Event.class) + id);
     }
 
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
@@ -137,9 +104,6 @@ public class EntityStorage {
 
     //TICKETS
     public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {
-        if (userId <= 0 || eventId <= 0 || place <= 0 || category == null) {
-            throw new IllegalArgumentException("wrong param");
-        }
         Ticket ticket = new TicketImpl();
         ticket.setUserId(userId);
         ticket.setEventId(eventId);
@@ -171,12 +135,22 @@ public class EntityStorage {
     }
 
     public boolean cancelTicket(long ticketId) {
-        if (ticketId > 0) {
-            if (storage.containsKey(getIdPrefix(Ticket.class) + ticketId)) {
-                storage.remove(getIdPrefix(Ticket.class) + ticketId);
-                return true;
-            }
+        if (storage.containsKey(getIdPrefix(Ticket.class) + ticketId)) {
+            storage.remove(getIdPrefix(Ticket.class) + ticketId);
+            return true;
         }
         return false;
+    }
+
+    //DB
+    private Map<String, Object> storage = new HashMap<>();
+
+    //Prefix
+    private <T> String getIdPrefix(T t) {
+        return t.getClass().getInterfaces()[0].getSimpleName().toLowerCase() + ":";
+    }
+
+    private <T> String getIdPrefix(Class<T> clazz) {
+        return clazz.getSimpleName().toLowerCase() + ":";
     }
 }

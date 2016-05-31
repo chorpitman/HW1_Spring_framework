@@ -14,7 +14,6 @@ public class TicketDaoImpl implements TicketDao {
     private static Logger logger = Logger.getLogger(TicketDaoImpl.class.getName());
     private EntityStorage storage;
 
-    @Autowired
     public void setStorage(EntityStorage storage) {
         logger.info("@Autowired storage into TicketDaoImpl " + storage);
         this.storage = storage;

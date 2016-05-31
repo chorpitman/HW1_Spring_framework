@@ -13,7 +13,6 @@ public class EventDaoImpl implements EventDao {
     private static Logger log = Logger.getLogger(EventDaoImpl.class.getName());
     private EntityStorage storage;
 
-    @Autowired
     public void setStorage(EntityStorage storage) {
         log.info("@Autowired storage into EventDaoImpl " + storage);
         this.storage = storage;

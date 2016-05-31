@@ -8,35 +8,13 @@
     <context:annotation-config/>
     <context:component-scan base-package="com.epam"/>
 
-    <!--<bean id="user" class="com.epam.model.impl.UserImpl">-->
-    <!--<property name="id" value="5"/>-->
-    <!--<property name="name" value="Joe"/>-->
-    <!--<property name="email" value="joe@gmail.com"/>-->
-    <!--</bean>-->
-
-    <!--<bean id="event" class="com.epam.model.impl.EventImpl">-->
-    <!--<property name="id" value="5"/>-->
-    <!--<property name="title" value="box"/>-->
-    <!--<property name="date">-->
-    <!--<bean class="java.util.Date"/>-->
-    <!--</property>-->
-    <!--</bean>-->
-
-    <!--<bean id="ticket" class="com.epam.model.impl.TicketImpl">-->
-    <!--<property name="id" value="5"/>-->
-    <!--<property name="category" value="STANDARD"/>-->
-    <!--<property name="userId" value="5"/>-->
-    <!--<property name="eventId" value="1"/>-->
-    <!--<property name="place" value="1"/>-->
-    <!--</bean>-->
-
-    <!--Storage-->
-    <bean id="storage" class="com.epam.storage.EntityStorage"/>
+     <!--Storage-->
+    <bean id="entityStorage" class="com.epam.storage.EntityStorage"/>
 
     <!-- DAO -->
-    <bean id="userDao" class="com.epam.dao.impl.UserDaoImpl"/>
-    <bean id="eventDao" class="com.epam.dao.impl.EventDaoImpl"/>
-    <bean id="ticketDao" class="com.epam.dao.impl.TicketDaoImpl"/>
+    <bean id="userDao" class="com.epam.dao.impl.UserDaoImpl" autowire="byType"/>
+    <bean id="eventDao" class="com.epam.dao.impl.EventDaoImpl" autowire="byType"/>
+    <bean id="ticketDao" class="com.epam.dao.impl.TicketDaoImpl" autowire="byType"/>
 
     <!-- Services: setter injection -->
     <bean id="userService" class="com.epam.service.impl.UserServiceImpl">

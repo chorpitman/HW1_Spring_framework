@@ -74,18 +74,6 @@ public class TicketServiceTest {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testBookTicketException() {
-        ticketService.bookTicket(0, 0, 0, ticket.getCategory());
-        ticketService.bookTicket(0, 0, 1, ticket.getCategory());
-        ticketService.bookTicket(0, 1, 0, ticket.getCategory());
-        ticketService.bookTicket(1, 0, 0, ticket.getCategory());
-        ticketService.bookTicket(1, 1, 0, ticket.getCategory());
-        ticketService.bookTicket(1, 0, 1, ticket.getCategory());
-        ticketService.bookTicket(0, 1, 1, ticket.getCategory());
-    }
-
-
     @Test
     public void testGetBookedByUserTickets() {
         Ticket bookedTicket = ticketService.bookTicket(user.getId(), event.getId(), ticket.getPlace(), ticket.getCategory());

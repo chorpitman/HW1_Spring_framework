@@ -26,6 +26,9 @@ public class BookingFacadeImpl implements BookingFacade {
 
     // START EVENT
     public Event getEventById(long eventId) {
+        if (eventId <= 0) {
+            return null;
+        }
         return eventService.getEventById(eventId);
     }
 
@@ -38,19 +41,31 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     public Event createEvent(Event event) {
+        if (event == null) {
+            throw new IllegalArgumentException("wrong param");
+        }
         return eventService.createEvent(event);
     }
 
     public Event updateEvent(Event event) {
+        if (event == null) {
+            throw new IllegalArgumentException("wrong param");
+        }
         return eventService.updateEvent(event);
     }
 
     public boolean deleteEvent(long eventId) {
+        if (eventId <= 0) {
+            return false;
+        }
         return eventService.deleteEvent(eventId);
     }
 
     // START USER
     public User getUserById(long userId) {
+        if (userId <= 0) {
+            return null;
+        }
         return userService.getUserById(userId);
     }
 
@@ -63,19 +78,31 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     public User createUser(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("wrong param");
+        }
         return userService.createUser(user);
     }
 
     public User updateUser(User user) {
+        if (user == null) {
+            return null;
+        }
         return userService.updateUser(user);
     }
 
     public boolean deleteUser(long userId) {
+        if (userId <= 0) {
+            return false;
+        }
         return userService.deleteUser(userId);
     }
 
     // START Ticket
     public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {
+        if (userId <= 0 || eventId <= 0 || place <= 0 || category == null) {
+            throw new IllegalArgumentException("wrong param");
+        }
         return ticketService.bookTicket(userId, eventId, place, category);
     }
 
@@ -88,6 +115,9 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     public boolean cancelTicket(long ticketId) {
-        return ticketService.cancelTicket(ticketId);
+        if (ticketId <= 0) {
+            return false;
+        }
+            return ticketService.cancelTicket(ticketId);
     }
 }

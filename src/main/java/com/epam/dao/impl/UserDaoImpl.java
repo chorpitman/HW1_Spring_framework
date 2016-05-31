@@ -13,7 +13,6 @@ public class UserDaoImpl implements UserDao {
     private EntityStorage storage;
 
 
-    @Autowired
     public void setStorage(EntityStorage storage) {
         log.info("@Autowired storage into UserDaoImpl " + storage);
         this.storage = storage;
