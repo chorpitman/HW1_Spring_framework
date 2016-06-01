@@ -7,16 +7,14 @@
 
     <context:annotation-config/>
     <context:component-scan base-package="com.epam"/>
-    <context:property-placeholder location="db_properties"/>
+    <context:property-placeholder location="db.properties"/>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${jdbc.driverClassName}"/>
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
+        <property name="driverClassName" value="${db.driver}"/>
+        <property name="url" value="${db.url}"/>
+        <property name="username" value="${db.user}"/>
+        <property name="password" value="${db.password}"/>
     </bean>
-
-    <context:property-placeholder location="jdbc.properties"/>
 
     <!--Storage-->
     <bean id="entityStorage" class="com.epam.storage.EntityStorage"/>
@@ -26,7 +24,7 @@
     <bean id="eventDao" class="com.epam.dao.impl.EventDaoImpl" autowire="byType"/>
     <bean id="ticketDao" class="com.epam.dao.impl.TicketDaoImpl" autowire="byType"/>
 
-    <!-- Services: setter injection -->
+    <!-- SERVICES: setter injection -->
     <bean id="userService" class="com.epam.service.impl.UserServiceImpl">
         <property name="userDao" ref="userDao"/>
     </bean>
@@ -39,7 +37,7 @@
         <property name="ticketDao" ref="ticketDao"/>
     </bean>
 
-    <!-- Facades: constructor way injection-->
+    <!-- FACADES: constructor way injection-->
     <bean id="bookingFacade" class="com.epam.facade.impl.BookingFacadeImpl">
         <constructor-arg ref="userService"/>
         <constructor-arg ref="eventService"/>

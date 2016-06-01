@@ -2,6 +2,7 @@ package com.epam.model.impl;
 
 import com.epam.model.Event;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class EventImpl implements Event {
@@ -10,6 +11,7 @@ public class EventImpl implements Event {
     private long id;
     private String title;
     private Date date;
+    private BigDecimal ticketPrice;
 
     public EventImpl() {
         this.id = ++counterId;

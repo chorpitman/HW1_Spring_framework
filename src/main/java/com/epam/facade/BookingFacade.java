@@ -5,6 +5,7 @@ import com.epam.model.Event;
 import com.epam.model.Ticket;
 import com.epam.model.User;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -157,4 +158,6 @@ public interface BookingFacade {
      */
     boolean cancelTicket(long ticketId);
 
+    //USER ACCOUNT
+    void rechargeAccount(long userId, BigDecimal amount);
 }
