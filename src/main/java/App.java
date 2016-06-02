@@ -1,5 +1,6 @@
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -16,5 +17,7 @@ public class App {
         DataSource dataSource = context.getBean("dataSource", DataSource.class);
         System.out.println("Connection exist");
         System.out.println(dataSource.getConnection());
+
+        JdbcTemplate template = new JdbcTemplate();
     }
 }
