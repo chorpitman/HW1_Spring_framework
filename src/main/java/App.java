@@ -19,13 +19,33 @@ public class App {
         DataSource dataSource = context.getBean("dataSource", DataSource.class);
         System.out.println("Connection exist: " + dataSource.getConnection());
 
+        UserDao userDao = context.getBean("userDao", UserDao.class);
 
-        UserDao user = context.getBean("userDao", UserDao.class);
-        User user1 = new UserImpl();
-        user1.setName("her");
-        user1.setEmail("her@i.ua");
 
-        User huuser = user.createUser(user1);
-        System.out.println(huuser.toString());
+        //UPDATE is WORK
+      /*
+      User user = userDao.getUserById(1);
+        user.setName("kuma");
+        user.setEmail("dima@i.ua");
+        System.out.println(user);
+        userDao.update(user);
+      */
+
+        //DELETE is WORK
+//        userDao.deleteUser(6);
+
+        //CREATE
+        User user = new UserImpl();
+        user.setId(10);
+        user.setName("ssanieTrypki");
+        user.setEmail("st@i.ua");
+        System.out.println(user);
+        System.out.println(userDao.createUser(user));
+
+//        GET BY ID is WORK
+/*        System.out.println(userDao.getUserById(3));*/
+
+//        GET BY EMAIL is WORK
+//        System.out.println(userDao.getUserByEmail("jack@i.ua"));
     }
 }

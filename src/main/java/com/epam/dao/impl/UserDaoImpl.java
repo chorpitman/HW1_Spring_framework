@@ -2,10 +2,15 @@ package com.epam.dao.impl;
 
 import com.epam.dao.UserDao;
 import com.epam.model.User;
+import com.epam.model.impl.UserImpl;
 import com.epam.storage.EntityStorage;
 import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,12 +18,13 @@ import java.util.Map;
 public class UserDaoImpl implements UserDao {
     private static Logger log = Logger.getLogger(UserDaoImpl.class.getName());
 
-    public static final String CREATE_USER = "INSERT INTO user (name, email) VALUE(:name, :email)";
-    public static final String DELETE_USER = "DELETE FROM user WHERE id = :id";
-    public static final String UPDATE_USER = "UPDATE USER SET NAME = ?, EMAIL = ? WHERE id = ?";
-    public static final String GET_USER_BY_ID = "SELECT * FROM user WHERE id = ?";
-    public static final String GET_USER_BY_NAME = "SELECT * FROM user WHERE name = ?";
-    public static final String GET_USER_BY_EMAIL = "SELECT * FROM user WHERE email = ?";
+    private static final String CREATE_USER = "INSERT INTO user (name, email) VALUE(:name, :email)";
+    private static final String DELETE_USER = "DELETE FROM user WHERE id =:id";
+    private static final String UPDATE_USER = "UPDATE user SET name = :name, email = :email WHERE id = :id";
+    private static final String GET_USER_BY_ID = "SELECT * FROM user WHERE id = :id";
+    private static final String GET_USER_BY_NAME = "SELECT * FROM user WHERE name = :name";
+    private static final String GET_USER_BY_NAME_PAGINATION = "SELECT * FROM user WHERE name = :name";
+    private static final String GET_USER_BY_EMAIL = "SELECT * FROM user WHERE email = :email";
 
     private EntityStorage storage;
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -31,39 +37,57 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User createUser(User user) {
         log.debug("createUser-" + user);
-        Map nameParameters = new HashMap<>();
+        Map<String, String> nameParameters = new HashMap<>();
         nameParameters.put("name", user.getName());
         nameParameters.put("email", user.getEmail());
-        return jdbcTemplate.queryForObject(CREATE_USER, nameParameters, User.class);
+        jdbcTemplate.update(CREATE_USER, nameParameters); //todo спросить: почему я не могу исп queryForObject
+        return user;
     }
 
     @Override
     public User update(User user) {
-        log.debug("updateUser-" + user);
-        return storage.update(user);
+        log.debug("updateUser-" + user + "with id " + user.getId());
+        Map<String, Object> nameParameters = new HashMap<>();
+        nameParameters.put("id", user.getId());
+        nameParameters.put("name", user.getName());
+        nameParameters.put("email", user.getEmail());
+        jdbcTemplate.update(UPDATE_USER, nameParameters);
+        return user;
     }
 
     @Override
     public boolean deleteUser(long userId) {
         log.debug("deleteUser - " + userId);
-        return jdbcTemplate.update(DELETE_USER, userId);
+        jdbcTemplate.update(DELETE_USER, Collections.singletonMap("id", userId));
+        return true;
     }
 
     @Override
     public User getUserById(long userId) {
         log.debug("getUserById-" + userId);
-        return storage.getUserById(userId);
+        return jdbcTemplate.queryForObject(GET_USER_BY_ID, Collections.singletonMap("id", userId), new UserMapper());
     }
 
     @Override
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
         log.debug("getUsersByName:" + name + " " + "pageSize:" + pageSize + " pageNum:" + pageNum);
-        return storage.getUsersByName(name, pageSize, pageNum);
+        return jdbcTemplate.query(GET_USER_BY_NAME, Collections.singletonMap("name", name), new UserMapper());
     }
 
     @Override
     public User getUserByEmail(String email) {
         log.debug("getUserByEmail:" + email);
-        return storage.getUserByEmail(email);
+        return jdbcTemplate.queryForObject(GET_USER_BY_EMAIL, Collections.singletonMap("email", email), new UserMapper());
+    }
+
+    public static final class UserMapper implements RowMapper<User> {
+        @Override
+        public User mapRow(ResultSet resultSet, int i) throws SQLException {
+            User user = new UserImpl();
+            user.setId(resultSet.getLong("id"));
+            user.setName(resultSet.getString("name"));
+            user.setEmail(resultSet.getString("email"));
+            return user;
+        }
     }
 }
