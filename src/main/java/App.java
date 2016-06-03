@@ -35,17 +35,20 @@ public class App {
 //        userDao.deleteUser(6);
 
         //CREATE
-        User user = new UserImpl();
-        user.setId(10);
-        user.setName("ssanieTrypki");
-        user.setEmail("st@i.ua");
-        System.out.println(user);
-        System.out.println(userDao.createUser(user));
+//        User user = new UserImpl();
+//        user.setId(10);
+//        user.setName("ssanieTrypki");
+//        user.setEmail("st@i.ua");
+//        System.out.println(user);
+//        System.out.println(userDao.createUser(user));
 
 //        GET BY ID is WORK
 /*        System.out.println(userDao.getUserById(3));*/
 
 //        GET BY EMAIL is WORK
 //        System.out.println(userDao.getUserByEmail("jack@i.ua"));
+
+//        PAGINATION
+        System.out.println(userDao.getUsersByName("John", 1, 1));
     }
 }

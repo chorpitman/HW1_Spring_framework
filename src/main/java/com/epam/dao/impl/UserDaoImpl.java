@@ -23,7 +23,6 @@ public class UserDaoImpl implements UserDao {
     private static final String UPDATE_USER = "UPDATE user SET name = :name, email = :email WHERE id = :id";
     private static final String GET_USER_BY_ID = "SELECT * FROM user WHERE id = :id";
     private static final String GET_USER_BY_NAME = "SELECT * FROM user WHERE name = :name";
-    private static final String GET_USER_BY_NAME_PAGINATION = "SELECT * FROM user WHERE name = :name";
     private static final String GET_USER_BY_EMAIL = "SELECT * FROM user WHERE email = :email";
 
     private EntityStorage storage;
@@ -71,7 +70,8 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
         log.debug("getUsersByName:" + name + " " + "pageSize:" + pageSize + " pageNum:" + pageNum);
-        return jdbcTemplate.query(GET_USER_BY_NAME, Collections.singletonMap("name", name), new UserMapper());
+        String sql  = GET_USER_BY_NAME + " LIMIT 0, 4";
+        return jdbcTemplate.query(sql, Collections.singletonMap("name", name), new UserMapper());
     }
 
     @Override
