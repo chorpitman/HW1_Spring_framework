@@ -21,34 +21,31 @@ public class App {
 
         UserDao userDao = context.getBean("userDao", UserDao.class);
 
-
         //UPDATE is WORK
-      /*
-      User user = userDao.getUserById(1);
-        user.setName("kuma");
-        user.setEmail("dima@i.ua");
-        System.out.println(user);
-        userDao.update(user);
-      */
+//        User user = userDao.getUserById(1);
+//        user.setName("kuma");
+//        user.setEmail("kuma@i.ua");
+//        System.out.println(user);
+//        userDao.update(user);
 
         //DELETE is WORK
-//        userDao.deleteUser(6);
+//        userDao.deleteUser(1);
 
         //CREATE
 //        User user = new UserImpl();
 //        user.setId(10);
-//        user.setName("ssanieTrypki");
-//        user.setEmail("st@i.ua");
+//        user.setName("bianchi");
+//        user.setEmail("bianchi@i.ua");
 //        System.out.println(user);
 //        System.out.println(userDao.createUser(user));
 
 //        GET BY ID is WORK
-/*        System.out.println(userDao.getUserById(3));*/
+//        System.out.println(userDao.getUserById(2));
 
 //        GET BY EMAIL is WORK
-//        System.out.println(userDao.getUserByEmail("jack@i.ua"));
+//        System.out.println(userDao.getUserByEmail("bianchi@i.ua"));
 
 //        PAGINATION
-        System.out.println(userDao.getUsersByName("John", 1, 1));
+//        System.out.println(userDao.getUsersByName("bianchi", 1, 1));
     }
 }

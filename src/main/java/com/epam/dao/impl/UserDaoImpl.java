@@ -70,6 +70,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
         log.debug("getUsersByName:" + name + " " + "pageSize:" + pageSize + " pageNum:" + pageNum);
+
         String sql  = GET_USER_BY_NAME + " LIMIT 0, 4";
         return jdbcTemplate.query(sql, Collections.singletonMap("name", name), new UserMapper());
     }
