@@ -26,10 +26,10 @@ CREATE TABLE Ticket (
   eventId  INT         NOT NULL,
   place    INT         NOT NULL,
   category VARCHAR(50) NOT NULL UNIQUE,
-  PRIMARY KEY (ID),
-  FOREIGN KEY (userId) REFERENCES USER (ID)
+  PRIMARY KEY (id),
+  FOREIGN KEY (userId) REFERENCES User (id)
     ON DELETE CASCADE,
-  FOREIGN KEY (eventId) REFERENCES EVENT (ID)
+  FOREIGN KEY (eventId) REFERENCES Event (id)
     ON DELETE CASCADE
 );
 
@@ -38,6 +38,6 @@ CREATE TABLE UserAccount (
   userId INT           NOT NULL,
   amount DECIMAL(9, 2) NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (userId) REFERENCES USER (id)
+  FOREIGN KEY (userId) REFERENCES User (id)
     ON DELETE CASCADE
 );

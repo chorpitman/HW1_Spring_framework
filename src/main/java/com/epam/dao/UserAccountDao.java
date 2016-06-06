@@ -1,10 +1,22 @@
 package com.epam.dao;
 
+import com.epam.model.UserAccount;
+
 import java.math.BigDecimal;
 
-/**
- * Created by Oleg_Chorpita on 6/1/2016.
- */
 public interface UserAccountDao {
-    void rechargeAccount(long userId, BigDecimal amount);
+
+    UserAccount createUserAccount(UserAccount account);
+
+    UserAccount getUserAccountbyId(long uAccountId);
+
+    UserAccount updateUserAccount(UserAccount account);
+
+    boolean deleteUserAccount(long uAccountId);
+
+
+// TODO: 07.06.2016 ask about 2methods
+//    void rechargeAccount(long userId, BigDecimal amount);
+//    BigDecimal getAmount();
+//    void setAmount(BigDecimal amount);
 }

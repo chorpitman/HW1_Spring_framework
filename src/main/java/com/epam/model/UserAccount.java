@@ -18,3 +18,5 @@ public interface UserAccount {
 
     void setAmount(BigDecimal amount);
 }
+
+
