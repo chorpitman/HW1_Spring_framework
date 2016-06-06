@@ -1,5 +1,6 @@
 package com.epam.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -22,4 +23,8 @@ public interface Event {
     Date getDate();
 
     void setDate(Date date);
+
+    BigDecimal getTicketPrice();
+
+    void setTicketPrice(BigDecimal ticketPrice);
 }

@@ -54,6 +54,16 @@ public class EventImpl implements Event {
     }
 
     @Override
+    public BigDecimal getTicketPrice() {
+        return ticketPrice;
+    }
+
+    @Override
+    public void setTicketPrice(BigDecimal ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
+    @Override
     public String toString() {
         return "EventImpl{" +
                 "id=" + id +

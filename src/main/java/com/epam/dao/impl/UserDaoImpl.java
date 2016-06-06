@@ -3,7 +3,6 @@ package com.epam.dao.impl;
 import com.epam.dao.UserDao;
 import com.epam.model.User;
 import com.epam.model.impl.UserImpl;
-import com.epam.storage.EntityStorage;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -25,7 +24,6 @@ public class UserDaoImpl implements UserDao {
     private static final String GET_USER_BY_NAME = "SELECT * FROM user WHERE name = :name";
     private static final String GET_USER_BY_EMAIL = "SELECT * FROM user WHERE email = :email";
 
-    private EntityStorage storage;
     private NamedParameterJdbcTemplate jdbcTemplate;
 
 
@@ -39,7 +37,7 @@ public class UserDaoImpl implements UserDao {
         Map<String, String> nameParameters = new HashMap<>();
         nameParameters.put("name", user.getName());
         nameParameters.put("email", user.getEmail());
-        jdbcTemplate.update(CREATE_USER, nameParameters); //todo спросить: почему я не могу исп queryForObject
+        jdbcTemplate.update(CREATE_USER, nameParameters); // TODO: 05.06.2016 ask about queryForObject. Do not work when compile;
         return user;
     }
 
@@ -71,7 +69,7 @@ public class UserDaoImpl implements UserDao {
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
         log.debug("getUsersByName:" + name + " " + "pageSize:" + pageSize + " pageNum:" + pageNum);
 
-        String sql  = GET_USER_BY_NAME + " LIMIT 0, 4";
+        String sql = GET_USER_BY_NAME + " LIMIT 0, 4";// TODO: 04.06.2016 implement pagination
         return jdbcTemplate.query(sql, Collections.singletonMap("name", name), new UserMapper());
     }
 
