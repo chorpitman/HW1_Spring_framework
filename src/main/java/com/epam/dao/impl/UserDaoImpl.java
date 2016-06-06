@@ -68,8 +68,9 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
         log.debug("getUsersByName:" + name + " " + "pageSize:" + pageSize + " pageNum:" + pageNum);
-
-        String sql = GET_USER_BY_NAME + " LIMIT 0, 4";// TODO: 04.06.2016 implement pagination
+        int start = pageSize;
+        int finish = (pageNum - 1) * pageSize;
+        String sql = GET_USER_BY_NAME + " LIMIT " + start + " OFFSET " + finish;
         return jdbcTemplate.query(sql, Collections.singletonMap("name", name), new UserMapper());
     }
 

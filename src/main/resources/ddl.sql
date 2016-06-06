@@ -24,6 +24,7 @@ CREATE TABLE Ticket (
   id       INT         NOT NULL AUTO_INCREMENT,
   userId   INT         NOT NULL,
   eventId  INT         NOT NULL,
+  place    INT         NOT NULL,
   category VARCHAR(50) NOT NULL UNIQUE,
   PRIMARY KEY (ID),
   FOREIGN KEY (userId) REFERENCES USER (ID)
