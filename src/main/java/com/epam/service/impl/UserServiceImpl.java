@@ -9,10 +9,10 @@ import org.apache.log4j.Logger;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
+    private static Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
     private UserDao userDao;
     private UserAccountDao userAccountDao;
-    private static Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;

@@ -5,7 +5,9 @@ import com.epam.model.Event;
 import com.epam.model.impl.EventImpl;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -60,8 +62,10 @@ public class EventDaoImpl implements EventDao {
         namedParameters.put("date", event.getDate());
         namedParameters.put("title", event.getTitle());
         namedParameters.put("ticketPrice", event.getTicketPrice());
-        jdbcTemplate.update(CREATE_EVENT, namedParameters);
-        return event;
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(CREATE_EVENT, new MapSqlParameterSource(namedParameters), keyHolder);
+        int lastEventId = keyHolder.getKey().intValue();
+        return jdbcTemplate.queryForObject(GET_EVENT_BY_ID, Collections.singletonMap("id", lastEventId), new EventMapper());
     }
 
     @Override

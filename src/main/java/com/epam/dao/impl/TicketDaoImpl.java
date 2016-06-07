@@ -42,7 +42,6 @@ public class TicketDaoImpl implements TicketDao {
         namedParameters.put("eventId", eventId);
         namedParameters.put("place", place);
         namedParameters.put("category", category.toString());
-
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(BOOK_TICKET, new MapSqlParameterSource(namedParameters), keyHolder);
         int lastBookId = keyHolder.getKey().intValue();

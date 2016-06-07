@@ -5,7 +5,9 @@ import com.epam.model.UserAccount;
 import com.epam.model.impl.UserAccountImpl;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +19,7 @@ public class UserAccountDaoImpl implements UserAccountDao {
     private static Logger log = Logger.getLogger(EventDaoImpl.class.getName());
 
     private static final String CREATE_USER_ACCOUNT = "INSERT INTO UserAccount (userId, amount) " +
-            "value (:userId, :amount)";
+            "VALUE (:userId, :amount)";
     private static final String GET_USER_ACCOUNT = "SELECT * FROM UserAccount WHERE id = :id";
     private static final String UPDATE_USER_ACCOUNT = "UPDATE UserAccount SET userId = :userId, amount = :amount WHERE id = :id";
     private static final String DELETE_USER_ACCOUNT = "DELETE FROM UserAccount WHERE id =:id";
@@ -33,8 +35,10 @@ public class UserAccountDaoImpl implements UserAccountDao {
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("userId", account.getUserId());
         namedParameters.put("amount", account.getAmount());
-        jdbcTemplate.update(CREATE_USER_ACCOUNT, namedParameters);
-        return account;
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(CREATE_USER_ACCOUNT, new MapSqlParameterSource(namedParameters), keyHolder);
+        int userAccountId = keyHolder.getKey().intValue();
+        return jdbcTemplate.queryForObject(GET_USER_ACCOUNT, Collections.singletonMap("id", userAccountId), new UserAccountMapper());
     }
 
     @Override

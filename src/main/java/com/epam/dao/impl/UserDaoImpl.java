@@ -5,7 +5,9 @@ import com.epam.model.User;
 import com.epam.model.impl.UserImpl;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,8 +39,10 @@ public class UserDaoImpl implements UserDao {
         Map<String, String> nameParameters = new HashMap<>();
         nameParameters.put("name", user.getName());
         nameParameters.put("email", user.getEmail());
-        jdbcTemplate.update(CREATE_USER, nameParameters); // TODO: 05.06.2016 ask about queryForObject. Do not work when compile;
-        return user;
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(CREATE_USER, new MapSqlParameterSource(nameParameters), keyHolder); // TODO: 05.06.2016 ask about queryForObject. Do not work when compile;
+        int lastUserId = keyHolder.getKey().intValue();
+        return jdbcTemplate.queryForObject(GET_USER_BY_ID, Collections.singletonMap("id", lastUserId), new UserMapper());
     }
 
     @Override
