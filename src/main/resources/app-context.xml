@@ -25,6 +25,9 @@
     <!--Storage-->
     <bean id="entityStorage" class="com.epam.storage.EntityStorage"/>
 
+
+
+
     <!-- DAO -->
     <bean id="userDao" class="com.epam.dao.impl.UserDaoImpl" autowire="byType"/>
     <!--<property name="jdbcTemplate" ref="nameJdbcTemplate"/>-->
@@ -34,6 +37,9 @@
     <bean id="ticketDao" class="com.epam.dao.impl.TicketDaoImpl" autowire="byType"/>
 
     <bean id="accountDao" class="com.epam.dao.impl.UserAccountDaoImpl" autowire="byType"/>
+
+
+
 
 
     <!-- SERVICES: setter injection -->

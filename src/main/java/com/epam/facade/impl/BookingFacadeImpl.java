@@ -123,7 +123,7 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     @Override
-    public void rechargeAccount(long userId, BigDecimal amount) {
+    public void rechargeAccount(User user, BigDecimal amount) {
 
     }
 }

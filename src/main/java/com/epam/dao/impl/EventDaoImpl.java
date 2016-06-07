@@ -13,6 +13,7 @@ import java.util.*;
 
 public class EventDaoImpl implements EventDao {
     private static Logger log = Logger.getLogger(EventDaoImpl.class.getName());
+
     private static final String CREATE_EVENT = "INSERT INTO event (date, title, ticketPrice) " +
             "value (:date, :title, :ticketPrice)";
     private static final String GET_EVENT_BY_ID = "SELECT * FROM event WHERE id = :id";
@@ -38,8 +39,8 @@ public class EventDaoImpl implements EventDao {
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
         log.debug("getEventsByTitle:" + title + " pageSize:" + pageSize + " pageNum:" + pageNum);
         int start = pageSize;
-        int fiish = (pageNum - 1) * pageSize;
-        String sql = GET_EVENTS_BY_TITLE + " LIMIT " + start + " OFFSET " + fiish;
+        int finish = (pageNum - 1) * pageSize;
+        String sql = GET_EVENTS_BY_TITLE + " LIMIT " + start + " OFFSET " + finish;
         return jdbcTemplate.query(sql, Collections.singletonMap("title", title), new EventMapper());
     }
 

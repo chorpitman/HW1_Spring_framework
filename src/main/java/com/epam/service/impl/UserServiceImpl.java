@@ -1,5 +1,6 @@
 package com.epam.service.impl;
 
+import com.epam.dao.UserAccountDao;
 import com.epam.dao.UserDao;
 import com.epam.model.User;
 import com.epam.service.UserService;
@@ -10,10 +11,15 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
+    private UserAccountDao userAccountDao;
     private static Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
+    }
+
+    public void setUserAccountDao(UserAccountDao userAccountDao) {
+        this.userAccountDao = userAccountDao;
     }
 
     //impl methods

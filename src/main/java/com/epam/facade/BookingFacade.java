@@ -159,5 +159,5 @@ public interface BookingFacade {
     boolean cancelTicket(long ticketId);
 
     //USER ACCOUNT
-    void rechargeAccount(long userId, BigDecimal amount);
+    void rechargeAccount(User user, BigDecimal amount);
 }

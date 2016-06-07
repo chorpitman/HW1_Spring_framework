@@ -25,7 +25,7 @@ CREATE TABLE Ticket (
   userId   INT         NOT NULL,
   eventId  INT         NOT NULL,
   place    INT         NOT NULL,
-  category VARCHAR(50) NOT NULL UNIQUE,
+  category VARCHAR(50) NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (userId) REFERENCES User (id)
     ON DELETE CASCADE,

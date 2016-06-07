@@ -1,13 +1,14 @@
 import com.epam.dao.EventDao;
+import com.epam.dao.TicketDao;
 import com.epam.dao.UserAccountDao;
 import com.epam.dao.UserDao;
-import com.epam.model.UserAccount;
-import com.epam.model.impl.UserAccountImpl;
+import com.epam.dao.impl.TicketDaoImpl;
+import com.epam.model.Event;
+import com.epam.model.impl.EventImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.sql.DataSource;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 
 public class App {
@@ -97,5 +98,27 @@ public class App {
 //        update.setUserId(5);
 //        update.setAmount(new BigDecimal(100.99));
 //        accountDao.updateUserAccount(update);
+
+        TicketDao ticketDao = context.getBean(TicketDaoImpl.class);
+//        Ticket ticket = new TicketImpl();
+//        ticket.setUserId(1);
+//        ticket.setEventId(2);
+//        ticket.setPlace(555);
+//        ticket.setCategory(Ticket.Category.PREMIUM);
+
+//        System.out.println(ticketDao.bookTicket(7, 1, 798, Ticket.Category.PREMIUM));
+
+        //cancel ticket
+        ticketDao.cancelTicket(14);
+
+        //getBookedTickets
+//        User user = new UserImpl();
+//        user.setId(7);
+//        System.out.println(ticketDao.getBookedTickets(user, 6, 2));
+
+        //getBookedTickets
+//        Event event = new EventImpl();
+//        event.setId(1);
+//        System.out.println(ticketDao.getBookedTickets(event, 6, 3));
     }
 }
