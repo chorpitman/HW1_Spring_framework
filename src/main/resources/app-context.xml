@@ -26,8 +26,6 @@
     <bean id="entityStorage" class="com.epam.storage.EntityStorage"/>
 
 
-
-
     <!-- DAO -->
     <bean id="userDao" class="com.epam.dao.impl.UserDaoImpl" autowire="byType"/>
     <!--<property name="jdbcTemplate" ref="nameJdbcTemplate"/>-->
@@ -55,11 +53,16 @@
         <!--<property name="ticketDao" ref="ticketDao"/>-->
     </bean>
 
+    <bean id="userAccount" class="com.epam.service.impl.UserAccountServiceImpl">
+
+    </bean>
+
     <!-- FACADES: constructor way injection-->
     <bean id="bookingFacade" class="com.epam.facade.impl.BookingFacadeImpl">
         <constructor-arg ref="userService"/>
         <constructor-arg ref="eventService"/>
         <constructor-arg ref="ticketService"/>
+        <!--<constructor-arg ref="userAccount"/>-->
     </bean>
 
 </beans>
