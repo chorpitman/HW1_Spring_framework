@@ -2,8 +2,6 @@ package com.epam.dao;
 
 import com.epam.model.UserAccount;
 
-import java.math.BigDecimal;
-
 public interface UserAccountDao {
 
     UserAccount createUserAccount(UserAccount account);

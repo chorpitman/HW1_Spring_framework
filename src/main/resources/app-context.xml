@@ -26,17 +26,15 @@
     <bean id="entityStorage" class="com.epam.storage.EntityStorage"/>
 
     <!-- DAO -->
-    <bean id="userDao" class="com.epam.dao.impl.UserDaoImpl" autowire="byType">
-        <!--<property name="jdbcTemplate" ref="nameJdbcTemplate"/>-->
-    </bean>
+    <bean id="userDao" class="com.epam.dao.impl.UserDaoImpl" autowire="byType"/>
+    <!--<property name="jdbcTemplate" ref="nameJdbcTemplate"/>-->
 
-    <bean id="eventDao" class="com.epam.dao.impl.EventDaoImpl" autowire="byType">
+    <bean id="eventDao" class="com.epam.dao.impl.EventDaoImpl" autowire="byType"/>
 
-    </bean>
+    <bean id="ticketDao" class="com.epam.dao.impl.TicketDaoImpl" autowire="byType"/>
 
-    <bean id="ticketDao" class="com.epam.dao.impl.TicketDaoImpl" autowire="byType">
+    <bean id="accountDao" class="com.epam.dao.impl.UserAccountDaoImpl" autowire="byType"/>
 
-    </bean>
 
     <!-- SERVICES: setter injection -->
     <bean id="userService" class="com.epam.service.impl.UserServiceImpl">

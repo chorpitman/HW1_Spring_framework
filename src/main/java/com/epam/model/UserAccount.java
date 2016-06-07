@@ -2,9 +2,6 @@ package com.epam.model;
 
 import java.math.BigDecimal;
 
-/**
- * Created by Oleg_Chorpita on 5/30/2016.
- */
 public interface UserAccount {
     long getId();
 
@@ -18,5 +15,3 @@ public interface UserAccount {
 
     void setAmount(BigDecimal amount);
 }
-
-

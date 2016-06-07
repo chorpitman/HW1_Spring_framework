@@ -10,6 +10,6 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public void rechargeAccount(long userId, BigDecimal amount) {
-        userAccountDao.rechargeAccount(userId, amount);
+
     }
 }

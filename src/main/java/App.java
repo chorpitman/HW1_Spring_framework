@@ -1,14 +1,14 @@
 import com.epam.dao.EventDao;
+import com.epam.dao.UserAccountDao;
 import com.epam.dao.UserDao;
-import com.epam.model.Event;
+import com.epam.model.UserAccount;
+import com.epam.model.impl.UserAccountImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
 
 public class App {
     public static void main(String[] args) throws SQLException {
@@ -78,5 +78,24 @@ public class App {
 //        List<Event> eventList = eventDao.getEventsByTitle("fight", 1, 1);
 //        System.out.println(eventList);
 
+
+        UserAccountDao accountDao = context.getBean("accountDao", UserAccountDao.class);
+        //get by Id - READ
+//        System.out.println(accountDao.getUserAccountbyId(4));
+
+        //delete
+//        accountDao.deleteUserAccount(4);
+
+        //createUserAccount
+//        UserAccount userAccount = new UserAccountImpl();
+//        userAccount.setUserId(5);
+//        userAccount.setAmount(new BigDecimal(5000));
+//        accountDao.createUserAccount(userAccount);
+
+        //update
+//        UserAccount update = accountDao.getUserAccountbyId(5);
+//        update.setUserId(5);
+//        update.setAmount(new BigDecimal(100.99));
+//        accountDao.updateUserAccount(update);
     }
 }

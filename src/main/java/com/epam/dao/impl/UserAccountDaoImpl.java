@@ -18,9 +18,9 @@ public class UserAccountDaoImpl implements UserAccountDao {
 
     private static final String CREATE_USER_ACCOUNT = "INSERT INTO UserAccount (userId, amount) " +
             "value (:userId, :amount)";
-    private static final String GET_USER_ACCOUNT = "";
-    private static final String UPDATE_USER_ACCOUNT = "";
-    private static final String DELETE_USER_ACCOUNT = "";
+    private static final String GET_USER_ACCOUNT = "SELECT * FROM UserAccount WHERE id = :id";
+    private static final String UPDATE_USER_ACCOUNT = "UPDATE UserAccount SET userId = :userId, amount = :amount WHERE id = :id";
+    private static final String DELETE_USER_ACCOUNT = "DELETE FROM UserAccount WHERE id =:id";
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -44,8 +44,12 @@ public class UserAccountDaoImpl implements UserAccountDao {
 
     @Override
     public UserAccount updateUserAccount(UserAccount account) {
-
-        return null;
+        Map<String, Object> namedParameters = new HashMap<>();
+        namedParameters.put("id", account.getId());
+        namedParameters.put("userId", account.getUserId());
+        namedParameters.put("amount", account.getAmount());
+        jdbcTemplate.update(UPDATE_USER_ACCOUNT, namedParameters);
+        return account;
     }
 
     @Override
