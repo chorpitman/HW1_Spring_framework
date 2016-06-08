@@ -43,6 +43,10 @@ public class UserDaoImpl implements UserDao {
         jdbcTemplate.update(CREATE_USER, new MapSqlParameterSource(nameParameters), keyHolder); // TODO: 05.06.2016 ask about queryForObject. Do not work when compile;
         int lastUserId = keyHolder.getKey().intValue();
         return jdbcTemplate.queryForObject(GET_USER_BY_ID, Collections.singletonMap("id", lastUserId), new UserMapper());
+
+//        User userFromDao = userDao.createUser(user);
+//        UserAccount userAccountFromDao = userAccountDao.createUserAccount(new UserAccountImpl(user.getId(), new BigDecimal(0)));
+//        LOG.info("Create user: {}", userFromDao);
     }
 
     @Override

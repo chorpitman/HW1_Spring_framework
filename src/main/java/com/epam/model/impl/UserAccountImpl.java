@@ -15,7 +15,7 @@ public class UserAccountImpl implements UserAccount {
         this.id = ++counterId;
     }
 
-    public UserAccountImpl(long id, long userId, BigDecimal amount) {
+    public UserAccountImpl(long userId, BigDecimal amount) {
         this.id = ++counterId;
         this.userId = userId;
         this.amount = amount;

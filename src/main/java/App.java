@@ -4,7 +4,11 @@ import com.epam.dao.UserAccountDao;
 import com.epam.dao.UserDao;
 import com.epam.dao.impl.TicketDaoImpl;
 import com.epam.model.Event;
+import com.epam.model.User;
 import com.epam.model.impl.EventImpl;
+import com.epam.model.impl.UserImpl;
+import com.epam.service.UserService;
+import com.epam.service.impl.UserServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -15,7 +19,7 @@ public class App {
     public static void main(String[] args) throws SQLException {
         ApplicationContext context = new ClassPathXmlApplicationContext("app-context.xml");
 
-        if (context.getBean("dataSource") == null) {
+        if (context.getBean("dbInMemory") == null) {
             System.out.println("bean do not exist");
         } else {
             System.out.println("bean exist");
@@ -36,21 +40,20 @@ public class App {
 //        userDao.deleteUser(1);
 
         //CREATE
-//        User user = new UserImpl();
-////        user.setId(10);
-//        user.setName("bianchi");
+//        UserService user = new UserServiceImpl();
+//        user.createUser(new UserImpl("govno", "otstoy"));
 //        user.setEmail("bianchi@i.ua");
 //        System.out.println(user);
 //        System.out.println(userDao.createUser(user));
 
 //        GET BY ID is WORK
-//        System.out.println(userDao.getUserById(2));
+        System.out.println(userDao.getUserById(7));
 
 //        GET BY EMAIL is WORK
 //        System.out.println(userDao.getUserByEmail("bianchi@i.ua"));
 
 //        GET BY NAME
-        System.out.println(userDao.getUsersByName("John", 1, 5));
+//        System.out.println(userDao.getUsersByName("John", 1, 5));
 
 //        PAGINATION
 //        System.out.println(userDao.getUsersByName("bianchi", 1, 1));
@@ -109,7 +112,7 @@ public class App {
 //        System.out.println(ticketDao.bookTicket(7, 1, 798, Ticket.Category.PREMIUM));
 
         //cancel ticket
-        ticketDao.cancelTicket(14);
+//        ticketDao.cancelTicket(14);
 
         //getBookedTickets
 //        User user = new UserImpl();
