@@ -11,6 +11,7 @@ import com.epam.service.UserService;
 import com.epam.service.impl.UserServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -24,7 +25,7 @@ public class App {
         } else {
             System.out.println("bean exist");
         }
-        DataSource dataSource = context.getBean("dataSource", DataSource.class);
+        DataSource dataSource = context.getBean("dbInMemory", DataSource.class);
         System.out.println("Connection exist: " + dataSource.getConnection());
 
         UserDao userDao = context.getBean("userDao", UserDao.class);
@@ -124,4 +125,5 @@ public class App {
 //        event.setId(1);
 //        System.out.println(ticketDao.getBookedTickets(event, 6, 3));
     }
+
 }

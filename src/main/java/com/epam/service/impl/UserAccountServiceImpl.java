@@ -11,6 +11,9 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     private UserAccountDao userAccountDao;
 
+    public void setAccountDao (UserAccountDao userAccountDao) {
+        this.userAccountDao = userAccountDao;
+    }
     @Override
     public void rechargeAccount(long userId, BigDecimal amount) {
 

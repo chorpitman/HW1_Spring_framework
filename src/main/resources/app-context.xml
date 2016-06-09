@@ -16,12 +16,12 @@
     <context:property-placeholder location="db.properties"/>
 
     <!--DATA SOURCE MYSQL-->
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${db.driver}"/>
-        <property name="url" value="${db.url}"/>
-        <property name="username" value="${db.user}"/>
-        <property name="password" value="${db.password}"/>
-    </bean>
+    <!--<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
+    <!--<property name="driverClassName" value="${db.driver}"/>-->
+    <!--<property name="url" value="${db.url}"/>-->
+    <!--<property name="username" value="${db.user}"/>-->
+    <!--<property name="password" value="${db.password}"/>-->
+    <!--</bean>-->
 
     <!--DATA SOURCE H2 IN MEMORY-->
     <bean id="dbInMemory" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -36,7 +36,11 @@
         <!--<constructor-arg ref="dataSource"/>-->
         <constructor-arg ref="dbInMemory"/>
     </bean>
-
+    <!--DB INITIALIZE-->
+    <jdbc:initialize-database data-source="dbInMemory">
+        <jdbc:script location="classpath:ddl-InMemory.sql"/>
+        <jdbc:script location="classpath:dml.sql"/>
+    </jdbc:initialize-database>
 
     <!--Storage-->
     <bean id="entityStorage" class="com.epam.storage.EntityStorage"/>
@@ -54,19 +58,21 @@
 
 
     <!-- SERVICES: setter injection -->
-    <bean id="userService" class="com.epam.service.impl.UserServiceImpl" autowire="byType">
-        <!--<property name="userDao" ref="userDao"/>-->
+    <bean id="userService" class="com.epam.service.impl.UserServiceImpl">
+        <property name="userDao" ref="userDao"/>
+        <property name="userAccountDao" ref="accountDao"/>
     </bean>
 
     <bean id="eventService" class="com.epam.service.impl.EventServiceImpl">
-        <!--<property name="eventDao" ref="eventDao"/>-->
+        <property name="eventDao" ref="eventDao"/>
     </bean>
 
     <bean id="ticketService" class="com.epam.service.impl.TicketServiceImpl">
-        <!--<property name="ticketDao" ref="ticketDao"/>-->
+        <property name="ticketDao" ref="ticketDao"/>
     </bean>
 
-    <bean id="userAccount" class="com.epam.service.impl.UserAccountServiceImpl">
+    <bean id="userAccountService" class="com.epam.service.impl.UserAccountServiceImpl">
+        <property name="accountDao" ref="accountDao"/>
     </bean>
 
     <!-- FACADES: constructor way injection-->
@@ -74,12 +80,6 @@
         <constructor-arg ref="userService"/>
         <constructor-arg ref="eventService"/>
         <constructor-arg ref="ticketService"/>
-        <constructor-arg ref="userAccount"/>
+        <constructor-arg ref="userAccountService"/>
     </bean>
-
-    <jdbc:initialize-database data-source="dbInMemory">
-        <jdbc:script location="classpath:ddl-InMemory.sql"/>
-        <jdbc:script location="classpath:dml.sql"/>
-    </jdbc:initialize-database>
-
 </beans>

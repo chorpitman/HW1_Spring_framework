@@ -29,7 +29,7 @@ public class UserServiceTest {
 
     @Before
     public void init() {
-        user = new UserImpl("Joe", "Joe@i.ua");
+        user = new UserImpl("Dima", "Dima@i.ua");
     }
 
     @After
