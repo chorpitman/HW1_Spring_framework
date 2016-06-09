@@ -31,16 +31,18 @@
         <property name="password" value="${jdbc.password}"/>
     </bean>
 
+
     <!--JDBC Template-->
     <bean id="nameJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
         <!--<constructor-arg ref="dataSource"/>-->
         <constructor-arg ref="dbInMemory"/>
     </bean>
+
     <!--DB INITIALIZE-->
-    <jdbc:initialize-database data-source="dbInMemory">
-        <jdbc:script location="classpath:ddl-InMemory.sql"/>
-        <jdbc:script location="classpath:dml.sql"/>
-    </jdbc:initialize-database>
+    <!--<jdbc:initialize-database data-source="dbInMemory">-->
+        <!--<jdbc:script location="classpath:ddl-InMemory.sql"/>-->
+        <!--<jdbc:script location="classpath:dml-inMemory.sql"/>-->
+    <!--</jdbc:initialize-database>-->
 
     <!--Storage-->
     <bean id="entityStorage" class="com.epam.storage.EntityStorage"/>
@@ -58,9 +60,9 @@
 
 
     <!-- SERVICES: setter injection -->
-    <bean id="userService" class="com.epam.service.impl.UserServiceImpl">
+    <bean id="userService" class="com.epam.service.impl.UserServiceImpl" autowire="byType">
         <property name="userDao" ref="userDao"/>
-        <property name="userAccountDao" ref="accountDao"/>
+        <!--<property name="userAccountDao" ref="accountDao"/>-->
     </bean>
 
     <bean id="eventService" class="com.epam.service.impl.EventServiceImpl">

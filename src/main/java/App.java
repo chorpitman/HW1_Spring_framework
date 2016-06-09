@@ -29,6 +29,7 @@ public class App {
         System.out.println("Connection exist: " + dataSource.getConnection());
 
         UserDao userDao = context.getBean("userDao", UserDao.class);
+//        UserService userService = context.getBean("userService", UserService.class);
 
         //UPDATE is WORK
 //        User user = userDao.getUserById(1);
@@ -49,6 +50,7 @@ public class App {
 
 //        GET BY ID is WORK
         System.out.println(userDao.getUserById(7));
+//        System.out.println(userService.getUserById(1));
 
 //        GET BY EMAIL is WORK
 //        System.out.println(userDao.getUserByEmail("bianchi@i.ua"));
