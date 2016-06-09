@@ -11,7 +11,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     private UserAccountDao userAccountDao;
 
-    public void setAccountDao (UserAccountDao userAccountDao) {
+    public void setUserAccountDao (UserAccountDao userAccountDao) {
         this.userAccountDao = userAccountDao;
     }
     @Override

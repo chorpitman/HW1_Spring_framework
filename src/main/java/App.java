@@ -26,7 +26,7 @@ public class App {
             System.out.println("bean exist");
         }
         DataSource dataSource = context.getBean("dbInMemory", DataSource.class);
-        System.out.println("Connection exist: " + dataSource.getConnection());
+        System.out.println(" --------->>> Connection exist <<<-------- " + dataSource.getConnection());
 
         UserDao userDao = context.getBean("userDao", UserDao.class);
 //        UserService userService = context.getBean("userService", UserService.class);
@@ -42,14 +42,17 @@ public class App {
 //        userDao.deleteUser(1);
 
         //CREATE
-//        UserService user = new UserServiceImpl();
-//        user.createUser(new UserImpl("govno", "otstoy"));
-//        user.setEmail("bianchi@i.ua");
-//        System.out.println(user);
+        UserService user = new UserServiceImpl();
+        User user1 = new UserImpl();
+        user1.setName("govno");
+        user1.setEmail("otstoy");
+
+        User user2 = user.createUser(user1);
+        System.out.println(user2);
 //        System.out.println(userDao.createUser(user));
 
 //        GET BY ID is WORK
-        System.out.println(userDao.getUserById(7));
+//        System.out.println(userDao.getUserById(1));
 //        System.out.println(userService.getUserById(1));
 
 //        GET BY EMAIL is WORK
