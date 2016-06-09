@@ -67,7 +67,6 @@
     </bean>
 
     <bean id="userAccount" class="com.epam.service.impl.UserAccountServiceImpl">
-
     </bean>
 
     <!-- FACADES: constructor way injection-->
@@ -75,7 +74,7 @@
         <constructor-arg ref="userService"/>
         <constructor-arg ref="eventService"/>
         <constructor-arg ref="ticketService"/>
-        <!--<constructor-arg ref="userAccount"/>-->
+        <constructor-arg ref="userAccount"/>
     </bean>
 
     <jdbc:initialize-database data-source="dbInMemory">

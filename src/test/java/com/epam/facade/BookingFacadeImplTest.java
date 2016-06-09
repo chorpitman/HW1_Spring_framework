@@ -9,6 +9,7 @@ import com.epam.model.impl.TicketImpl;
 import com.epam.model.impl.UserImpl;
 import com.epam.service.EventService;
 import com.epam.service.TicketService;
+import com.epam.service.UserAccountService;
 import com.epam.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +42,8 @@ public class BookingFacadeImplTest {
     @Mock
     private TicketService mockTicketService;
 
+    private UserAccountService accountService;
+
     private BookingFacade bookingFacade;
 
     @InjectMocks
@@ -54,7 +57,7 @@ public class BookingFacadeImplTest {
 
     @Before
     public void init() {
-        bookingFacade = new BookingFacadeImpl(mockUserService, mockEventService, mockTicketService);
+        bookingFacade = new BookingFacadeImpl(mockUserService, mockEventService, mockTicketService, accountService);
     }
 
     //    EVENT

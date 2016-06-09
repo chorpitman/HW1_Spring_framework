@@ -6,6 +6,7 @@ import com.epam.model.Ticket;
 import com.epam.model.User;
 import com.epam.service.EventService;
 import com.epam.service.TicketService;
+import com.epam.service.UserAccountService;
 import com.epam.service.UserService;
 
 import java.math.BigDecimal;
@@ -17,12 +18,14 @@ public class BookingFacadeImpl implements BookingFacade {
     private UserService userService;
     private EventService eventService;
     private TicketService ticketService;
+    private UserAccountService accountService;
 
     //constructor
-    public BookingFacadeImpl(UserService userService, EventService eventService, TicketService ticketService) {
+    public BookingFacadeImpl(UserService userService, EventService eventService, TicketService ticketService, UserAccountService accountService) {
         this.userService = userService;
         this.eventService = eventService;
         this.ticketService = ticketService;
+        this.accountService = accountService;
     }
 
     // START EVENT
