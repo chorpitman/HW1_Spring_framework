@@ -3,12 +3,9 @@ import com.epam.dao.TicketDao;
 import com.epam.dao.UserAccountDao;
 import com.epam.dao.UserDao;
 import com.epam.dao.impl.TicketDaoImpl;
-import com.epam.model.Event;
 import com.epam.model.User;
-import com.epam.model.impl.EventImpl;
 import com.epam.model.impl.UserImpl;
 import com.epam.service.UserService;
-import com.epam.service.impl.UserServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -24,11 +21,13 @@ public class App {
         } else {
             System.out.println("bean exist");
         }
-        DataSource dataSource = context.getBean("dataSource", DataSource.class);
-        System.out.println("Connection exist: " + dataSource.getConnection());
+        DataSource dataSource = context.getBean("dbInMemory", DataSource.class);
+        System.out.println(" --------->>> Connection exist <<<-------- " + dataSource.getConnection());
 
         UserDao userDao = context.getBean("userDao", UserDao.class);
+//        UserService userService = context.getBean("userService", UserService.class);
 
+        UserService userService = context.getBean("userService", UserService.class);
         //UPDATE is WORK
 //        User user = userDao.getUserById(1);
 //        user.setName("cube");
@@ -40,17 +39,21 @@ public class App {
 //        userDao.deleteUser(1);
 
         //CREATE
-//        UserService user = new UserServiceImpl();
-//        user.createUser(new UserImpl("govno", "otstoy"));
-//        user.setEmail("bianchi@i.ua");
+        User user1 = new UserImpl();
+        user1.setName("qwe");
+        user1.setEmail("asd");
+
+//        User user = userDao.createUser(user1);
 //        System.out.println(user);
 //        System.out.println(userDao.createUser(user));
 
 //        GET BY ID is WORK
-        System.out.println(userDao.getUserById(7));
+//        System.out.println(userDao.getUserById(1));
+//        System.out.println(userService.getUserById(user.getId()));
 
 //        GET BY EMAIL is WORK
 //        System.out.println(userDao.getUserByEmail("bianchi@i.ua"));
+        System.out.println(userService.getUserByEmail("John5@i.ua"));
 
 //        GET BY NAME
 //        System.out.println(userDao.getUsersByName("John", 1, 5));
@@ -85,7 +88,7 @@ public class App {
 
         UserAccountDao accountDao = context.getBean("accountDao", UserAccountDao.class);
         //get by Id - READ
-//        System.out.println(accountDao.getUserAccountbyId(4));
+//        System.out.println(accountDao.getUserAccountById(4));
 
         //delete
 //        accountDao.deleteUserAccount(4);
@@ -97,7 +100,7 @@ public class App {
 //        accountDao.createUserAccount(userAccount);
 
         //update
-//        UserAccount update = accountDao.getUserAccountbyId(5);
+//        UserAccount update = accountDao.getUserAccountById(5);
 //        update.setUserId(5);
 //        update.setAmount(new BigDecimal(100.99));
 //        accountDao.updateUserAccount(update);
@@ -124,4 +127,5 @@ public class App {
 //        event.setId(1);
 //        System.out.println(ticketDao.getBookedTickets(event, 6, 3));
     }
+
 }

@@ -6,21 +6,20 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class EventImpl implements Event {
-    private static long counterId = 0;
-
     private long id;
     private String title;
     private Date date;
     private BigDecimal ticketPrice;
 
     public EventImpl() {
-        this.id = ++counterId;
+
     }
 
-    public EventImpl(String title, Date date) {
-        this.id = ++counterId;
+    public EventImpl(long id, String title, Date date, BigDecimal ticketPrice) {
+        this.id = id;
         this.title = title;
         this.date = date;
+        this.ticketPrice = ticketPrice;
     }
 
     @Override
@@ -69,6 +68,7 @@ public class EventImpl implements Event {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", date=" + date +
+                ", ticketPrice=" + ticketPrice +
                 '}';
     }
 

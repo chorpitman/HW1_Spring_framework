@@ -1,18 +1,11 @@
-DROP DATABASE IF EXISTS booking_db;
-
-CREATE DATABASE IF NOT EXISTS booking_db
-  DEFAULT CHARACTER SET utf8;
-
-USE booking_db;
-
-CREATE TABLE User (
+CREATE TABLE IF NOT EXISTS User (
   id    INT         NOT NULL AUTO_INCREMENT,
   name  VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL UNIQUE,
   PRIMARY KEY (id)
 );
 
-CREATE TABLE Event (
+CREATE TABLE IF NOT EXISTS Event (
   id          INT          NOT NULL AUTO_INCREMENT,
   date        DATETIME     NOT NULL,
   title       VARCHAR(100) NOT NULL,
@@ -20,7 +13,7 @@ CREATE TABLE Event (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE Ticket (
+CREATE TABLE IF NOT EXISTS Ticket (
   id       INT         NOT NULL AUTO_INCREMENT,
   userId   INT         NOT NULL,
   eventId  INT         NOT NULL,
@@ -33,7 +26,7 @@ CREATE TABLE Ticket (
     ON DELETE CASCADE
 );
 
-CREATE TABLE UserAccount (
+CREATE TABLE IF NOT EXISTS UserAccount (
   id     INT           NOT NULL AUTO_INCREMENT,
   userId INT           NOT NULL,
   amount DECIMAL(9, 2) NOT NULL,

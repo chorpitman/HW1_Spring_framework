@@ -1,115 +1,123 @@
 package com.epam.service;
 
-import com.epam.config.ServiceTestConfig;
+import com.epam.dao.EventDao;
 import com.epam.model.Event;
 import com.epam.model.impl.EventImpl;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.Profile;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ServiceTestConfig.class})
-@ActiveProfiles("test")
+@Configuration
+@ImportResource("classpath:app-context.xml")
+@Profile("test")
+@RunWith(MockitoJUnitRunner.class)
 public class EventServiceTest {
+    @InjectMocks
+    private EventImpl event;
 
-    private Event event;
-
-    @Autowired
-    private EventService eventService;
+    @Mock
+    private EventDao mockEventDao;
 
     @Before
     public void init() {
-        event = new EventImpl("golf", new Date());
-    }
-
-    @After
-    public void cleanStorage() {
-        eventService.deleteEvent(event.getId());
+        event = new EventImpl(1L, "golf", new Date(), BigDecimal.TEN);
     }
 
     @Test
     public void testGetEventById() {
-        long evendID = event.getId();
-        assertNotSame(null, evendID);
+        when(mockEventDao.createEvent(event)).thenReturn(event);
+        Event createdEvent = mockEventDao.createEvent(event);
+        verify(mockEventDao).createEvent(event);
 
-        Event createdEvent = eventService.createEvent(event);
         assertNotSame(null, createdEvent.getId());
-        assertEquals(evendID, createdEvent.getId());
+        assertEquals(createdEvent.getTitle(), event.getTitle());
+        assertEquals(createdEvent.getTicketPrice(), event.getTicketPrice());
+
+        when(mockEventDao.getEventById(event.getId())).thenReturn(event);
+        Event receivedEvent = mockEventDao.getEventById(createdEvent.getId());
+        verify(mockEventDao).getEventById(event.getId());
+
+        assertEquals(event.getTitle(), receivedEvent.getTitle());
+        assertEquals(event.getTicketPrice(), receivedEvent.getTicketPrice());
+        assertEquals(event.getDate(), receivedEvent.getDate());
+        assertEquals(createdEvent, receivedEvent);
     }
 
     @Test
     public void testCreateEvent() {
-        Event createdEvent = eventService.createEvent(event);
-        assertNotNull(event);
+        when(mockEventDao.createEvent(event)).thenReturn(event);
+        Event createdEvent = mockEventDao.createEvent(event);
+        verify(mockEventDao).createEvent(event);
         assertNotNull(createdEvent);
         assertEquals(event, createdEvent);
-
-        assertNotSame(0, createdEvent.getId());
-
-        assertEquals(event.getId(), createdEvent.getId());
-        assertEquals(event.getTitle(), createdEvent.getTitle());
-        assertEquals(event.getDate(), createdEvent.getDate());
     }
 
     @Test
     public void testUpdateEvent() {
-        long eventId = event.getId();
-        eventService.createEvent(event);
-        Event createdEvent = eventService.getEventById(eventId);
-        String newTitle = "box";
-        Date newDate = new Date();
+        when(mockEventDao.createEvent(event)).thenReturn(event);
+        Event createdEvent = mockEventDao.createEvent(event);
+        verify(mockEventDao).createEvent(event);
 
-        createdEvent.setTitle(newTitle);
-        createdEvent.setDate(newDate);
+        String title = "box";
+        Date date = new Date();
 
-        eventService.updateEvent(createdEvent);
-        assertEquals(newTitle, event.getTitle());
-        assertEquals(newDate, event.getDate());
+        createdEvent.setDate(date);
+        createdEvent.setTitle(title);
+        createdEvent.setTicketPrice(BigDecimal.ONE);
+
+        when(mockEventDao.updateEvent(event)).thenReturn(event);
+        Event receivedEvent = mockEventDao.updateEvent(createdEvent);
+        assertEquals(createdEvent, receivedEvent);
     }
 
     @Test
     public void testDeleteEvent() {
-        long idEvent = event.getId();
-        eventService.createEvent(event);
-        eventService.deleteEvent(idEvent);
-        assertEquals(eventService.deleteEvent(0), false);
-        assertEquals(null, eventService.getEventById(idEvent));
+        long eventId = 2L;
+        when(mockEventDao.deleteEvent(eventId)).thenReturn(Boolean.TRUE);
+        assertEquals(true, mockEventDao.deleteEvent(eventId));
+        assertEquals(false, mockEventDao.deleteEvent(0));
+        assertEquals(false, mockEventDao.deleteEvent(-1));
+        assertEquals(false, mockEventDao.deleteEvent(100));
+        verify(mockEventDao).deleteEvent(eventId);
     }
 
     @Test
     public void testGetEventsByTitle() {
-        String title = event.getTitle();
-        Event createdEvent = eventService.createEvent(event);
+        when(mockEventDao.getEventsByTitle(event.getTitle(), 1, 1)).thenReturn(Arrays.asList(event));
+        List<Event> receivedUser = mockEventDao.getEventsByTitle(event.getTitle(), 1, 1);
+        verify(mockEventDao).getEventsByTitle(event.getTitle(), 1, 1);
 
-        assertEquals(title, createdEvent.getTitle());
-
-        assertEquals(Collections.emptyList(), eventService.getEventsByTitle(title, 0, 0));
-        assertEquals(Collections.emptyList(), eventService.getEventsByTitle(title, 1, 0));
-        assertEquals(Collections.emptyList(), eventService.getEventsByTitle(title, 0, 1));
-        assertEquals(Arrays.asList(event), eventService.getEventsByTitle(title, 1, 1));
+        assertNotNull(receivedUser);
+        assertEquals(event.getTitle(), receivedUser.get(0).getTitle());
+        assertTrue(receivedUser.containsAll(Arrays.asList(event)));
     }
 
     @Test
     public void testGetEventsForDay() {
-        Date date = event.getDate();
-        Event createdEvent = eventService.createEvent(event);
+        when(mockEventDao.getEventsForDay(event.getDate(), 1, 1)).thenReturn(Arrays.asList(event));
+        List<Event> receivedUser = mockEventDao.getEventsForDay(event.getDate(), 1, 1);
+        verify(mockEventDao).getEventsForDay(event.getDate(), 1, 1);
 
-        assertEquals(date, createdEvent.getDate());
-        assertEquals(Collections.emptyList(), eventService.getEventsForDay(date, 0, 0));
-        assertEquals(Collections.emptyList(), eventService.getEventsForDay(date, 1, 0));
-        assertEquals(Collections.emptyList(), eventService.getEventsForDay(date, 0, 1));
-        assertEquals(Arrays.asList(event), eventService.getEventsForDay(date, 1, 1));
+        assertNotNull(receivedUser);
+        assertEquals(event.getDate(), receivedUser.get(0).getDate());
+        assertTrue(receivedUser.containsAll(Arrays.asList(event)));
     }
 }

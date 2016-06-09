@@ -1,5 +1,4 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns:jdbc="http://www.springframework.org/schema/jdbc"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -12,7 +11,7 @@
     <url>http://maven.apache.org</url>
 
     <dependencies>
-        <!--Spring-->
+        <!--SPRING START-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -25,13 +24,13 @@
             <version>${org.springframework-version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!--Spring JDBC Support-->
+        <!--JDBC Support-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>4.2.1.RELEASE</version>
+            <version>${org.springframework-version}</version>
         </dependency>
+        <!--SPRING END-->
 
         <!-- Test -->
         <dependency>
@@ -69,13 +68,25 @@
             <version>1.4.189</version>
         </dependency>
 
+        <!-- http://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.9</version>
+        </dependency>
     </dependencies>
+
     <!--Spring version-->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.springframework-version>4.2.5.RELEASE</org.springframework-version>
+        <!--sonar properties-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.junit.reportsPath>target/surefire-reports</sonar.junit.reportsPath>
+        <sonar.cobertura.reportPath>target/cobertura/cobertura.ser</sonar.cobertura.reportPath>
     </properties>
 
+    <!--Build version-->
     <build>
         <plugins>
             <plugin>
@@ -89,5 +100,16 @@
             </plugin>
         </plugins>
     </build>
+
+    <!--reports for sonar-->
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.6</version>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>

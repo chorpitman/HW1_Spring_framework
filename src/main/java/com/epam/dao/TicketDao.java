@@ -15,4 +15,6 @@ public interface TicketDao {
     List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum);
 
     boolean cancelTicket(long ticketId);
+
+    Ticket bookedTicketById(long ticketId);
 }

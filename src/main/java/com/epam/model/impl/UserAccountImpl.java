@@ -5,18 +5,15 @@ import com.epam.model.UserAccount;
 import java.math.BigDecimal;
 
 public class UserAccountImpl implements UserAccount {
-    private static long counterId = 0;
-
     private long id;
     private long userId;
     private BigDecimal amount;
 
     public UserAccountImpl() {
-        this.id = ++counterId;
     }
 
-    public UserAccountImpl(long userId, BigDecimal amount) {
-        this.id = ++counterId;
+    public UserAccountImpl(long accountId, long userId, BigDecimal amount) {
+        this.id = accountId;
         this.userId = userId;
         this.amount = amount;
     }
@@ -60,9 +57,8 @@ public class UserAccountImpl implements UserAccount {
 
         if (id != that.id) return false;
         if (userId != that.userId) return false;
-        if (amount != null ? !amount.equals(that.amount) : that.amount != null) return false;
+        return amount != null ? amount.equals(that.amount) : that.amount == null;
 
-        return true;
     }
 
     @Override
