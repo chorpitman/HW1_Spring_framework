@@ -17,7 +17,7 @@ public class EventDaoImpl implements EventDao {
     private static Logger log = Logger.getLogger(EventDaoImpl.class.getName());
 
     private static final String CREATE_EVENT = "INSERT INTO event (date, title, ticketPrice) " +
-            "value (:date, :title, :ticketPrice)";
+            "VALUES (:date, :title, :ticketPrice)";
     private static final String GET_EVENT_BY_ID = "SELECT * FROM event WHERE id = :id";
     private static final String UDATE_EVENT = "UPDATE event SET " +
             "date = :date, title = :title, ticketPrice = :ticketPrice WHERE id = :id";

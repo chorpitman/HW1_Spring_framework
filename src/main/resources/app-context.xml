@@ -3,12 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
-
-
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context-4.2.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/jdbc
+       http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
     <context:annotation-config/>
     <context:component-scan base-package="com.epam"/>
@@ -36,22 +37,46 @@
         <constructor-arg ref="dbInMemory"/>
     </bean>
 
-    <!--DB INITIALIZE-->
+    <!--<bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">-->
+        <!--<property name="locations">-->
+            <!--<list>-->
+                <!--<value>classpath:db.properties</value>-->
+                <!--<value>classpath:db_test.properties</value>-->
+            <!--</list>-->
+        <!--</property>-->
+        <!--<property name="ignoreResourceNotFound" value="false"/>-->
+    <!--</bean>-->
+
+    <!--DB IN MEMORY INITIALIZE-->
     <jdbc:initialize-database data-source="dbInMemory">
-    <jdbc:script location="classpath:ddl-InMemory.sql"/>
-    <jdbc:script location="classpath:dml-inMemory.sql"/>
+        <jdbc:script location="classpath:ddl_InMem.sql"/>
     </jdbc:initialize-database>
 
-    <!--Storage-->
-    <bean id="entityStorage" class="com.epam.storage.EntityStorage"/>
+    <!--DB LOCAL INITIALIZE-->
+    <!--<jdbc:initialize-database data-source="dataSource">-->
+        <!--<jdbc:script location="classpath:ddl.sql"/>-->
+        <!--<jdbc:script location="classpath:dml.sql"/>-->
+    <!--</jdbc:initialize-database>-->
+
+    <!--Storage in MAP-->
+    <!--<bean id="entityStorage" class="com.epam.storage.EntityStorage"/>-->
 
     <!-- DAO -->
-    <bean id="userDao" class="com.epam.dao.impl.UserDaoImpl" autowire="byType"/>
-    <!--<property name="jdbcTemplate" ref="nameJdbcTemplate"/>-->
-    <bean id="eventDao" class="com.epam.dao.impl.EventDaoImpl" autowire="byType"/>
-    <bean id="ticketDao" class="com.epam.dao.impl.TicketDaoImpl" autowire="byType"/>
-    <bean id="accountDao" class="com.epam.dao.impl.UserAccountDaoImpl" autowire="byType"/>
+    <bean id="userDao" class="com.epam.dao.impl.UserDaoImpl">
+        <property name="jdbcTemplate" ref="nameJdbcTemplate"/>
+    </bean>
 
+    <bean id="eventDao" class="com.epam.dao.impl.EventDaoImpl">
+        <property name="jdbcTemplate" ref="nameJdbcTemplate"/>
+    </bean>
+
+    <bean id="ticketDao" class="com.epam.dao.impl.TicketDaoImpl" autowire="byType">
+        <property name="jdbcTemplate" ref="nameJdbcTemplate"/>
+    </bean>
+
+    <bean id="accountDao" class="com.epam.dao.impl.UserAccountDaoImpl" autowire="byType">
+        <property name="jdbcTemplate" ref="nameJdbcTemplate"/>
+    </bean>
 
     <!-- SERVICES: setter injection -->
     <bean id="userService" class="com.epam.service.impl.UserServiceImpl">

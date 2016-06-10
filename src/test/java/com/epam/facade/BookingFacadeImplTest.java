@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -121,7 +122,7 @@ public class BookingFacadeImplTest {
 
     @Test
     public void testUpdateEvent() {
-        Event eventUpdt = new EventImpl(event.getTitle() + " with ball", new Date());
+        Event eventUpdt = new EventImpl(event.getTitle() + " with ball", new Date(), new BigDecimal(501));
 
         when(mockEventService.createEvent(event)).thenReturn(event);
 

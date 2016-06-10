@@ -17,7 +17,10 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {
-        return ticketDao.bookTicket(userId, eventId, place, category);
+        if (userId <= 0 || eventId <= 0 || place <= 0 || category == null) {
+            return null;
+        }
+            return ticketDao.bookTicket(userId, eventId, place, category);
     }
 
     @Override

@@ -17,10 +17,11 @@ public class EventImpl implements Event {
         this.id = ++counterId;
     }
 
-    public EventImpl(String title, Date date) {
+    public EventImpl(String title, Date date, BigDecimal ticketPrice) {
         this.id = ++counterId;
         this.title = title;
         this.date = date;
+        this.ticketPrice = ticketPrice;
     }
 
     @Override

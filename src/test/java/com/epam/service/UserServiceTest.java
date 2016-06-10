@@ -3,13 +3,14 @@ package com.epam.service;
 import com.epam.config.ServiceTestConfig;
 import com.epam.model.User;
 import com.epam.model.impl.UserImpl;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
@@ -21,6 +22,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ServiceTestConfig.class})
 @ActiveProfiles("test")
+@Sql(scripts = {"classpath:drop.sql", "classpath:ddl_InMem.sql", "classpath:dml_InMem.sql"})
 public class UserServiceTest {
     private User user;
 
@@ -30,11 +32,6 @@ public class UserServiceTest {
     @Before
     public void init() {
         user = new UserImpl("Dima", "Dima@i.ua");
-    }
-
-    @After
-    public void cleanStorage() {
-        userService.deleteUser(user.getId());
     }
 
     @Test
@@ -54,7 +51,15 @@ public class UserServiceTest {
 
         User createdUser = userService.createUser(user);
         assertNotSame(null, createdUser.getId());
-        assertEquals(userId, createdUser.getId());
+
+        assertEquals(createdUser.getName(), user.getName());
+        assertEquals(createdUser.getEmail(), user.getEmail());
+
+        User receivedUser = userService.getUserById(createdUser.getId());
+
+        assertEquals(user.getName(), receivedUser.getName());
+        assertEquals(user.getEmail(), receivedUser.getEmail());
+        assertEquals(createdUser, receivedUser);
     }
 
     @Test
@@ -83,22 +88,28 @@ public class UserServiceTest {
 
     @Test
     public void testDeleteUser() {
-        long idUser = user.getId();
-        userService.createUser(user);
-        userService.deleteUser(user.getId());
-        assertEquals(null, userService.getUserById(idUser));
+        User receivedUser = userService.createUser(user);
+        userService.deleteUser(receivedUser.getId());
+        assertEquals(userService.deleteUser(receivedUser.getId()), true);
+    }
+
+    @Test(expected = DataAccessException.class)
+    public void testDeleteUserException() {
+        User receivedUser = userService.createUser(user);
+        userService.deleteUser(receivedUser.getId());
+        assertEquals(receivedUser, userService.getUserById(receivedUser.getId()));
     }
 
     @Test
     public void testGetUsersByName() {
-        userService.createUser(user);
+        User createdUser = userService.createUser(user);
         //test pagination
         assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 0, 1));
         assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 0, 0));
         assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 1, 0));
 
         //check result of logic
-        assertEquals(Arrays.asList(user), userService.getUsersByName(user.getName(), 1, 1));
+        assertEquals(Arrays.asList(createdUser), userService.getUsersByName(user.getName(), 1, 1));
 
         //test logic
         List<User> resultUserList = userService.getUsersByName(user.getName(), 1, 1);
@@ -106,6 +117,6 @@ public class UserServiceTest {
 
         //check name
         User user = resultUserList.get(0);
-        assertEquals(user.getName(), user.getName());
+        assertEquals(createdUser.getName(), user.getName());
     }
 }

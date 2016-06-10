@@ -3,15 +3,12 @@ import com.epam.dao.TicketDao;
 import com.epam.dao.UserAccountDao;
 import com.epam.dao.UserDao;
 import com.epam.dao.impl.TicketDaoImpl;
-import com.epam.model.Event;
 import com.epam.model.User;
-import com.epam.model.impl.EventImpl;
 import com.epam.model.impl.UserImpl;
 import com.epam.service.UserService;
 import com.epam.service.impl.UserServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -31,6 +28,7 @@ public class App {
         UserDao userDao = context.getBean("userDao", UserDao.class);
 //        UserService userService = context.getBean("userService", UserService.class);
 
+        UserService userService = context.getBean("userService", UserService.class);
         //UPDATE is WORK
 //        User user = userDao.getUserById(1);
 //        user.setName("cube");
@@ -42,21 +40,21 @@ public class App {
 //        userDao.deleteUser(1);
 
         //CREATE
-        UserService user = new UserServiceImpl();
         User user1 = new UserImpl();
-        user1.setName("govno");
-        user1.setEmail("otstoy");
+        user1.setName("qwe");
+        user1.setEmail("asd");
 
-        User user2 = user.createUser(user1);
-        System.out.println(user2);
+//        User user = userDao.createUser(user1);
+//        System.out.println(user);
 //        System.out.println(userDao.createUser(user));
 
 //        GET BY ID is WORK
 //        System.out.println(userDao.getUserById(1));
-//        System.out.println(userService.getUserById(1));
+//        System.out.println(userService.getUserById(user.getId()));
 
 //        GET BY EMAIL is WORK
 //        System.out.println(userDao.getUserByEmail("bianchi@i.ua"));
+        System.out.println(userService.getUserByEmail("John5@i.ua"));
 
 //        GET BY NAME
 //        System.out.println(userDao.getUsersByName("John", 1, 5));

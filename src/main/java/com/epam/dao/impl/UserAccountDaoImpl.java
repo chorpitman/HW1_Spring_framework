@@ -19,7 +19,7 @@ public class UserAccountDaoImpl implements UserAccountDao {
     private static Logger log = Logger.getLogger(EventDaoImpl.class.getName());
 
     private static final String CREATE_USER_ACCOUNT = "INSERT INTO UserAccount (userId, amount) " +
-            "VALUE (:userId, :amount)";
+            "VALUES (:userId, :amount)";
     private static final String GET_USER_ACCOUNT = "SELECT * FROM UserAccount WHERE id = :id";
     private static final String UPDATE_USER_ACCOUNT = "UPDATE UserAccount SET userId = :userId, amount = :amount WHERE id = :id";
     private static final String DELETE_USER_ACCOUNT = "DELETE FROM UserAccount WHERE id =:id";

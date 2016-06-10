@@ -4,6 +4,7 @@ import com.epam.dao.UserDao;
 import com.epam.model.User;
 import com.epam.model.impl.UserImpl;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -19,7 +20,7 @@ import java.util.Map;
 public class UserDaoImpl implements UserDao {
     private static Logger log = Logger.getLogger(UserDaoImpl.class.getName());
 
-    private static final String CREATE_USER = "INSERT INTO user (name, email) VALUE(:name, :email)";
+    private static final String CREATE_USER = "INSERT INTO user (name, email) VALUES (:name, :email)";
     private static final String DELETE_USER = "DELETE FROM user WHERE id =:id";
     private static final String UPDATE_USER = "UPDATE user SET name = :name, email = :email WHERE id = :id";
     private static final String GET_USER_BY_ID = "SELECT * FROM user WHERE id = :id";

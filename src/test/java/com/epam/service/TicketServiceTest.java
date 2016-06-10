@@ -14,8 +14,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -27,6 +29,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ServiceTestConfig.class})
 @ActiveProfiles("test")
+@Sql(scripts = {"classpath:drop.sql", "classpath:ddl_InMem.sql", "classpath:dml_InMem.sql"})
 public class TicketServiceTest {
 
     private User user;
@@ -47,18 +50,18 @@ public class TicketServiceTest {
         user = new UserImpl("Joe", "Joe@gmail.com");
         userService.createUser(user);
 
-        event = new EventImpl("baseball", new Date());
+        event = new EventImpl("baseball", new Date(), new BigDecimal("789"));
         eventService.createEvent(event);
 
         ticket = new TicketImpl(Ticket.Category.PREMIUM, event.getId(), user.getId(), 666);
     }
 
-    @After
-    public void cleanStorage() {
-        ticketService.cancelTicket(ticket.getId());
-    }
+//    @After
+//    public void cleanStorage() {
+//        ticketService.cancelTicket(ticket.getId());
+//    }
 
-    @Test()
+    @Test
     public void testBookTicket() {
         Ticket bokedTicket = ticketService.bookTicket(user.getId(), event.getId(), ticket.getPlace(), ticket.getCategory());
 

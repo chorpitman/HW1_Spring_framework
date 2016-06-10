@@ -23,7 +23,7 @@ public class TicketDaoImpl implements TicketDao {
     private static Logger logger = Logger.getLogger(TicketDaoImpl.class.getName());
 
     private final static String BOOKED_TICKETS_BY_ID = "SELECT * FROM Ticket WHERE id = :id";
-    private final static String BOOK_TICKET = "INSERT INTO Ticket (userId, eventId, place, category) VALUE (:userId, :eventId, :place, :category)";
+    private final static String BOOK_TICKET = "INSERT INTO Ticket (userId, eventId, place, category) VALUES (:userId, :eventId, :place, :category)";
     private final static String BOOKED_TICKETS_BY_USER = "SELECT * FROM Ticket WHERE userId = :userId";
     private final static String BOOKED_TICKETS_BY_EVENT = "SELECT * FROM Ticket WHERE eventId = :eventId";
     private final static String CANCEL_TICKET = "DELETE FROM Ticket WHERE id =:id";

@@ -1,5 +1,4 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns:jdbc="http://www.springframework.org/schema/jdbc"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -12,26 +11,25 @@
     <url>http://maven.apache.org</url>
 
     <dependencies>
-        <!--Spring-->
+        <!--SPRING START-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${org.springframework-version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${org.springframework-version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!--Spring JDBC Support-->
+        <!--JDBC Support-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>4.2.1.RELEASE</version>
+            <version>${org.springframework-version}</version>
         </dependency>
+        <!--SPRING END-->
 
         <!-- Test -->
         <dependency>
@@ -70,12 +68,14 @@
         </dependency>
 
     </dependencies>
+
     <!--Spring version-->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.springframework-version>4.2.5.RELEASE</org.springframework-version>
     </properties>
 
+    <!--Build version-->
     <build>
         <plugins>
             <plugin>

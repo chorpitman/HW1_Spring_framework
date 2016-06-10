@@ -4,6 +4,7 @@ import com.epam.dao.EventDao;
 import com.epam.model.Event;
 import com.epam.service.EventService;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -21,11 +22,17 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
+        if (pageSize <= 0 || pageNum <= 0) {
+            return Collections.emptyList();
+        }
         return eventDao.getEventsByTitle(title, pageSize, pageNum);
     }
 
     @Override
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
+        if (pageSize <= 0 || pageNum <= 0) {
+            return Collections.emptyList();
+        }
         return eventDao.getEventsForDay(day, pageSize, pageNum);
     }
 
