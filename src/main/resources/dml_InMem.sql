@@ -15,6 +15,10 @@ insert into Ticket (userId, eventId, place, category) values (1, 1, 10, 'STANDAR
 insert into Ticket (userId, eventId, place, category) values (2, 1, 20, 'PREMIUM');
 insert into Ticket (userId, eventId, place, category) values (3, 2, 30, 'BAR');
 
-insert into UserAccount (userId, amount) values (2, 50);
-insert into UserAccount (userId, amount) values (1, 300);
-insert into UserAccount (userId, amount) values (7, 500);
+insert into UserAccount (userId, amount) values (1, 50);
+insert into UserAccount (userId, amount) values (2, 0);
+insert into UserAccount (userId, amount) values (3, 0);
+insert into UserAccount (userId, amount) values (4, 10);
+insert into UserAccount (userId, amount) values (5, 5);
+insert into UserAccount (userId, amount) values (6, 0);
+insert into UserAccount (userId, amount) values (7, 0);

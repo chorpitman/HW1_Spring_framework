@@ -89,7 +89,7 @@ public class App {
 
         UserAccountDao accountDao = context.getBean("accountDao", UserAccountDao.class);
         //get by Id - READ
-//        System.out.println(accountDao.getUserAccountbyId(4));
+//        System.out.println(accountDao.getUserAccountById(4));
 
         //delete
 //        accountDao.deleteUserAccount(4);
@@ -101,7 +101,7 @@ public class App {
 //        accountDao.createUserAccount(userAccount);
 
         //update
-//        UserAccount update = accountDao.getUserAccountbyId(5);
+//        UserAccount update = accountDao.getUserAccountById(5);
 //        update.setUserId(5);
 //        update.setAmount(new BigDecimal(100.99));
 //        accountDao.updateUserAccount(update);

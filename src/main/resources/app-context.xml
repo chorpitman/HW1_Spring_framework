@@ -58,9 +58,6 @@
         <!--<jdbc:script location="classpath:dml.sql"/>-->
     <!--</jdbc:initialize-database>-->
 
-    <!--Storage in MAP-->
-    <!--<bean id="entityStorage" class="com.epam.storage.EntityStorage"/>-->
-
     <!-- DAO -->
     <bean id="userDao" class="com.epam.dao.impl.UserDaoImpl">
         <property name="jdbcTemplate" ref="nameJdbcTemplate"/>
@@ -78,6 +75,10 @@
         <property name="jdbcTemplate" ref="nameJdbcTemplate"/>
     </bean>
 
+
+
+
+
     <!-- SERVICES: setter injection -->
     <bean id="userService" class="com.epam.service.impl.UserServiceImpl">
         <property name="userDao" ref="userDao"/>
@@ -90,6 +91,8 @@
 
     <bean id="ticketService" class="com.epam.service.impl.TicketServiceImpl">
         <property name="ticketDao" ref="ticketDao"/>
+        <property name="userAccountDao" ref="accountDao"/>
+        <property name="eventDao" ref="eventDao"/>
     </bean>
 
     <bean id="userAccountService" class="com.epam.service.impl.UserAccountServiceImpl">
