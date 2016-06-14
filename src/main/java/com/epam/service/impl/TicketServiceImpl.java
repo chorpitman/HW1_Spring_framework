@@ -9,6 +9,7 @@ import com.epam.model.User;
 import com.epam.model.UserAccount;
 import com.epam.service.TicketService;
 
+import java.util.Collections;
 import java.util.List;
 
 public class TicketServiceImpl implements TicketService {
@@ -34,7 +35,7 @@ public class TicketServiceImpl implements TicketService {
             return null;
         }
 
-        //check for existing ticket
+        //check for existing ticket todo think about this methods and about approach which can test Ticketservic --> bookTicket
 //        if (ticketDao.bookTicket(userId, eventId, place, category) != null) {
 //            throw new IllegalArgumentException("ticket already booked");
 //        }
@@ -54,7 +55,7 @@ public class TicketServiceImpl implements TicketService {
 
         //withdraw money from, user account
         userAccount.setAmount(userAccount.getAmount().subtract(event.getTicketPrice()));
-        System.out.println("BALANCE AFTER BUYING TICKET -->>>" +userAccount.getAmount());
+        System.out.println("BALANCE AFTER BUYING TICKET -->>>" + userAccount.getAmount());
         userAccountDao.updateUserAccount(userAccount);
 
         return ticketDao.bookTicket(userId, eventId, place, category);
@@ -62,16 +63,27 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
+        if (pageSize <= 0 || pageNum <= 0) {
+            return Collections.emptyList();
+        }
         return ticketDao.getBookedTickets(user, pageSize, pageNum);
     }
 
     @Override
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
+        if (pageSize <= 0 || pageNum <= 0) {
+            return Collections.emptyList();
+        }
         return ticketDao.getBookedTickets(event, pageSize, pageNum);
     }
 
     @Override
     public boolean cancelTicket(long ticketId) {
         return ticketDao.cancelTicket(ticketId);
+    }
+
+    @Override
+    public Ticket bookedTicketById(long ticketId) {
+        return ticketDao.bookedTicketById(ticketId);
     }
 }

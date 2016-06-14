@@ -38,13 +38,13 @@
     </bean>
 
     <!--<bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">-->
-        <!--<property name="locations">-->
-            <!--<list>-->
-                <!--<value>classpath:db.properties</value>-->
-                <!--<value>classpath:db_test.properties</value>-->
-            <!--</list>-->
-        <!--</property>-->
-        <!--<property name="ignoreResourceNotFound" value="false"/>-->
+    <!--<property name="locations">-->
+    <!--<list>-->
+    <!--<value>classpath:db.properties</value>-->
+    <!--<value>classpath:db_test.properties</value>-->
+    <!--</list>-->
+    <!--</property>-->
+    <!--<property name="ignoreResourceNotFound" value="false"/>-->
     <!--</bean>-->
 
     <!--DB IN MEMORY INITIALIZE-->
@@ -54,8 +54,8 @@
 
     <!--DB LOCAL INITIALIZE-->
     <!--<jdbc:initialize-database data-source="dataSource">-->
-        <!--<jdbc:script location="classpath:ddl.sql"/>-->
-        <!--<jdbc:script location="classpath:dml.sql"/>-->
+    <!--<jdbc:script location="classpath:ddl.sql"/>-->
+    <!--<jdbc:script location="classpath:dml.sql"/>-->
     <!--</jdbc:initialize-database>-->
 
     <!-- DAO -->
@@ -74,9 +74,6 @@
     <bean id="accountDao" class="com.epam.dao.impl.UserAccountDaoImpl" autowire="byType">
         <property name="jdbcTemplate" ref="nameJdbcTemplate"/>
     </bean>
-
-
-
 
 
     <!-- SERVICES: setter injection -->

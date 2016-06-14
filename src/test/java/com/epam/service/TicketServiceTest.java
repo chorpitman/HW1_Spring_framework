@@ -4,7 +4,6 @@ import com.epam.config.ServiceTestConfig;
 import com.epam.model.Event;
 import com.epam.model.Ticket;
 import com.epam.model.User;
-import com.epam.model.UserAccount;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +27,6 @@ import static org.junit.Assert.assertNotNull;
 @Sql(scripts = {"classpath:drop.sql", "classpath:ddl_InMem.sql", "classpath:dml_InMem.sql"})
 public class TicketServiceTest {
 
-    private User user;
-    private Event event;
-    private Ticket ticket;
-    private UserAccount userAccount;
-
     @Autowired
     private TicketService ticketService;
 
@@ -45,18 +39,6 @@ public class TicketServiceTest {
     @Autowired
     private UserAccountService userAccountService;
 
-//    @Before
-//    public void init() {
-//        user = new UserImpl("Travolta", "travolta@gmail.com");
-//        userService.createUser(user);
-//
-//        event = new EventImpl("baseball", new Date(), new BigDecimal("100"));
-//        eventService.createEvent(event);
-//
-//        ticket = new TicketImpl(Ticket.Category.PREMIUM, event.getId(), user.getId(), 666);
-//    }
-
-
     @Test(expected = IllegalArgumentException.class)
     public void testBookTicketException() {
         //not enough money on balance
@@ -66,39 +48,61 @@ public class TicketServiceTest {
     @Test()
     public void testBookTicket() {
         userAccountService.rechargeAccount(2, new BigDecimal(201));
-        Ticket bokedTicket = ticketService.bookTicket(2, 2, 20, Ticket.Category.BAR);
-        assertNotNull(bokedTicket);
+        Ticket bookedTicket = ticketService.bookTicket(2, 2, 20, Ticket.Category.BAR);
+        assertNotNull(bookedTicket);
 
         Event receivedEvent = eventService.getEventById(2);
+        assertEquals(new BigDecimal(201), receivedEvent.getTicketPrice());
     }
 
     @Test
     public void testGetBookedByUserTickets() {
-        Ticket bookedTicket = ticketService.bookTicket(user.getId(), event.getId(), ticket.getPlace(), ticket.getCategory());
-        List<Ticket> bookedTickets = ticketService.getBookedTickets(user, 1, 1);
+        User receivedUser = userService.getUserById(1);
+        List<Ticket> bookedTickets = ticketService.getBookedTickets(receivedUser, 1, 1);
+        assertEquals(Arrays.asList(ticketService.bookedTicketById(1)), bookedTickets);
 
-        assertEquals(Arrays.asList(bookedTicket), bookedTickets);
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 0, 0));
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 1, 0));
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 0, 1));
+        List<Ticket> bookedTickets1 = ticketService.getBookedTickets(receivedUser, 1, 2);
+        assertEquals(Arrays.asList(ticketService.bookedTicketById(4)), bookedTickets1);
+
+        List<Ticket> bookedTickets2 = ticketService.getBookedTickets(receivedUser, 2, 1);
+        assertEquals(Arrays.asList(ticketService.bookedTicketById(1), ticketService.bookedTicketById(4)), bookedTickets2);
+    }
+
+    @Test
+    public void testGetBookedByUserTicketsWithWrongPagination() {
+        User receivedUser = userService.getUserById(1);
+        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(receivedUser, 0, 0));
+        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(receivedUser, 1, 0));
+        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(receivedUser, 0, 1));
+
+        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(receivedUser, -1, 1));
     }
 
     @Test
     public void testGetBookedByEventTickets() {
-        Ticket bookedTicket = ticketService.bookTicket(user.getId(), event.getId(), ticket.getPlace(), ticket.getCategory());
-        List<Ticket> bookedTickets = ticketService.getBookedTickets(event, 1, 1);
+        Event bookedEvent = eventService.getEventById(1);
 
-        assertEquals(Arrays.asList(bookedTicket), bookedTickets);
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 0, 0));
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 1, 0));
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(user, 1, 0));
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(event, 0, 1));
+        List<Ticket> bookedTickets = ticketService.getBookedTickets(bookedEvent, 2, 1);
+        assertEquals(bookedTickets, Arrays.asList(ticketService.bookedTicketById(1), ticketService.bookedTicketById(2)));
+
+        List<Ticket> bookedTickets1 = ticketService.getBookedTickets(bookedEvent, 1, 1);
+        assertEquals(Arrays.asList(ticketService.bookedTicketById(1)), bookedTickets1);
+
+        List<Ticket> bookedTickets2 = ticketService.getBookedTickets(bookedEvent, 1, 2);
+        assertEquals(Arrays.asList(ticketService.bookedTicketById(2)), bookedTickets2);
     }
 
     @Test
     public void testCancelTicket() {
-        long ticketID = ticket.getId();
-        ticketService.bookTicket(user.getId(), event.getId(), ticket.getPlace(), ticket.getCategory());
-        ticketService.cancelTicket(ticketID);
+        assertEquals(true, ticketService.cancelTicket(1));
+        assertEquals(true, ticketService.cancelTicket(2));
+        assertEquals(true, ticketService.cancelTicket(3));
+    }
+
+    @Test
+    public void testCancelTicketWithWrongId() {
+        assertEquals(false, ticketService.cancelTicket(100));
+        assertEquals(false, ticketService.cancelTicket(0));
+        assertEquals(false, ticketService.cancelTicket(-1));
     }
 }

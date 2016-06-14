@@ -4,7 +4,6 @@ import com.epam.dao.UserDao;
 import com.epam.model.User;
 import com.epam.model.impl.UserImpl;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -64,8 +63,10 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean deleteUser(long userId) {
         log.debug("deleteUser - " + userId);
-        jdbcTemplate.update(DELETE_USER, Collections.singletonMap("id", userId));
-        return true;
+        if (jdbcTemplate.update(DELETE_USER, Collections.singletonMap("id", userId)) > 0) {
+            return true;
+        }
+        return false;
     }
 
     @Override

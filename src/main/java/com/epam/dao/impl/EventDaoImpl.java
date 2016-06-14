@@ -83,8 +83,10 @@ public class EventDaoImpl implements EventDao {
     @Override
     public boolean deleteEvent(long eventId) {
         log.debug("deleteEvent:" + eventId);
-        jdbcTemplate.update(DELETE_EVENT, Collections.singletonMap("id", eventId));
-        return true;
+        if (jdbcTemplate.update(DELETE_EVENT, Collections.singletonMap("id", eventId)) > 0) {
+            return true;
+        }
+        return false;
     }
 
     private static final class EventMapper implements RowMapper<Event> {

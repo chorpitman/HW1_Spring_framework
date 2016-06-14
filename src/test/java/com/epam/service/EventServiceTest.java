@@ -37,16 +37,11 @@ public class EventServiceTest {
         event = new EventImpl("golf", new Date(2016, 06, 10), new BigDecimal(1500));
     }
 
-//    @After
-//    public void cleanStorage() {
-//        eventService.deleteEvent(event.getId());
-//    }
-
     @Test
     public void testGetEventById() {
         Event createdEvent = eventService.createEvent(event);
-        Event recievedEvent = eventService.getEventById(createdEvent.getId());
-        assertEquals(createdEvent.getId(), recievedEvent.getId());
+        Event receivedEvent = eventService.getEventById(createdEvent.getId());
+        assertEquals(createdEvent.getId(), receivedEvent.getId());
     }
 
     @Test
@@ -55,10 +50,10 @@ public class EventServiceTest {
         assertNotNull(event);
         assertNotNull(createdEvent);
 
-        Event recievedEvent = eventService.getEventById(createdEvent.getId());
-        assertEquals(recievedEvent.getDate(), createdEvent.getDate());
-        assertEquals(recievedEvent.getTitle(), createdEvent.getTitle());
-        assertEquals(recievedEvent.getTicketPrice(), createdEvent.getTicketPrice());
+        Event receivedEvent = eventService.getEventById(createdEvent.getId());
+        assertEquals(receivedEvent.getDate(), createdEvent.getDate());
+        assertEquals(receivedEvent.getTitle(), createdEvent.getTitle());
+        assertEquals(receivedEvent.getTicketPrice(), createdEvent.getTicketPrice());
     }
 
     @Test
@@ -71,15 +66,21 @@ public class EventServiceTest {
         createdEvent.setTitle(newTitle);
         createdEvent.setTicketPrice(new BigDecimal("987"));
 
-        Event recievedEvent = eventService.updateEvent(createdEvent);
-        assertEquals(createdEvent, recievedEvent);
+        Event receivedEvent = eventService.updateEvent(createdEvent);
+        assertEquals(createdEvent, receivedEvent);
     }
 
     @Test
     public void testDeleteEvent() {
         Event createdEvent = eventService.createEvent(event);
-        eventService.deleteEvent(createdEvent.getId());
         assertEquals(true, eventService.deleteEvent(createdEvent.getId()));
+    }
+
+    @Test
+    public void testDeleteEventWithWrongId() {
+        assertEquals(false, eventService.deleteEvent(0));
+        assertEquals(false, eventService.deleteEvent(-1));
+        assertEquals(false, eventService.deleteEvent(100));
     }
 
     @Test

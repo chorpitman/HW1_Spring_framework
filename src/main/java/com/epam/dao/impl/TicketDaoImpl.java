@@ -5,7 +5,6 @@ import com.epam.model.Event;
 import com.epam.model.Ticket;
 import com.epam.model.User;
 import com.epam.model.impl.TicketImpl;
-import com.epam.storage.EntityStorage;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -32,6 +31,12 @@ public class TicketDaoImpl implements TicketDao {
 
     public void setJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public Ticket bookedTicketById(long ticketId) {
+        logger.debug("bookedTicketById " + " ticketId:" + ticketId);
+        return jdbcTemplate.queryForObject(BOOKED_TICKETS_BY_ID, Collections.singletonMap("id", ticketId), new TicketMapper());
     }
 
     @Override
@@ -69,8 +74,10 @@ public class TicketDaoImpl implements TicketDao {
     @Override
     public boolean cancelTicket(long ticketId) {
         logger.debug("cancelTicket " + " ticketId");
-        jdbcTemplate.update(CANCEL_TICKET, Collections.singletonMap("id", ticketId));
-        return true;
+        if (jdbcTemplate.update(CANCEL_TICKET, Collections.singletonMap("id", ticketId)) > 0) {
+            return true;
+        }
+        return false;
     }
 
     private static final class TicketMapper implements RowMapper<Ticket> {

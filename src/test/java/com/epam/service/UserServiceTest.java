@@ -46,9 +46,6 @@ public class UserServiceTest {
 
     @Test
     public void testGetUserById() {
-        long userId = user.getId();
-        assertNotNull(userId);
-
         User createdUser = userService.createUser(user);
         assertNotSame(null, createdUser.getId());
 
@@ -70,13 +67,13 @@ public class UserServiceTest {
         User createdUser = userService.createUser(user);
         assertNotSame(null, createdUser.getEmail());
         assertEquals(userEmail, createdUser.getEmail());
-
     }
 
     @Test
     public void testUpdateUser() {
         final String name = "Jack";
         final String email = "Jack@i.ua";
+
         userService.createUser(user);
         user.setName(name);
         user.setEmail(email);
@@ -90,7 +87,14 @@ public class UserServiceTest {
     public void testDeleteUser() {
         User receivedUser = userService.createUser(user);
         userService.deleteUser(receivedUser.getId());
-        assertEquals(userService.deleteUser(receivedUser.getId()), true);
+        assertEquals(false, userService.deleteUser(receivedUser.getId()));
+    }
+
+    @Test
+    public void testDeleteUserWithWrongId() {
+        assertEquals(false, userService.deleteUser(0));
+        assertEquals(false, userService.deleteUser(-1));
+        assertEquals(false, userService.deleteUser(100));
     }
 
     @Test(expected = DataAccessException.class)
@@ -102,21 +106,35 @@ public class UserServiceTest {
 
     @Test
     public void testGetUsersByName() {
-        User createdUser = userService.createUser(user);
-        //test pagination
-        assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 0, 1));
+        final String userName = "John";
+        List<User> receivedUser = userService.getUsersByName(userName, 5, 1);
+
+        assertNotNull(receivedUser);
+        assertEquals(userName, receivedUser.get(1).getName());
+        assertEquals(receivedUser.size(), 5);
+
+        assertEquals(receivedUser.get(0), userService.getUserById(3));
+        assertEquals(receivedUser.get(2), userService.getUserById(5));
+        assertEquals(receivedUser.get(4), userService.getUserById(7));
+
+        receivedUser = userService.getUsersByName(userName, 2, 2);
+        assertEquals(receivedUser.size(), 2);
+
+        receivedUser = userService.getUsersByName(userName, 2, 3);
+        assertEquals(receivedUser.size(), 1);
+        System.out.println(receivedUser);
+        assertEquals(receivedUser, Arrays.asList(userService.getUserById(7)));
+    }
+
+    @Test
+    public void testGetUserByNameWithWrongParameters() {
+        userService.createUser(user);
         assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 0, 0));
         assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 1, 0));
-
-        //check result of logic
-        assertEquals(Arrays.asList(createdUser), userService.getUsersByName(user.getName(), 1, 1));
-
-        //test logic
-        List<User> resultUserList = userService.getUsersByName(user.getName(), 1, 1);
-        assertEquals(1, resultUserList.size());
-
-        //check name
-        User user = resultUserList.get(0);
-        assertEquals(createdUser.getName(), user.getName());
+        assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 0, 1));
+        assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), -1, 0));
+        assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), -1, 1));
+        assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 1, -1));
+        assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 0, -1));
     }
 }

@@ -23,7 +23,7 @@ public class UserAccountDaoImpl implements UserAccountDao {
     private static final String GET_USER_ACCOUNT = "SELECT * FROM UserAccount WHERE id = :id";
     private static final String UPDATE_USER_ACCOUNT = "UPDATE UserAccount SET userId = :userId, amount = :amount WHERE id = :id";
     private static final String DELETE_USER_ACCOUNT = "DELETE FROM UserAccount WHERE id =:id";
-    private static final String GET_USER_ACCOUNT_BY_ID= "SELECT * FROM UserAccount WHERE userId = :userId";
+    private static final String GET_USER_ACCOUNT_BY_ID = "SELECT * FROM UserAccount WHERE userId = :userId";
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -64,8 +64,10 @@ public class UserAccountDaoImpl implements UserAccountDao {
 
     @Override
     public boolean deleteUserAccount(long uAccountId) {
-        jdbcTemplate.update(DELETE_USER_ACCOUNT, Collections.singletonMap("id", uAccountId));
-        return true;
+        if (jdbcTemplate.update(DELETE_USER_ACCOUNT, Collections.singletonMap("id", uAccountId)) > 0) {
+            return true;
+        }
+        return false;
     }
 
     private static final class UserAccountMapper implements RowMapper<UserAccount> {

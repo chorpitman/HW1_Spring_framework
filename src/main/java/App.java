@@ -6,7 +6,6 @@ import com.epam.dao.impl.TicketDaoImpl;
 import com.epam.model.User;
 import com.epam.model.impl.UserImpl;
 import com.epam.service.UserService;
-import com.epam.service.impl.UserServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
