@@ -45,7 +45,7 @@ public class TicketServiceTest {
         ticketService.bookTicket(1, 1, 10, Ticket.Category.PREMIUM);
     }
 
-    @Test()
+    @Test
     public void testBookTicket() {
         userAccountService.rechargeAccount(2, new BigDecimal(201));
         Ticket bookedTicket = ticketService.bookTicket(2, 2, 20, Ticket.Category.BAR);
