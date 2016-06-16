@@ -59,11 +59,11 @@
     </tx:advice>
 
     <aop:config>
-        <aop:pointcut id="txOperationUserAccount" expression="execution(* com.epam.service.impl.*.*(..))"/>
-        <aop:pointcut id="txOperationBookTicket" expression="execution(* com.epam.service.impl.*.*(..))"/>
+        <aop:pointcut id="txOperationWithBookTicket" expression="execution(* com.epam.service.TicketService.*(..))" />
+        <aop:pointcut id="txOperationWithUserAccount" expression="execution(* com.epam.service.UserAccountService.*(..))"/>
 
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="txOperationUserAccount"/>
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="txOperationBookTicket"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txOperationWithBookTicket"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txOperationWithUserAccount"/>
     </aop:config>
 
     <!--<bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">-->

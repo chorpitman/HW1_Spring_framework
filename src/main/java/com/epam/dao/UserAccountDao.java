@@ -16,7 +16,7 @@ public interface UserAccountDao {
 
 
 // TODO: 07.06.2016 ask about 2methods
-//    void rechargeAccount(long userId, BigDecimal amount);
+//    void rechargeAccountByUserId(long userId, BigDecimal amount);
 //    BigDecimal getAmount();
 //    void setAmount(BigDecimal amount);
 }

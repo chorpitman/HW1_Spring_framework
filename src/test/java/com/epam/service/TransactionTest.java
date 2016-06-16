@@ -32,7 +32,7 @@ public class TransactionTest {
 
     @Test
     public void testBookTicket() {
-        userAccountService.rechargeAccount(2, new BigDecimal(50));
+        userAccountService.rechargeAccountByUserId(2, new BigDecimal(50));
         Ticket bookedTicket = ticketService.bookTicket(2, 2, 20, Ticket.Category.BAR);
         assertNotNull(bookedTicket);
 

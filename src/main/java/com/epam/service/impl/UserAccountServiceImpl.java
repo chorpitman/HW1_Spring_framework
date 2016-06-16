@@ -17,7 +17,32 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
-    public void rechargeAccount(long userId, BigDecimal amount) {
+    public UserAccount createUserAccount(UserAccount account) {
+        return userAccountDao.createUserAccount(account);
+    }
+
+    @Override
+    public UserAccount getUserAccountById(long uAccountId) {
+        return userAccountDao.getUserAccountById(uAccountId);
+    }
+
+    @Override
+    public UserAccount getUserAccountByUserId(long uAccountId) {
+        return userAccountDao.getUserAccountByUserId(uAccountId);
+    }
+
+    @Override
+    public UserAccount updateUserAccount(UserAccount account) {
+        return userAccountDao.updateUserAccount(account);
+    }
+
+    @Override
+    public boolean deleteUserAccount(long uAccountId) {
+        return userAccountDao.deleteUserAccount(uAccountId);
+    }
+
+    public void rechargeAccountByUserId(long userId, BigDecimal amount) {
+        log.debug("rechargeAccountByUserId:  userId " + userId + " amount: " +amount );
         UserAccount userAccount = userAccountDao.getUserAccountByUserId(userId);
 
         BigDecimal startBalance = new BigDecimal(0);
@@ -25,6 +50,21 @@ public class UserAccountServiceImpl implements UserAccountService {
 
         if (userBalance.compareTo(startBalance) == 1) {
             userAccount.setAmount(userBalance.add(amount));
+        } else {
+            userAccount.setAmount(amount);
+        }
+        userAccountDao.updateUserAccount(userAccount);
+    }
+
+    public void rechargeAccountByAccountId(long uAccountId, BigDecimal amount) {
+        log.debug("rechargeAccountByUserId:  userId " + uAccountId + " amount: " +amount );
+        UserAccount userAccount = userAccountDao.getUserAccountById(uAccountId);
+
+        BigDecimal startBalance = new BigDecimal(0);
+        BigDecimal uAccountBalance = userAccount.getAmount();
+
+        if (uAccountBalance.compareTo(startBalance) == 1) {
+            userAccount.setAmount(uAccountBalance.add(amount));
         } else {
             userAccount.setAmount(amount);
         }

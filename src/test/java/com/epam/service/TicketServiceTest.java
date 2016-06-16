@@ -47,7 +47,7 @@ public class TicketServiceTest {
 
     @Test
     public void testBookTicket() {
-        userAccountService.rechargeAccount(2, new BigDecimal(201));
+        userAccountService.rechargeAccountByUserId(2, new BigDecimal(201));
         Ticket bookedTicket = ticketService.bookTicket(2, 2, 20, Ticket.Category.BAR);
         assertNotNull(bookedTicket);
 
