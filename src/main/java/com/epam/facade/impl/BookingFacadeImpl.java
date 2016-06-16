@@ -4,6 +4,7 @@ import com.epam.facade.BookingFacade;
 import com.epam.model.Event;
 import com.epam.model.Ticket;
 import com.epam.model.User;
+import com.epam.model.UserAccount;
 import com.epam.service.EventService;
 import com.epam.service.TicketService;
 import com.epam.service.UserAccountService;
@@ -125,8 +126,55 @@ public class BookingFacadeImpl implements BookingFacade {
         return ticketService.cancelTicket(ticketId);
     }
 
+    //USER ACCOUNT
     @Override
-    public void rechargeAccount(User user, BigDecimal amount) {
+    public UserAccount createUserAccount(UserAccount account) {
+
+        return userAccountService.createUserAccount(account);
+    }
+
+    @Override
+    public UserAccount getUserAccountById(long uAccountId) {
+        if (uAccountId <= 0) {
+            return null;
+        }
+        return userAccountService.getUserAccountById(uAccountId);
+    }
+
+    @Override
+    public UserAccount getUserAccountByUserId(long uAccountId) {
+        if (uAccountId <= 0) {
+            return null;
+        }
+        return userAccountService.getUserAccountByUserId(uAccountId);
+    }
+
+    @Override
+    public UserAccount updateUserAccount(UserAccount account) {
+        if (account == null) {
+            return null;
+        }
+        return userAccountService.updateUserAccount(account);
+    }
+
+    @Override
+    public boolean deleteUserAccount(long uAccountId) {
+        if (uAccountId <= 0) {
+            return false;
+        }
+        return userAccountService.deleteUserAccount(uAccountId);
+    }
+
+    @Override
+    public void rechargeAccountByAccountId(long userId, BigDecimal amount) {
+        if (userId <= 0 || amount.compareTo(new BigDecimal(0)) <= 0) {
+            throw new IllegalArgumentException();
+        }
+        userAccountService.rechargeAccountByAccountId(userId, amount);
+    }
+
+    @Override
+    public void rechargeAccountByUserId(long userId, BigDecimal amount) {
 
     }
 }

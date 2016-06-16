@@ -105,4 +105,38 @@ public class TicketServiceTest {
         assertEquals(false, ticketService.cancelTicket(0));
         assertEquals(false, ticketService.cancelTicket(-1));
     }
+
+    @Test
+    public void testReturnExceptionWhenBookTicket() {
+//        User user = new UserImpl(1L, "1", "1");
+//        user = bookingFacade.createUser(user);
+//        bookingFacade.refillUserAccount(user, new BigDecimal(1));
+//        Event event = new EventImpl(1L, "1", new Date(), new BigDecimal(10));
+//        event = bookingFacade.createEvent(event);
+//
+//        TransactionStatus transaction = transactionTemplate.getTransactionManager().getTransaction(transactionTemplate);
+//        try {
+//            bookingFacade.bookTicket(user.getId(), event.getId(), 10, Ticket.Category.STANDARD);
+//        } catch (Exception e) {
+//            assertTrue("", transaction.isRollbackOnly());
+//        }
+//        transactionTemplate.getTransactionManager().rollback(transaction);
+    }
+
+    @Test
+    public void testReturnTicketWhenBookTicket() {
+//        User user = new UserImpl(1L, "2", "1");
+//        user = bookingFacade.createUser(user);
+//        bookingFacade.refillUserAccount(user, new BigDecimal(100));
+//        Event event = new EventImpl(1L, "1", new Date(), new BigDecimal(10));
+//        event = bookingFacade.createEvent(event);
+//
+//        TransactionStatus transaction = transactionTemplate.getTransactionManager().getTransaction(transactionTemplate);
+//        try {
+//            bookingFacade.bookTicket(user.getId(), event.getId(), 10, Ticket.Category.STANDARD);
+//        } finally {
+//            assertFalse("", transaction.isRollbackOnly());
+//            transactionTemplate.getTransactionManager().rollback(transaction);
+//        }
+    }
 }

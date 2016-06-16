@@ -4,8 +4,10 @@ import com.epam.facade.impl.BookingFacadeImpl;
 import com.epam.model.Event;
 import com.epam.model.Ticket;
 import com.epam.model.User;
+import com.epam.model.UserAccount;
 import com.epam.model.impl.EventImpl;
 import com.epam.model.impl.TicketImpl;
+import com.epam.model.impl.UserAccountImpl;
 import com.epam.model.impl.UserImpl;
 import com.epam.service.EventService;
 import com.epam.service.TicketService;
@@ -28,6 +30,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Configuration
@@ -42,8 +45,8 @@ public class BookingFacadeImplTest {
     private EventService mockEventService;
     @Mock
     private TicketService mockTicketService;
-
-    private UserAccountService accountService;
+    @Mock
+    private UserAccountService mockAccountService;
 
     private BookingFacade bookingFacade;
 
@@ -56,9 +59,14 @@ public class BookingFacadeImplTest {
     @InjectMocks
     TicketImpl ticket;
 
+    @InjectMocks
+    UserAccountImpl userAccount;
+
+    // TODO: 14.06.2016 test class - UserAccountService
+
     @Before
     public void init() {
-        bookingFacade = new BookingFacadeImpl(mockUserService, mockEventService, mockTicketService, accountService);
+        bookingFacade = new BookingFacadeImpl(mockUserService, mockEventService, mockTicketService, mockAccountService);
     }
 
     //    EVENT
@@ -319,5 +327,63 @@ public class BookingFacadeImplTest {
 
         when(mockTicketService.cancelTicket(1L)).thenReturn(Boolean.TRUE);
         assertEquals(bookingFacade.cancelTicket(1L), true);
+    }
+
+    //USER ACCOUNT
+    @Test
+    public void testCreateUserAccount() {
+        when(mockAccountService.createUserAccount(userAccount)).thenReturn(userAccount);
+        UserAccount createdUserAccount = bookingFacade.createUserAccount(userAccount);
+        assertNotNull(userAccount);
+        assertNotNull(createdUserAccount);
+        assertEquals(userAccount, createdUserAccount);
+        assertEquals(userAccount.getAmount(), createdUserAccount.getAmount());
+    }
+
+    @Test
+    public void testGetUserAccountById() {
+        when(mockAccountService.getUserAccountById(userAccount.getId())).thenReturn(userAccount);
+
+        UserAccount receivedUserAccount = bookingFacade.getUserAccountById(userAccount.getId());
+        assertEquals(userAccount.getUserId(), receivedUserAccount.getUserId());
+        assertEquals(userAccount.getAmount(), receivedUserAccount.getAmount());
+        assertEquals(userAccount, receivedUserAccount);
+    }
+
+    @Test
+    public void testGetUserAccountByUserId() {
+        when(mockAccountService.getUserAccountByUserId(userAccount.getUserId())).thenReturn(userAccount);
+
+        UserAccount receivedUserAccount = bookingFacade.getUserAccountById(userAccount.getUserId());
+        assertEquals(userAccount.getUserId(), receivedUserAccount.getUserId());
+        assertEquals(userAccount.getAmount(), receivedUserAccount.getAmount());
+        assertEquals(userAccount, receivedUserAccount);
+    }
+
+    @Test
+    public void testUpdateUserAccount() {
+
+    }
+
+    @Test
+    public void testDeleteUserAccount() {
+        when(mockUserService.deleteUser(-1L)).thenReturn(Boolean.FALSE);
+        assertEquals(false, bookingFacade.deleteUserAccount(-1L));
+
+        when(mockUserService.deleteUser(0L)).thenReturn(Boolean.FALSE);
+        assertEquals(false, bookingFacade.deleteUserAccount(0L));
+
+        when(mockUserService.deleteUser(1L)).thenReturn(Boolean.TRUE);
+        assertEquals(true, bookingFacade.deleteUserAccount(1L));
+    }
+
+    @Test
+    public void testRechargeAccountByAccountId() {
+
+    }
+
+    @Test
+    public void testRechargeAccountByUserId() {
+
     }
 }
