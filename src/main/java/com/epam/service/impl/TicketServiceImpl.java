@@ -39,25 +39,22 @@ public class TicketServiceImpl implements TicketService {
 //        if (ticketDao.bookTicket(userId, eventId, place, category) != null) {
 //            throw new IllegalArgumentException("ticket already booked");
 //        }
-
         //check userAccountDao for money
         UserAccount userAccount = userAccountDao.getUserAccountByUserId(userId);
-        System.out.println(userAccount);
-
         Event event = eventDao.getEventById(eventId);
-
-        System.out.println("compare check -->>" + userAccount.getAmount().compareTo(event.getTicketPrice()));
-
         if (userAccount.getAmount().compareTo(event.getTicketPrice()) == -1) {
-
             throw new IllegalArgumentException("User don't have enough money on his balance");
         }
 
         //withdraw money from, user account
-        userAccount.setAmount(userAccount.getAmount().subtract(event.getTicketPrice()));
-        System.out.println("BALANCE AFTER BUYING TICKET -->>>" + userAccount.getAmount());
+        try {
+            userAccount.setAmount(userAccount.getAmount().subtract(event.getTicketPrice()));
+            System.out.println("BALANCE AFTER BUYING TICKET -->>>" + userAccount.getAmount());
+            throw new RuntimeException();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
         userAccountDao.updateUserAccount(userAccount);
-
         return ticketDao.bookTicket(userId, eventId, place, category);
     }
 

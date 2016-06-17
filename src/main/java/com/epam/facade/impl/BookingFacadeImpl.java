@@ -129,7 +129,9 @@ public class BookingFacadeImpl implements BookingFacade {
     //USER ACCOUNT
     @Override
     public UserAccount createUserAccount(UserAccount account) {
-
+        if (account == null) {
+            return null;
+        }
         return userAccountService.createUserAccount(account);
     }
 
@@ -175,6 +177,9 @@ public class BookingFacadeImpl implements BookingFacade {
 
     @Override
     public void rechargeAccountByUserId(long userId, BigDecimal amount) {
-
+        if (userId <= 0 || amount.compareTo(new BigDecimal(0)) <= 0) {
+            throw new IllegalArgumentException();
+        }
+        userAccountService.rechargeAccountByUserId(userId, amount);
     }
 }

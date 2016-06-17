@@ -30,7 +30,6 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Configuration
@@ -354,36 +353,51 @@ public class BookingFacadeImplTest {
     public void testGetUserAccountByUserId() {
         when(mockAccountService.getUserAccountByUserId(userAccount.getUserId())).thenReturn(userAccount);
 
-        UserAccount receivedUserAccount = bookingFacade.getUserAccountById(userAccount.getUserId());
-        assertEquals(userAccount.getUserId(), receivedUserAccount.getUserId());
+        UserAccount receivedUserAccount = bookingFacade.getUserAccountByUserId(userAccount.getUserId());
         assertEquals(userAccount.getAmount(), receivedUserAccount.getAmount());
-        assertEquals(userAccount, receivedUserAccount);
     }
 
     @Test
     public void testUpdateUserAccount() {
+        long idExistUserAcc = 1;
+        BigDecimal amount = new BigDecimal(3000);
+        when(mockAccountService.getUserAccountById(idExistUserAcc)).thenReturn(userAccount);
+        UserAccount userAccount = bookingFacade.getUserAccountById(idExistUserAcc);
 
+        when(mockAccountService.updateUserAccount(userAccount)).thenReturn(userAccount);
+        userAccount.setAmount(amount);
+
+        assertTrue(bookingFacade.getUserAccountById(idExistUserAcc).getAmount().compareTo(amount) == 0);
     }
 
     @Test
     public void testDeleteUserAccount() {
-        when(mockUserService.deleteUser(-1L)).thenReturn(Boolean.FALSE);
+        when(mockAccountService.deleteUserAccount(-1L)).thenReturn(Boolean.FALSE);
         assertEquals(false, bookingFacade.deleteUserAccount(-1L));
 
         when(mockUserService.deleteUser(0L)).thenReturn(Boolean.FALSE);
         assertEquals(false, bookingFacade.deleteUserAccount(0L));
 
-        when(mockUserService.deleteUser(1L)).thenReturn(Boolean.TRUE);
+        when(mockAccountService.deleteUserAccount(1L)).thenReturn(Boolean.TRUE);
         assertEquals(true, bookingFacade.deleteUserAccount(1L));
     }
 
     @Test
     public void testRechargeAccountByAccountId() {
+        BigDecimal rechargeBalance = new BigDecimal(500);
+//        when(mockAccountService.getUserAccountById(userAccount.getId())).then(userAccount);
+//        when(mockAccountService.rechargeAccountByAccountId(userAccount.getId(), rechargeBalance)).then()
+        //todo mock void method
 
+
+        bookingFacade.rechargeAccountByAccountId(userAccount.getId(), rechargeBalance);
+        UserAccount receivedUserAccount = bookingFacade.getUserAccountById(userAccount.getId());
+        assertTrue(receivedUserAccount.getAmount().compareTo(rechargeBalance) == 0);
+//        receivedUserAcc
     }
 
     @Test
     public void testRechargeAccountByUserId() {
-
+        //todo
     }
 }

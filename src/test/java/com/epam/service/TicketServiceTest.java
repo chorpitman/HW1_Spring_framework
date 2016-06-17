@@ -11,14 +11,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -38,6 +39,9 @@ public class TicketServiceTest {
 
     @Autowired
     private UserAccountService userAccountService;
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
 
     @Test(expected = IllegalArgumentException.class)
     public void testBookTicketException() {
@@ -53,6 +57,22 @@ public class TicketServiceTest {
 
         Event receivedEvent = eventService.getEventById(2);
         assertEquals(new BigDecimal(201), receivedEvent.getTicketPrice());
+    }
+
+    @Test
+    public void txBookTicket() {
+        TransactionStatus transactionStatus = transactionTemplate.getTransactionManager().getTransaction(transactionTemplate);
+
+        userAccountService.rechargeAccountByUserId(2, new BigDecimal(100));
+        Ticket bookedTicket = ticketService.bookTicket(2, 2, 20, Ticket.Category.BAR);
+
+        assertEquals((userAccountService.getUserAccountById(2)).getAmount(), 0);
+
+        assertTrue("Current balance userAccount", (userAccountService.getUserAccountById(2)).getAmount().compareTo(new BigDecimal(0)) == 0);
+//        userAccountService.rechargeAccountByUserId(2, new BigDecimal(301));
+//        Ticket bookedTicket = ticketService.bookTicket(2, 2, 20, Ticket.Category.BAR);
+//        assertTrue((userAccountService.getUserAccountById(2)).getAmount().compareTo(new BigDecimal(100)) == 0);
+
     }
 
     @Test

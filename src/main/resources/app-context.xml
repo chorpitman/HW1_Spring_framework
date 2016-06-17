@@ -54,7 +54,10 @@
 
     <tx:advice id="txAdvice" transaction-manager="txManager">
         <tx:attributes>
-            <tx:method name="*" read-only="true" rollback-for="Exception" propagation="REQUIRED"/>
+            <tx:method name="get*" isolation="DEFAULT" propagation="REQUIRED" read-only="true" rollback-for="Exception" timeout="-1" />
+            <tx:method name="recharge*" isolation="DEFAULT" propagation="REQUIRED" read-only="true" rollback-for="Exception" timeout="-1"/>
+            <tx:method name="update*" isolation="DEFAULT" propagation="REQUIRED" read-only="true" rollback-for="Exception" timeout="-1"/>
+            <tx:method name="book*" isolation="DEFAULT" propagation="REQUIRED" read-only="true" rollback-for="Exception" timeout="-1"/>
         </tx:attributes>
     </tx:advice>
 
