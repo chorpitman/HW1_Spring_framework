@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
@@ -30,6 +31,9 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.when;
 
 @Configuration
@@ -60,8 +64,6 @@ public class BookingFacadeImplTest {
 
     @InjectMocks
     UserAccountImpl userAccount;
-
-    // TODO: 14.06.2016 test class - UserAccountService
 
     @Before
     public void init() {
@@ -333,6 +335,7 @@ public class BookingFacadeImplTest {
     public void testCreateUserAccount() {
         when(mockAccountService.createUserAccount(userAccount)).thenReturn(userAccount);
         UserAccount createdUserAccount = bookingFacade.createUserAccount(userAccount);
+
         assertNotNull(userAccount);
         assertNotNull(createdUserAccount);
         assertEquals(userAccount, createdUserAccount);
@@ -342,8 +345,8 @@ public class BookingFacadeImplTest {
     @Test
     public void testGetUserAccountById() {
         when(mockAccountService.getUserAccountById(userAccount.getId())).thenReturn(userAccount);
-
         UserAccount receivedUserAccount = bookingFacade.getUserAccountById(userAccount.getId());
+
         assertEquals(userAccount.getUserId(), receivedUserAccount.getUserId());
         assertEquals(userAccount.getAmount(), receivedUserAccount.getAmount());
         assertEquals(userAccount, receivedUserAccount);
@@ -351,23 +354,27 @@ public class BookingFacadeImplTest {
 
     @Test
     public void testGetUserAccountByUserId() {
-        when(mockAccountService.getUserAccountByUserId(userAccount.getUserId())).thenReturn(userAccount);
+        userAccount.setUserId(1);
 
+        when(mockAccountService.getUserAccountByUserId(userAccount.getUserId())).thenReturn(userAccount);
         UserAccount receivedUserAccount = bookingFacade.getUserAccountByUserId(userAccount.getUserId());
+
         assertEquals(userAccount.getAmount(), receivedUserAccount.getAmount());
+        assertEquals(userAccount.getId(), receivedUserAccount.getId());
+        assertEquals(userAccount.getUserId(), receivedUserAccount.getUserId());
     }
 
     @Test
     public void testUpdateUserAccount() {
-        long idExistUserAcc = 1;
-        BigDecimal amount = new BigDecimal(3000);
-        when(mockAccountService.getUserAccountById(idExistUserAcc)).thenReturn(userAccount);
-        UserAccount userAccount = bookingFacade.getUserAccountById(idExistUserAcc);
+        userAccount.setId(1);
+        BigDecimal updateBalance = new BigDecimal(3000);
+        when(mockAccountService.getUserAccountById(userAccount.getId())).thenReturn(userAccount);
+        UserAccount receivedUserAccount = bookingFacade.getUserAccountById(userAccount.getId());
 
-        when(mockAccountService.updateUserAccount(userAccount)).thenReturn(userAccount);
-        userAccount.setAmount(amount);
+        when(mockAccountService.updateUserAccount(receivedUserAccount)).thenReturn(receivedUserAccount);
+        receivedUserAccount.setAmount(updateBalance);
 
-        assertTrue(bookingFacade.getUserAccountById(idExistUserAcc).getAmount().compareTo(amount) == 0);
+        assertTrue(bookingFacade.getUserAccountById((userAccount.getId())).getAmount().compareTo(updateBalance) == 0);
     }
 
     @Test
@@ -385,15 +392,13 @@ public class BookingFacadeImplTest {
     @Test
     public void testRechargeAccountByAccountId() {
         BigDecimal rechargeBalance = new BigDecimal(500);
-//        when(mockAccountService.getUserAccountById(userAccount.getId())).then(userAccount);
-//        when(mockAccountService.rechargeAccountByAccountId(userAccount.getId(), rechargeBalance)).then()
+//        mockAccountService.rechargeAccountByAccountId(userAccount.getId(), rechargeBalance);
         //todo mock void method
-
+        doNothing().when(mockAccountService).rechargeAccountByAccountId(userAccount.getId(), rechargeBalance);
 
         bookingFacade.rechargeAccountByAccountId(userAccount.getId(), rechargeBalance);
         UserAccount receivedUserAccount = bookingFacade.getUserAccountById(userAccount.getId());
         assertTrue(receivedUserAccount.getAmount().compareTo(rechargeBalance) == 0);
-//        receivedUserAcc
     }
 
     @Test

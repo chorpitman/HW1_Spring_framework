@@ -60,19 +60,28 @@ public class TicketServiceTest {
     }
 
     @Test
-    public void txBookTicket() {
+    public void testTxBookTicketException() {
         TransactionStatus transactionStatus = transactionTemplate.getTransactionManager().getTransaction(transactionTemplate);
-
         userAccountService.rechargeAccountByUserId(2, new BigDecimal(100));
-        Ticket bookedTicket = ticketService.bookTicket(2, 2, 20, Ticket.Category.BAR);
+        try {
+            Ticket bookedTicket = ticketService.bookTicket(2, 2, 20, Ticket.Category.BAR);
+        } catch (Exception e) {
+            assertTrue(transactionStatus.isRollbackOnly());
+        }
+        transactionTemplate.getTransactionManager().rollback(transactionStatus);
+    }
 
-        assertEquals((userAccountService.getUserAccountById(2)).getAmount(), 0);
-
-        assertTrue("Current balance userAccount", (userAccountService.getUserAccountById(2)).getAmount().compareTo(new BigDecimal(0)) == 0);
-//        userAccountService.rechargeAccountByUserId(2, new BigDecimal(301));
-//        Ticket bookedTicket = ticketService.bookTicket(2, 2, 20, Ticket.Category.BAR);
-//        assertTrue((userAccountService.getUserAccountById(2)).getAmount().compareTo(new BigDecimal(100)) == 0);
-
+    @Test
+    public void testTxBookTicket() {
+        TransactionStatus transactionStatus = transactionTemplate.getTransactionManager().getTransaction(transactionTemplate);
+        userAccountService.rechargeAccountByUserId(2, new BigDecimal(301));
+        try {
+            Ticket bookedTicket = ticketService.bookTicket(2, 2, 20, Ticket.Category.BAR);
+        } catch (Exception e) {
+            assertFalse(transactionStatus.isRollbackOnly());
+        } finally {
+            transactionTemplate.getTransactionManager().rollback(transactionStatus);
+        }
     }
 
     @Test
@@ -124,39 +133,5 @@ public class TicketServiceTest {
         assertEquals(false, ticketService.cancelTicket(100));
         assertEquals(false, ticketService.cancelTicket(0));
         assertEquals(false, ticketService.cancelTicket(-1));
-    }
-
-    @Test
-    public void testReturnExceptionWhenBookTicket() {
-//        User user = new UserImpl(1L, "1", "1");
-//        user = bookingFacade.createUser(user);
-//        bookingFacade.refillUserAccount(user, new BigDecimal(1));
-//        Event event = new EventImpl(1L, "1", new Date(), new BigDecimal(10));
-//        event = bookingFacade.createEvent(event);
-//
-//        TransactionStatus transaction = transactionTemplate.getTransactionManager().getTransaction(transactionTemplate);
-//        try {
-//            bookingFacade.bookTicket(user.getId(), event.getId(), 10, Ticket.Category.STANDARD);
-//        } catch (Exception e) {
-//            assertTrue("", transaction.isRollbackOnly());
-//        }
-//        transactionTemplate.getTransactionManager().rollback(transaction);
-    }
-
-    @Test
-    public void testReturnTicketWhenBookTicket() {
-//        User user = new UserImpl(1L, "2", "1");
-//        user = bookingFacade.createUser(user);
-//        bookingFacade.refillUserAccount(user, new BigDecimal(100));
-//        Event event = new EventImpl(1L, "1", new Date(), new BigDecimal(10));
-//        event = bookingFacade.createEvent(event);
-//
-//        TransactionStatus transaction = transactionTemplate.getTransactionManager().getTransaction(transactionTemplate);
-//        try {
-//            bookingFacade.bookTicket(user.getId(), event.getId(), 10, Ticket.Category.STANDARD);
-//        } finally {
-//            assertFalse("", transaction.isRollbackOnly());
-//            transactionTemplate.getTransactionManager().rollback(transaction);
-//        }
     }
 }

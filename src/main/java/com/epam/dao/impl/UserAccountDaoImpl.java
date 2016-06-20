@@ -20,10 +20,10 @@ public class UserAccountDaoImpl implements UserAccountDao {
 
     private static final String CREATE_USER_ACCOUNT = "INSERT INTO UserAccount (userId, amount) " +
             "VALUES (:userId, :amount)";
-    private static final String GET_USER_ACCOUNT = "SELECT * FROM UserAccount WHERE id = :id";
     private static final String UPDATE_USER_ACCOUNT = "UPDATE UserAccount SET userId = :userId, amount = :amount WHERE id = :id";
     private static final String DELETE_USER_ACCOUNT = "DELETE FROM UserAccount WHERE id =:id";
-    private static final String GET_USER_ACCOUNT_BY_ID = "SELECT * FROM UserAccount WHERE userId = :userId";
+    private static final String GET_USER_ACCOUNT_BY_ID = "SELECT * FROM UserAccount WHERE id = :id";
+    private static final String GET_USER_ACCOUNT_BY_USER_ID = "SELECT * FROM UserAccount WHERE userId = :userId";
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -39,17 +39,17 @@ public class UserAccountDaoImpl implements UserAccountDao {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(CREATE_USER_ACCOUNT, new MapSqlParameterSource(namedParameters), keyHolder);
         int userAccountId = keyHolder.getKey().intValue();
-        return jdbcTemplate.queryForObject(GET_USER_ACCOUNT, Collections.singletonMap("id", userAccountId), new UserAccountMapper());
+        return jdbcTemplate.queryForObject(GET_USER_ACCOUNT_BY_ID, Collections.singletonMap("id", userAccountId), new UserAccountMapper());
     }
 
     @Override
     public UserAccount getUserAccountById(long uAccountId) {
-        return jdbcTemplate.queryForObject(GET_USER_ACCOUNT, Collections.singletonMap("id", uAccountId), new UserAccountMapper());
+        return jdbcTemplate.queryForObject(GET_USER_ACCOUNT_BY_ID, Collections.singletonMap("id", uAccountId), new UserAccountMapper());
     }
 
     @Override
     public UserAccount getUserAccountByUserId(long uAccountId) {
-        return jdbcTemplate.queryForObject(GET_USER_ACCOUNT_BY_ID, Collections.singletonMap("userId", uAccountId), new UserAccountMapper());
+        return jdbcTemplate.queryForObject(GET_USER_ACCOUNT_BY_USER_ID, Collections.singletonMap("userId", uAccountId), new UserAccountMapper());
     }
 
     @Override
