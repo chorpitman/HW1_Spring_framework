@@ -31,10 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.stub;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Configuration
 @ImportResource("classpath:app-context.xml")
@@ -392,13 +389,19 @@ public class BookingFacadeImplTest {
     @Test
     public void testRechargeAccountByAccountId() {
         BigDecimal rechargeBalance = new BigDecimal(500);
-//        mockAccountService.rechargeAccountByAccountId(userAccount.getId(), rechargeBalance);
-        //todo mock void method
-        doNothing().when(mockAccountService).rechargeAccountByAccountId(userAccount.getId(), rechargeBalance);
-
-        bookingFacade.rechargeAccountByAccountId(userAccount.getId(), rechargeBalance);
+        when(mockAccountService.getUserAccountById(userAccount.getId())).thenReturn(userAccount);
         UserAccount receivedUserAccount = bookingFacade.getUserAccountById(userAccount.getId());
-        assertTrue(receivedUserAccount.getAmount().compareTo(rechargeBalance) == 0);
+
+
+        verify(mockAccountService).rechargeAccountByAccountId(userAccount.getId(), rechargeBalance);
+
+//        doAnswer(new UserAccountImpl(userAccount.getId(), rechargeBalance)).when(mockAccountService).rechargeAccountByAccountId(userAccount.getId(),rechargeBalance);
+//        bookingFacade.rechargeAccountByAccountId(receivedUserAccount.getId(), rechargeBalance);
+//        System.out.println(receivedUserAccount);
+//
+//        UserAccount receivedUserAccount1 = bookingFacade.getUserAccountById(userAccount.getId());
+//        System.out.println(receivedUserAccount1);
+//        assertNotEquals(receivedUserAccount, receivedUserAccount1);
     }
 
     @Test
