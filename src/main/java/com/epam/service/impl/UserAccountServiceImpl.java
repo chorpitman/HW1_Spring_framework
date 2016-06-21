@@ -42,13 +42,12 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     public void rechargeAccountByUserId(long userId, BigDecimal amount) {
-        log.debug("rechargeAccountByUserId:  userId " + userId + " amount: " +amount );
+        log.debug("rechargeAccountByUserId:  userId " + userId + " amount: " + amount);
         UserAccount userAccount = userAccountDao.getUserAccountByUserId(userId);
 
-        BigDecimal startBalance = new BigDecimal(0);
         BigDecimal userBalance = userAccount.getAmount();
 
-        if (userBalance.compareTo(startBalance) == 1) {
+        if (userBalance.compareTo(BigDecimal.ZERO) == 1) {
             userAccount.setAmount(userBalance.add(amount));
         } else {
             userAccount.setAmount(amount);
@@ -57,7 +56,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     public void rechargeAccountByAccountId(long userAccountId, BigDecimal amount) {
-        log.debug("rechargeAccountByUserId:  userId " + userAccountId + " amount: " +amount );
+        log.debug("rechargeAccountByUserId:  userId " + userAccountId + " amount: " + amount);
         UserAccount userAccount = userAccountDao.getUserAccountById(userAccountId);
 
         BigDecimal uAccountBalance = userAccount.getAmount();

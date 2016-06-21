@@ -9,6 +9,7 @@ import com.epam.service.EventService;
 import com.epam.service.TicketService;
 import com.epam.service.UserAccountService;
 import com.epam.service.UserService;
+import com.epam.utils.Validator;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -31,155 +32,135 @@ public class BookingFacadeImpl implements BookingFacade {
 
     // START EVENT
     public Event getEventById(long eventId) {
-        if (eventId <= 0) {
-            return null;
-        }
+        Validator.checkExpression(eventId <= 0, " eventID must be more then 0");
         return eventService.getEventById(eventId);
     }
 
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
+        Validator.checkExpression(title == null || pageNum <= 0 || pageNum <= 0, "title can't be null or pageSize " +
+                "and pageNum can't be equals or less then 0");
         return eventService.getEventsByTitle(title, pageSize, pageNum);
     }
 
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
+        Validator.checkExpression(day == null || pageSize <= 0 || pageNum <= 0, "day can't be null or pageSize " +
+                "and pageNum can't be equals or less then 0");
         return eventService.getEventsForDay(day, pageSize, pageNum);
     }
 
     public Event createEvent(Event event) {
-        if (event == null) {
-            throw new IllegalArgumentException("wrong param");
-        }
+        Validator.checkNotNull(event);
         return eventService.createEvent(event);
     }
 
     public Event updateEvent(Event event) {
-        if (event == null) {
-            throw new IllegalArgumentException("wrong param");
-        }
+        Validator.checkNotNull(event);
         return eventService.updateEvent(event);
     }
 
     public boolean deleteEvent(long eventId) {
-        if (eventId <= 0) {
-            return false;
-        }
+        Validator.checkExpression(eventId <= 0, " eventID must be more then 0");
         return eventService.deleteEvent(eventId);
     }
 
     // START USER
     public User getUserById(long userId) {
-        if (userId <= 0) {
-            return null;
-        }
+        Validator.checkExpression(userId <= 0, " userId must be more then 0");
         return userService.getUserById(userId);
     }
 
     public User getUserByEmail(String email) {
+        Validator.checkNotNull(email);
         return userService.getUserByEmail(email);
     }
 
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
+        Validator.checkExpression(name == null || pageSize <= 0 || pageNum <= 0, "name can't be null or pageSize " +
+                "and pageNum can't be equals or less then 0");
         return userService.getUsersByName(name, pageSize, pageNum);
     }
 
     public User createUser(User user) {
-        if (user == null) {
-            throw new IllegalArgumentException("wrong param");
-        }
+        Validator.checkNotNull(user);
         return userService.createUser(user);
     }
 
     public User updateUser(User user) {
-        if (user == null) {
-            return null;
-        }
+        Validator.checkNotNull(user);
         return userService.updateUser(user);
     }
 
     public boolean deleteUser(long userId) {
-        if (userId <= 0) {
-            return false;
-        }
+        Validator.checkExpression(userId <= 0, " userId must be more then 0");
         return userService.deleteUser(userId);
     }
 
     // START Ticket
     public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {
-        if (userId <= 0 || eventId <= 0 || place <= 0 || category == null) {
-            throw new IllegalArgumentException("wrong param");
-        }
+        Validator.checkExpression(userId <= 0 || eventId <= 0 || place <= 0 || category == null, "place or category " +
+                "can't be null or pageSize, pageNum, place can't be equals or less then 0");
         return ticketService.bookTicket(userId, eventId, place, category);
     }
 
     public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
+        Validator.checkExpression(user == null || pageSize <= 0 || pageNum <= 0, "user can't be null or pageSize " +
+                "and pageNum can't be equals or less then 0");
         return ticketService.getBookedTickets(user, pageSize, pageNum);
     }
 
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
+        Validator.checkExpression(event == null || pageSize <= 0 || pageNum <= 0, "event can't be null or pageSize " +
+                "and pageNum can't be equals or less then 0");
         return ticketService.getBookedTickets(event, pageSize, pageNum);
     }
 
     public boolean cancelTicket(long ticketId) {
-        if (ticketId <= 0) {
-            return false;
-        }
+        Validator.checkExpression(ticketId <= 0, "ticketId must be more then 0");
         return ticketService.cancelTicket(ticketId);
     }
 
     //USER ACCOUNT
     @Override
     public UserAccount createUserAccount(UserAccount account) {
-        if (account == null) {
-            return null;
-        }
+        Validator.checkExpression(account == null, " account can't be null");
         return userAccountService.createUserAccount(account);
     }
 
     @Override
-    public UserAccount getUserAccountById(long uAccountId) {
-        if (uAccountId <= 0) {
-            return null;
-        }
-        return userAccountService.getUserAccountById(uAccountId);
+    public UserAccount getUserAccountById(long AccountId) {
+        Validator.checkExpression(AccountId <= 0, "AccountId must be more then 0");
+        return userAccountService.getUserAccountById(AccountId);
     }
 
     @Override
-    public UserAccount getUserAccountByUserId(long uAccountId) {
-        if (uAccountId <= 0) {
-            return null;
-        }
-        return userAccountService.getUserAccountByUserId(uAccountId);
+    public UserAccount getUserAccountByUserId(long userAccountId) {
+        Validator.checkExpression(userAccountId <= 0, "AccountId must be more then 0");
+        return userAccountService.getUserAccountByUserId(userAccountId);
     }
 
     @Override
     public UserAccount updateUserAccount(UserAccount account) {
-        if (account == null) {
-            return null;
-        }
+        Validator.checkExpression(account == null, "account can't be null");
         return userAccountService.updateUserAccount(account);
     }
 
     @Override
-    public boolean deleteUserAccount(long uAccountId) {
-        if (uAccountId <= 0) {
-            return false;
-        }
-        return userAccountService.deleteUserAccount(uAccountId);
+    public boolean deleteUserAccount(long accountId) {
+        Validator.checkExpression(accountId <= 0, "accountId can't be null");
+        return userAccountService.deleteUserAccount(accountId);
     }
 
     @Override
     public void rechargeAccountByAccountId(long accountId, BigDecimal amount) {
-        if (accountId <= 0 || amount.compareTo(new BigDecimal(0)) <= 0) {
-            throw new IllegalArgumentException();
-        }
+        Validator.checkExpression(accountId <= 0 || amount.compareTo(new BigDecimal(0)) <= 0, "accountId and amount " +
+                "must be more then 0");
         userAccountService.rechargeAccountByAccountId(accountId, amount);
     }
 
     @Override
     public void rechargeAccountByUserId(long userId, BigDecimal amount) {
-        if (userId <= 0 || amount.compareTo(new BigDecimal(0)) <= 0) {
-            throw new IllegalArgumentException();
-        }
+        Validator.checkExpression(userId <= 0 || amount.compareTo(new BigDecimal(0)) <= 0, "userId and amount " +
+                "must be more then 0");
         userAccountService.rechargeAccountByUserId(userId, amount);
     }
 }

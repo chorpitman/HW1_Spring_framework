@@ -8,7 +8,6 @@ import com.epam.service.UserService;
 import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
@@ -36,16 +35,13 @@ public class UserServiceImpl implements UserService {
 
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
         log.debug("get users by name " + name);
-        if (pageSize <= 0 || pageNum <= 0) {
-            return Collections.emptyList();
-        }
         return userDao.getUsersByName(name, pageSize, pageNum);
     }
 
     public User createUser(User user) {
         User createdUser = userDao.createUser(user);
         long idCreatedUser = createdUser.getId();
-        userAccountDao.createUserAccount(new UserAccountImpl(idCreatedUser, new BigDecimal(0)));
+        userAccountDao.createUserAccount(new UserAccountImpl(idCreatedUser, BigDecimal.ZERO));
         return createdUser;
     }
 

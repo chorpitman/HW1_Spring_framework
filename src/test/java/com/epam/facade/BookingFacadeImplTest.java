@@ -157,6 +157,8 @@ public class BookingFacadeImplTest {
         assertEquals(bookingFacade.deleteEvent(1L), true);
     }
 
+
+
     //USER
     @Test
     public void testGetUserById() {
@@ -171,8 +173,13 @@ public class BookingFacadeImplTest {
 
     @Test
     public void testGetUserByEmail() {
+        user.setId(1);
+        user.setName("Gleb");
+        user.setEmail("Gleb@i.ua");
+
         when(mockUserService.getUserByEmail(user.getEmail())).thenReturn(user);
         User receivedUser = bookingFacade.getUserByEmail(user.getEmail());
+        verify(mockUserService).getUserByEmail(user.getEmail());
 
         assertEquals(receivedUser.getEmail(), user.getEmail());
     }

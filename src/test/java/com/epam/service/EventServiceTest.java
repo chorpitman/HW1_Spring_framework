@@ -76,7 +76,7 @@ public class EventServiceTest {
         assertEquals(true, eventService.deleteEvent(createdEvent.getId()));
     }
 
-    @Test
+    @Test(/*expected = IllegalArgumentException.class*/)
     public void testDeleteEventWithWrongId() {
         assertEquals(false, eventService.deleteEvent(0));
         assertEquals(false, eventService.deleteEvent(-1));
