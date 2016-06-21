@@ -23,8 +23,8 @@ public class TicketDaoImpl implements TicketDao {
 
     private final static String BOOKED_TICKETS_BY_ID = "SELECT * FROM Ticket WHERE id = :id";
     private final static String BOOK_TICKET = "INSERT INTO Ticket (userId, eventId, place, category) VALUES (:userId, :eventId, :place, :category)";
-    private final static String BOOKED_TICKETS_BY_USER = "SELECT * FROM Ticket WHERE userId = :userId";
-    private final static String BOOKED_TICKETS_BY_EVENT = "SELECT * FROM Ticket WHERE eventId = :eventId";
+    private final static String BOOKED_TICKETS_BY_USER = "SELECT * FROM Ticket WHERE userId = :userId LIMIT :start OFFSET :finish";
+    private final static String BOOKED_TICKETS_BY_EVENT = "SELECT * FROM Ticket WHERE eventId = :eventId LIMIT :start OFFSET :finish";
     private final static String CANCEL_TICKET = "DELETE FROM Ticket WHERE id =:id";
 
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -58,8 +58,13 @@ public class TicketDaoImpl implements TicketDao {
         logger.debug("getBookedTickets " + " user:" + " pageSize:" + pageSize + " pageNum:");
         int start = pageSize;
         int finish = (pageNum - 1) * pageSize;
-        String sql = BOOKED_TICKETS_BY_USER + " LIMIT " + start + " OFFSET " + finish;
-        return jdbcTemplate.query(sql, Collections.singletonMap("userId", user.getId()), new TicketMapper());
+        Map<String, Object> namedParameters = new HashMap<>();
+        namedParameters.put("userId", user.getId());
+        namedParameters.put("pageSize", pageSize);
+        namedParameters.put("pageNum", pageNum);
+        namedParameters.put("start", start);
+        namedParameters.put("finish", finish);
+        return jdbcTemplate.query(BOOKED_TICKETS_BY_USER, new MapSqlParameterSource(namedParameters), new TicketMapper());
     }
 
     @Override
@@ -67,8 +72,13 @@ public class TicketDaoImpl implements TicketDao {
         logger.debug("getBookedTickets " + " event:" + " pageSize:" + " pageNum:" + pageNum);
         int start = pageSize;
         int finish = (pageNum - 1) * pageSize;
-        String sql = BOOKED_TICKETS_BY_EVENT + " LIMIT " + start + " OFFSET " + finish;
-        return jdbcTemplate.query(sql, Collections.singletonMap("eventId", event.getId()), new TicketMapper());
+        Map<String, Object> namedParameters = new HashMap<>();
+        namedParameters.put("eventId", event.getId());
+        namedParameters.put("pageSize", pageSize);
+        namedParameters.put("pageNum", pageNum);
+        namedParameters.put("start", start);
+        namedParameters.put("finish", finish);
+        return jdbcTemplate.query(BOOKED_TICKETS_BY_EVENT, new MapSqlParameterSource(namedParameters), new TicketMapper());
     }
 
     @Override
