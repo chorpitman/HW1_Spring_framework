@@ -81,13 +81,13 @@
 
     <!--INIT DB IN MEMORY -->
     <jdbc:initialize-database data-source="dbInMemory">
-        <jdbc:script location="classpath:ddl_InMem.sql"/>
+        <jdbc:script location="classpath:sql/ddl_in_memory.sql"/>
     </jdbc:initialize-database>
 
-    <!--INIT DB LOCAL INITIALIZE-->
+    <!--INIT DB LOCAL -->
     <!--<jdbc:initialize-database data-source="dataSource">-->
-    <!--<jdbc:script location="classpath:ddl.sql"/>-->
-    <!--<jdbc:script location="classpath:dml.sql"/>-->
+    <!--<jdbc:script location="classpath:sql/ddl.sql"/>-->
+    <!--<jdbc:script location="classpath:sql/dml.sql"/>-->
     <!--</jdbc:initialize-database>-->
 
     <!-- DAO -->
@@ -106,7 +106,6 @@
     <bean id="accountDao" class="com.epam.dao.impl.UserAccountDaoImpl" autowire="byType">
         <property name="jdbcTemplate" ref="nameJdbcTemplate"/>
     </bean>
-
 
     <!-- SERVICES: setter injection -->
     <bean id="userService" class="com.epam.service.impl.UserServiceImpl">

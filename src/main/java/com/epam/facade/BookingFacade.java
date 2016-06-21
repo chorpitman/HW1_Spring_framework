@@ -170,7 +170,7 @@ public interface BookingFacade {
 
     boolean deleteUserAccount(long uAccountId);
 
-    void rechargeAccountByAccountId(long userId, BigDecimal amount);
+    void rechargeAccountByAccountId(long accountId, BigDecimal amount);
 
     void rechargeAccountByUserId(long userId, BigDecimal amount);
 }

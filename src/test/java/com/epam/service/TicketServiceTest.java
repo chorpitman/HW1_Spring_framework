@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ServiceTestConfig.class})
 @ActiveProfiles("test")
-@Sql(scripts = {"classpath:drop.sql", "classpath:ddl_InMem.sql", "classpath:dml_InMem.sql"})
+@Sql(scripts = {"classpath:sql/drop.sql", "classpath:sql/ddl_in_memory.sql", "classpath:sql/dml_in_memory.sql"})
 public class TicketServiceTest {
 
     @Autowired
@@ -39,6 +39,7 @@ public class TicketServiceTest {
 
     @Autowired
     private UserAccountService userAccountService;
+
     @Autowired
     private TransactionTemplate transactionTemplate;
 

@@ -56,14 +56,13 @@ public class UserAccountServiceImpl implements UserAccountService {
         userAccountDao.updateUserAccount(userAccount);
     }
 
-    public void rechargeAccountByAccountId(long uAccountId, BigDecimal amount) {
-        log.debug("rechargeAccountByUserId:  userId " + uAccountId + " amount: " +amount );
-        UserAccount userAccount = userAccountDao.getUserAccountById(uAccountId);
+    public void rechargeAccountByAccountId(long userAccountId, BigDecimal amount) {
+        log.debug("rechargeAccountByUserId:  userId " + userAccountId + " amount: " +amount );
+        UserAccount userAccount = userAccountDao.getUserAccountById(userAccountId);
 
-        BigDecimal startBalance = new BigDecimal(0);
         BigDecimal uAccountBalance = userAccount.getAmount();
 
-        if (uAccountBalance.compareTo(startBalance) == 1) {
+        if (uAccountBalance.compareTo(BigDecimal.ZERO) == 1) {
             userAccount.setAmount(uAccountBalance.add(amount));
         } else {
             userAccount.setAmount(amount);

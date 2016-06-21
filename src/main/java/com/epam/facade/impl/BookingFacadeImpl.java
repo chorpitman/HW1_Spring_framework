@@ -168,11 +168,11 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     @Override
-    public void rechargeAccountByAccountId(long userId, BigDecimal amount) {
-        if (userId <= 0 || amount.compareTo(new BigDecimal(0)) <= 0) {
+    public void rechargeAccountByAccountId(long accountId, BigDecimal amount) {
+        if (accountId <= 0 || amount.compareTo(new BigDecimal(0)) <= 0) {
             throw new IllegalArgumentException();
         }
-        userAccountService.rechargeAccountByAccountId(userId, amount);
+        userAccountService.rechargeAccountByAccountId(accountId, amount);
     }
 
     @Override
