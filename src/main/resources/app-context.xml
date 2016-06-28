@@ -94,15 +94,12 @@
     <bean id="userDao" class="com.epam.dao.impl.UserDaoImpl">
         <property name="jdbcTemplate" ref="nameJdbcTemplate"/>
     </bean>
-
     <bean id="eventDao" class="com.epam.dao.impl.EventDaoImpl">
         <property name="jdbcTemplate" ref="nameJdbcTemplate"/>
     </bean>
-
     <bean id="ticketDao" class="com.epam.dao.impl.TicketDaoImpl" autowire="byType">
         <property name="jdbcTemplate" ref="nameJdbcTemplate"/>
     </bean>
-
     <bean id="accountDao" class="com.epam.dao.impl.UserAccountDaoImpl" autowire="byType">
         <property name="jdbcTemplate" ref="nameJdbcTemplate"/>
     </bean>
@@ -112,17 +109,14 @@
         <property name="userDao" ref="userDao"/>
         <property name="userAccountDao" ref="accountDao"/>
     </bean>
-
     <bean id="eventService" class="com.epam.service.impl.EventServiceImpl">
         <property name="eventDao" ref="eventDao"/>
     </bean>
-
     <bean id="ticketService" class="com.epam.service.impl.TicketServiceImpl">
         <property name="ticketDao" ref="ticketDao"/>
         <property name="userAccountDao" ref="accountDao"/>
         <property name="eventDao" ref="eventDao"/>
     </bean>
-
     <bean id="userAccountService" class="com.epam.service.impl.UserAccountServiceImpl">
         <property name="userAccountDao" ref="accountDao"/>
     </bean>
