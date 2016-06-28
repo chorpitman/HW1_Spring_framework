@@ -70,6 +70,7 @@ public class EventImpl implements Event {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", date=" + date +
+                ", ticketPrice=" + ticketPrice +
                 '}';
     }
 

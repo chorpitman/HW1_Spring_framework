@@ -3,7 +3,7 @@ package com.epam.utils;
 public class Validator {
     public static void checkNotNull(Object obj) {
         if (obj == null) {
-            throw new IllegalArgumentException("wrong: param can not be null");
+            throw new IllegalArgumentException("wrong: parameter can not be null");
         }
     }
 

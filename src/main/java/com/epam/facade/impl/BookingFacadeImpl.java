@@ -38,13 +38,13 @@ public class BookingFacadeImpl implements BookingFacade {
 
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
         Validator.checkExpression(title == null || pageNum <= 0 || pageNum <= 0, "title can't be null or pageSize " +
-                "and pageNum can't be equals or less then 0");
+                "and pageNum must be more then 0");
         return eventService.getEventsByTitle(title, pageSize, pageNum);
     }
 
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
         Validator.checkExpression(day == null || pageSize <= 0 || pageNum <= 0, "day can't be null or pageSize " +
-                "and pageNum can't be equals or less then 0");
+                "and pageNum must be more then 0");
         return eventService.getEventsForDay(day, pageSize, pageNum);
     }
 
@@ -59,7 +59,7 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     public boolean deleteEvent(long eventId) {
-        Validator.checkExpression(eventId <= 0, " eventID must be more then 0");
+        Validator.checkExpression(eventId <= 0, " eventId must be more then 0");
         return eventService.deleteEvent(eventId);
     }
 
@@ -76,7 +76,7 @@ public class BookingFacadeImpl implements BookingFacade {
 
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
         Validator.checkExpression(name == null || pageSize <= 0 || pageNum <= 0, "name can't be null or pageSize " +
-                "and pageNum can't be equals or less then 0");
+                "and pageNum must be more then 0");
         return userService.getUsersByName(name, pageSize, pageNum);
     }
 
@@ -98,19 +98,19 @@ public class BookingFacadeImpl implements BookingFacade {
     // START Ticket
     public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {
         Validator.checkExpression(userId <= 0 || eventId <= 0 || place <= 0 || category == null, "place or category " +
-                "can't be null or pageSize, pageNum, place can't be equals or less then 0");
+                "can't be null or pageSize, and pageNum must be more then 0");
         return ticketService.bookTicket(userId, eventId, place, category);
     }
 
     public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
         Validator.checkExpression(user == null || pageSize <= 0 || pageNum <= 0, "user can't be null or pageSize " +
-                "and pageNum can't be equals or less then 0");
+                "and pageNum must be more then 0");
         return ticketService.getBookedTickets(user, pageSize, pageNum);
     }
 
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
         Validator.checkExpression(event == null || pageSize <= 0 || pageNum <= 0, "event can't be null or pageSize " +
-                "and pageNum can't be equals or less then 0");
+                "and pageNum must be more then 0");
         return ticketService.getBookedTickets(event, pageSize, pageNum);
     }
 
@@ -122,14 +122,14 @@ public class BookingFacadeImpl implements BookingFacade {
     //USER ACCOUNT
     @Override
     public UserAccount createUserAccount(UserAccount account) {
-        Validator.checkExpression(account == null, " account can't be null");
+        Validator.checkNotNull(account);
         return userAccountService.createUserAccount(account);
     }
 
     @Override
-    public UserAccount getUserAccountById(long AccountId) {
-        Validator.checkExpression(AccountId <= 0, "AccountId must be more then 0");
-        return userAccountService.getUserAccountById(AccountId);
+    public UserAccount getUserAccountById(long accountId) {
+        Validator.checkExpression(accountId <= 0, "AccountId must be more then 0");
+        return userAccountService.getUserAccountById(accountId);
     }
 
     @Override
@@ -140,13 +140,13 @@ public class BookingFacadeImpl implements BookingFacade {
 
     @Override
     public UserAccount updateUserAccount(UserAccount account) {
-        Validator.checkExpression(account == null, "account can't be null");
+        Validator.checkNotNull(account);
         return userAccountService.updateUserAccount(account);
     }
 
     @Override
     public boolean deleteUserAccount(long accountId) {
-        Validator.checkExpression(accountId <= 0, "accountId can't be null");
+        Validator.checkExpression(accountId <= 0, "ccountId must be more then 0");
         return userAccountService.deleteUserAccount(accountId);
     }
 

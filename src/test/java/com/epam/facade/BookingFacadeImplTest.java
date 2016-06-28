@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyVararg;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -72,44 +73,81 @@ public class BookingFacadeImplTest {
     public void testGetEventById() {
         when(mockEventService.getEventById(event.getId())).thenReturn(event);
 
-        Event recievedEvent = bookingFacade.getEventById(event.getId());
-        assertEquals(event.getId(), recievedEvent.getId());
-        assertEquals(event, recievedEvent);
+        Event receivedEvent = bookingFacade.getEventById(event.getId());
+        assertEquals(event.getId(), receivedEvent.getId());
+        assertEquals(event, receivedEvent);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetEventByIdWithWrongParam() {
+        bookingFacade.getEventById(0L);
+        verify(mockEventService).getEventById(0L);
+        bookingFacade.getEventById(-1L);
+        verify(mockEventService).getEventById(-1L);
     }
 
     @Test
     public void testGetEventsByTitle() {
-        String eventTitle = event.getTitle();
+        event.setTitle("Programming day");
         List<Event> eventList = Arrays.asList(event);
 
-        when(mockEventService.getEventsByTitle(eventTitle, 1, 1)).thenReturn(eventList);
-        assertEquals(eventList, bookingFacade.getEventsByTitle(eventTitle, 1, 1));
+        when(mockEventService.getEventsByTitle(event.getTitle(), 1, 1)).thenReturn(eventList);
+        assertEquals(eventList, bookingFacade.getEventsByTitle(event.getTitle(), 1, 1));
+    }
 
-        when(mockEventService.getEventsByTitle(eventTitle, 0, 0)).thenReturn(Collections.emptyList());
-        assertEquals(Collections.emptyList(), bookingFacade.getEventsByTitle(eventTitle, 0, 0));
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetEventsByTitleWithWrongParam() {
+        event.setTitle("Programming");
+        String eventTitle = event.getTitle();
+        bookingFacade.getEventsByTitle(eventTitle, 0, 0);
+        verify(mockEventService).getEventsByTitle(eventTitle, 0, 0);
 
-        when(mockEventService.getEventsByTitle(eventTitle, 0, 1)).thenReturn(Collections.emptyList());
-        assertEquals(Collections.emptyList(), bookingFacade.getEventsByTitle(eventTitle, 0, 1));
+        bookingFacade.getEventsByTitle(eventTitle, 0, 1);
+        verify(mockEventService).getEventsByTitle(eventTitle, 0, 1);
 
-        when(mockEventService.getEventsByTitle(eventTitle, 1, 0)).thenReturn(Collections.emptyList());
-        assertEquals(Collections.emptyList(), bookingFacade.getEventsByTitle(eventTitle, 1, 0));
+        bookingFacade.getEventsByTitle(eventTitle, 1, 0);
+        verify(mockEventService).getEventsByTitle(eventTitle, 1, 0);
+
+        bookingFacade.getEventsByTitle(eventTitle, -1, -1);
+        verify(mockEventService).getEventsByTitle(eventTitle, -1, -1);
+
+        bookingFacade.getEventsByTitle(eventTitle, 1, -1);
+        verify(mockEventService).getEventsByTitle(eventTitle, 1, -1);
+
+        bookingFacade.getEventsByTitle(eventTitle, -1, 1);
+        verify(mockEventService).getEventsByTitle(eventTitle, -1, 1);
     }
 
     @Test
     public void testGetEventsForDay() {
+        event = new EventImpl("Programming", new Date(), BigDecimal.TEN);
         List<Event> eventList = Arrays.asList(event);
 
         when(mockEventService.getEventsForDay(event.getDate(), 1, 1)).thenReturn(eventList);
         assertEquals(eventList, bookingFacade.getEventsForDay(event.getDate(), 1, 1));
+    }
 
-        when(mockEventService.getEventsForDay(event.getDate(), 0, 0)).thenReturn(Collections.emptyList());
-        assertEquals(Collections.emptyList(), bookingFacade.getEventsForDay(event.getDate(), 0, 0));
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetEventsForDayWithWrongParam() {
+        event.setDate(new Date());
 
-        when(mockEventService.getEventsForDay(event.getDate(), 1, 0)).thenReturn(Collections.emptyList());
-        assertEquals(Collections.emptyList(), bookingFacade.getEventsForDay(event.getDate(), 1, 0));
+        bookingFacade.getEventsForDay(event.getDate(), 0, 0);
+        verify(mockEventService).getEventsForDay(event.getDate(), 0, 0);
 
-        when(mockEventService.getEventsForDay(event.getDate(), 0, 1)).thenReturn(Collections.emptyList());
-        assertEquals(Collections.emptyList(), bookingFacade.getEventsForDay(event.getDate(), 0, 1));
+        bookingFacade.getEventsForDay(event.getDate(), 1, 0);
+        verify(mockEventService).getEventsForDay(event.getDate(), 1, 0);
+
+        bookingFacade.getEventsForDay(event.getDate(), 0, 1);
+        verify(mockEventService).getEventsForDay(event.getDate(), 0, 1);
+
+        bookingFacade.getEventsForDay(event.getDate(), -1, -1);
+        verify(mockEventService).getEventsForDay(event.getDate(), -1, -1);
+
+        bookingFacade.getEventsForDay(event.getDate(), 1, -1);
+        verify(mockEventService).getEventsForDay(event.getDate(), 1, -1);
+
+        bookingFacade.getEventsForDay(event.getDate(), -1, 1);
+        verify(mockEventService).getEventsForDay(event.getDate(), -1, 1);
     }
 
     @Test
@@ -126,9 +164,15 @@ public class BookingFacadeImplTest {
         assertEquals(createdEvent.getId(), event.getId());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateEventWithWrongParam() {
+        bookingFacade.createEvent(null);
+        verify(mockEventService).createEvent(null);
+    }
+
     @Test
     public void testUpdateEvent() {
-        Event eventUpdt = new EventImpl(event.getTitle() + " with ball", new Date(), new BigDecimal(501));
+        Event eventUpdt = new EventImpl(event.getTitle() + " with ball", new Date(), BigDecimal.TEN);
 
         when(mockEventService.createEvent(event)).thenReturn(event);
 
@@ -148,15 +192,27 @@ public class BookingFacadeImplTest {
         assertNotSame(event.getDate(), updatedEvent.getDate());
     }
 
-    @Test
-    public void testDeleteEvent() {
-        when(mockEventService.deleteEvent(0L)).thenReturn(Boolean.FALSE);
-        assertEquals(bookingFacade.deleteEvent(0L), false);
-
-        when(mockEventService.deleteEvent(1L)).thenReturn(Boolean.TRUE);
-        assertEquals(bookingFacade.deleteEvent(1L), true);
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateEventWithWrongParam() {
+        bookingFacade.updateEvent(null);
+        verify(mockEventService).updateEvent(null);
     }
 
+    @Test
+    public void testDeleteEvent() {
+        when(mockEventService.deleteEvent(1L)).thenReturn(Boolean.TRUE);
+        assertEquals(bookingFacade.deleteEvent(1L), true);
+        verify(mockEventService).deleteEvent(1L);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteEventWithWrongParam() {
+        assertTrue(bookingFacade.deleteEvent(0L));
+        verify(mockEventService.deleteEvent(0L));
+
+        assertTrue(bookingFacade.deleteEvent(-1L));
+        verify(mockEventService.deleteEvent(-1L));
+    }
 
 
     //USER
@@ -164,11 +220,21 @@ public class BookingFacadeImplTest {
     public void testGetUserById() {
         when(mockUserService.getUserById(user.getId())).thenReturn(user);
         User receivedUser = bookingFacade.getUserById(user.getId());
+        verify(mockUserService).getUserById(user.getId());
 
         assertNotNull(receivedUser);
         assertEquals(receivedUser, user);
         assertEquals(receivedUser.getEmail(), user.getEmail());
         assertEquals(receivedUser.getName(), user.getName());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetUserByIdWithWrongParam() {
+        bookingFacade.getUserById(0L);
+        verify(mockUserService).getUserById(0L);
+
+        bookingFacade.getUserById(-1L);
+        verify(mockUserService).getUserById(-1L);
     }
 
     @Test
@@ -184,39 +250,68 @@ public class BookingFacadeImplTest {
         assertEquals(receivedUser.getEmail(), user.getEmail());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetUserByEmailWithWrongParam() {
+        bookingFacade.getUserByEmail(null);
+        verify(mockUserService).getUserByEmail(null);
+    }
+
     @Test
     public void testGetUsersByName() {
         int pageSize = 1;
         int pageNum = 1;
 
+        user = new UserImpl("Dexter", "Dexter@gmail.com");
         List<User> userList = Arrays.asList(user);
 
         when(mockUserService.getUsersByName(user.getName(), pageSize, pageNum)).thenReturn(userList);
         assertEquals(userList, bookingFacade.getUsersByName(user.getName(), pageSize, pageNum));
+        verify(mockUserService).getUsersByName(user.getName(), pageSize, pageNum);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetUsersByNameWithWrongParam() {
+        int pageSize = 1;
+        int pageNum = 1;
+        bookingFacade.getUsersByName(user.getName(), pageSize, pageNum);
+        verify(mockUserService).getUsersByName(user.getName(), pageSize, pageNum);
 
         pageSize = 0;
         pageNum = 0;
-
-        when(mockUserService.getUsersByName(user.getName(), pageSize, pageNum)).thenReturn(Collections.emptyList());
-        assertEquals(Collections.emptyList(), bookingFacade.getUsersByName(user.getName(), 0, 0));
+        bookingFacade.getUsersByName(user.getName(), pageSize, pageNum);
+        verify(mockUserService).getUsersByName(user.getName(), pageSize, pageNum);
 
         pageSize = 0;
         pageNum = 1;
-
-        when(mockUserService.getUsersByName(user.getName(), pageSize, pageNum)).thenReturn(Collections.emptyList());
-        assertEquals(Collections.emptyList(), bookingFacade.getUsersByName(user.getName(), pageSize, pageNum));
+        bookingFacade.getUsersByName(user.getName(), pageSize, pageNum);
+        verify(mockUserService).getUsersByName(user.getName(), pageSize, pageNum);
 
         pageSize = 1;
         pageNum = 0;
+        bookingFacade.getUsersByName(user.getName(), pageSize, pageNum);
+        verify(mockUserService).getUsersByName(user.getName(), pageSize, pageNum);
 
-        when(mockUserService.getUsersByName(user.getName(), pageSize, pageNum)).thenReturn(Collections.emptyList());
-        assertEquals(Collections.emptyList(), bookingFacade.getUsersByName(user.getName(), pageSize, pageNum));
+        pageSize = -1;
+        pageNum = -1;
+        bookingFacade.getUsersByName(user.getName(), pageSize, pageNum);
+        verify(mockUserService).getUsersByName(user.getName(), pageSize, pageNum);
+
+        pageSize = 1;
+        pageNum = -1;
+        bookingFacade.getUsersByName(user.getName(), pageSize, pageNum);
+        verify(mockUserService).getUsersByName(user.getName(), pageSize, pageNum);
+
+        pageSize = -1;
+        pageNum = 1;
+        bookingFacade.getUsersByName(user.getName(), pageSize, pageNum);
+        verify(mockUserService).getUsersByName(user.getName(), pageSize, pageNum);
     }
 
     @Test
     public void testCreateUser() {
         when(mockUserService.createUser(user)).thenReturn(user);
         User createdUser = bookingFacade.createUser(user);
+        verify(mockUserService).createUser(user);
 
         assertNotNull(user);
         assertNotNull(createdUser);
@@ -225,10 +320,17 @@ public class BookingFacadeImplTest {
         assertEquals(createdUser.getEmail(), user.getEmail());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateUserWithWrongParam() {
+        bookingFacade.createUser(null);
+        verify(mockUserService).createUser(null);
+    }
+
     @Test
     public void testUpdateUser() {
         when(mockUserService.createUser(user)).thenReturn(user);
         User createdUser = bookingFacade.createUser(user);
+        verify(mockUserService).createUser(user);
 
         assertNotNull(user);
         assertNotNull(createdUser);
@@ -240,6 +342,7 @@ public class BookingFacadeImplTest {
 
         when(bookingFacade.updateUser(userUpd)).thenReturn(userUpd);
         User receivedUser = bookingFacade.updateUser(userUpd);
+        verify(mockUserService).updateUser(userUpd);
 
         assertNotNull(receivedUser);
         assertNotSame(createdUser, receivedUser);
@@ -248,13 +351,25 @@ public class BookingFacadeImplTest {
         assertEquals(userUpd.getName(), receivedUser.getName());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateUserWithWrongParam() {
+        bookingFacade.updateUser(null);
+        verify(mockUserService).updateUser(null);
+    }
+
     @Test
     public void testDeleteUser() {
-        when(mockUserService.deleteUser(0L)).thenReturn(Boolean.FALSE);
-        assertEquals(bookingFacade.deleteUser(0L), false);
-
         when(mockUserService.deleteUser(1L)).thenReturn(Boolean.TRUE);
         assertEquals(bookingFacade.deleteUser(1L), true);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteUserWithWrongParam() {
+        assertTrue(bookingFacade.deleteUser(0L));
+        verify(mockUserService).deleteUser(0L);
+
+        assertTrue(bookingFacade.deleteUser(-1L));
+        verify(mockUserService).deleteUser(0L);
     }
 
     //TICKETS
@@ -262,27 +377,32 @@ public class BookingFacadeImplTest {
     public void testBookTicket() {
         when(mockTicketService.bookTicket(user.getId(), event.getId(), 1, Ticket.Category.STANDARD)).thenReturn(ticket);
         assertEquals(bookingFacade.bookTicket(user.getId(), event.getId(), 1, Ticket.Category.STANDARD), ticket);
+        verify(mockTicketService).bookTicket(user.getId(), event.getId(), 1, Ticket.Category.STANDARD);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testBookTicketException() {
+    public void testBookTicketWithWrongParam() {
         long userId = 0;
         long eventId = 0;
         int place = 0;
 
-        when(mockTicketService.bookTicket(userId, eventId, place, Ticket.Category.PREMIUM)).thenThrow(IllegalArgumentException.class);
         bookingFacade.bookTicket(userId, eventId, place, Ticket.Category.PREMIUM);
+        verify(mockTicketService).bookTicket(userId, eventId, place, Ticket.Category.PREMIUM);
 
         userId = 0;
         eventId = 1;
         place = 1;
         bookingFacade.bookTicket(userId, eventId, place, Ticket.Category.PREMIUM);
+        verify(mockTicketService).bookTicket(userId, eventId, place, Ticket.Category.PREMIUM);
 
         userId = 1;
         eventId = 0;
         place = 0;
-        when(mockTicketService.bookTicket(userId, eventId, place, Ticket.Category.PREMIUM)).thenThrow(IllegalArgumentException.class);
         bookingFacade.bookTicket(userId, eventId, place, Ticket.Category.PREMIUM);
+        verify(mockTicketService).bookTicket(userId, eventId, place, Ticket.Category.PREMIUM);
+
+        bookingFacade.bookTicket(userId, eventId, place, null);
+        verify(mockTicketService).bookTicket(userId, eventId, place, null);
     }
 
     @Test
@@ -291,18 +411,40 @@ public class BookingFacadeImplTest {
         int pageNum = 1;
         when(mockTicketService.getBookedTickets(user, pageSize, pageNum)).thenReturn(Arrays.asList(ticket));
         assertEquals(bookingFacade.getBookedTickets(user, 1, 1), Arrays.asList(ticket));
+        verify(mockTicketService).getBookedTickets(user, 1, 1);
+    }
 
-        pageSize = 0;
-        pageNum = 0;
-        assertEquals(bookingFacade.getBookedTickets(user, pageSize, pageNum), Collections.emptyList());
+    @Test(expected = IllegalArgumentException.class)
+    public void getBookedByUserTicketWithWrongParam() {
+        int pageSize = 0;
+        int pageNum = 0;
+        bookingFacade.getBookedTickets(user, pageSize, pageNum);
+        verify(mockTicketService).getBookedTickets(user, pageSize, pageNum);
 
         pageSize = 0;
         pageNum = 1;
-        assertEquals(bookingFacade.getBookedTickets(user, pageSize, pageNum), Collections.emptyList());
+        bookingFacade.getBookedTickets(user, pageSize, pageNum);
+        verify(mockTicketService).getBookedTickets(user, pageSize, pageNum);
 
         pageSize = 1;
         pageNum = 0;
-        assertEquals(bookingFacade.getBookedTickets(user, pageSize, pageNum), Collections.emptyList());
+        bookingFacade.getBookedTickets(user, pageSize, pageNum);
+        verify(mockTicketService).getBookedTickets(user, pageSize, pageNum);
+
+        pageSize = -1;
+        pageNum = -1;
+        bookingFacade.getBookedTickets(user, pageSize, pageNum);
+        verify(mockTicketService).getBookedTickets(user, pageSize, pageNum);
+
+        pageSize = 1;
+        pageNum = -1;
+        bookingFacade.getBookedTickets(user, pageSize, pageNum);
+        verify(mockTicketService).getBookedTickets(user, pageSize, pageNum);
+
+        pageSize = -1;
+        pageNum = 1;
+        bookingFacade.getBookedTickets(user, pageSize, pageNum);
+        verify(mockTicketService).getBookedTickets(user, pageSize, pageNum);
     }
 
     @Test
@@ -311,27 +453,58 @@ public class BookingFacadeImplTest {
         int pageNum = 1;
         when(mockTicketService.getBookedTickets(event, pageSize, pageNum)).thenReturn(Arrays.asList(ticket));
         assertEquals(bookingFacade.getBookedTickets(event, 1, 1), Arrays.asList(ticket));
+        verify(mockTicketService).getBookedTickets(event, 1, 1);
+    }
 
-        pageSize = 0;
-        pageNum = 0;
-        assertEquals(bookingFacade.getBookedTickets(event, pageSize, pageNum), Collections.emptyList());
+    @Test(expected = IllegalArgumentException.class)
+    public void getBookedTicketsByEventTicketsWithWrongParam() {
+        int pageSize = 0;
+        int pageNum = 0;
+        bookingFacade.getBookedTickets(event, pageSize, pageNum);
+        verify(mockTicketService).getBookedTickets(event, pageSize, pageNum);
 
         pageSize = 0;
         pageNum = 1;
-        assertEquals(bookingFacade.getBookedTickets(event, pageSize, pageNum), Collections.emptyList());
+        bookingFacade.getBookedTickets(event, pageSize, pageNum);
+        verify(mockTicketService).getBookedTickets(event, pageSize, pageNum);
 
         pageSize = 1;
         pageNum = 0;
-        assertEquals(bookingFacade.getBookedTickets(event, pageSize, pageNum), Collections.emptyList());
+        bookingFacade.getBookedTickets(event, pageSize, pageNum);
+        verify(mockTicketService).getBookedTickets(event, pageSize, pageNum);
+
+        pageSize = -1;
+        pageNum = -1;
+        bookingFacade.getBookedTickets(event, pageSize, pageNum);
+        verify(mockTicketService).getBookedTickets(event, pageSize, pageNum);
+
+        pageSize = 1;
+        pageNum = -1;
+        bookingFacade.getBookedTickets(event, pageSize, pageNum);
+        verify(mockTicketService).getBookedTickets(event, pageSize, pageNum);
+
+        pageSize = -1;
+        pageNum = 1;
+        bookingFacade.getBookedTickets(event, pageSize, pageNum);
+        verify(mockTicketService).getBookedTickets(event, pageSize, pageNum);
     }
 
     @Test
     public void cancelTicket() {
-        when(mockTicketService.cancelTicket(0L)).thenReturn(Boolean.FALSE);
-        assertEquals(bookingFacade.cancelTicket(0L), false);
-
         when(mockTicketService.cancelTicket(1L)).thenReturn(Boolean.TRUE);
         assertEquals(bookingFacade.cancelTicket(1L), true);
+        verify(mockTicketService).cancelTicket(1L);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void cancelTicketWithWrongParam() {
+        when(mockTicketService.cancelTicket(0L)).thenReturn(Boolean.TRUE);
+        assertTrue(bookingFacade.cancelTicket(0L));
+        verify(mockTicketService).cancelTicket(0L);
+
+        assertTrue(bookingFacade.cancelTicket(-1L));
+        verify(mockTicketService).cancelTicket(-1L);
+        verify(mockTicketService).cancelTicket(-1L);
     }
 
     //USER ACCOUNT
@@ -339,6 +512,7 @@ public class BookingFacadeImplTest {
     public void testCreateUserAccount() {
         when(mockAccountService.createUserAccount(userAccount)).thenReturn(userAccount);
         UserAccount createdUserAccount = bookingFacade.createUserAccount(userAccount);
+        verify(mockAccountService).createUserAccount(userAccount);
 
         assertNotNull(userAccount);
         assertNotNull(createdUserAccount);
@@ -346,14 +520,30 @@ public class BookingFacadeImplTest {
         assertEquals(userAccount.getAmount(), createdUserAccount.getAmount());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateUserAccountWithWrongParam() {
+        bookingFacade.createUserAccount(null);
+        verify(mockAccountService).createUserAccount(null);
+    }
+
     @Test
     public void testGetUserAccountById() {
         when(mockAccountService.getUserAccountById(userAccount.getId())).thenReturn(userAccount);
         UserAccount receivedUserAccount = bookingFacade.getUserAccountById(userAccount.getId());
+        verify(mockAccountService).getUserAccountById(userAccount.getId());
 
         assertEquals(userAccount.getUserId(), receivedUserAccount.getUserId());
         assertEquals(userAccount.getAmount(), receivedUserAccount.getAmount());
         assertEquals(userAccount, receivedUserAccount);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetUserAccountByIdWithWrongParam() {
+        bookingFacade.getUserAccountById(0L);
+        verify(mockAccountService).getUserAccountById(0L);
+
+        bookingFacade.getUserAccountById(-1L);
+        verify(mockAccountService).getUserAccountById(-1L);
     }
 
     @Test
@@ -362,10 +552,20 @@ public class BookingFacadeImplTest {
 
         when(mockAccountService.getUserAccountByUserId(userAccount.getUserId())).thenReturn(userAccount);
         UserAccount receivedUserAccount = bookingFacade.getUserAccountByUserId(userAccount.getUserId());
+        verify(mockAccountService).getUserAccountByUserId(userAccount.getUserId());
 
         assertEquals(userAccount.getAmount(), receivedUserAccount.getAmount());
         assertEquals(userAccount.getId(), receivedUserAccount.getId());
         assertEquals(userAccount.getUserId(), receivedUserAccount.getUserId());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetUserAccountByUserIdWithWrongParam() {
+        bookingFacade.getUserAccountByUserId(0L);
+        verify(mockAccountService).getUserAccountByUserId(0L);
+
+        bookingFacade.getUserAccountByUserId(-1L);
+        verify(mockAccountService).getUserAccountByUserId(-1L);
     }
 
     @Test
@@ -382,16 +582,22 @@ public class BookingFacadeImplTest {
         assertTrue(bookingFacade.getUserAccountById((userAccount.getId())).getAmount().compareTo(updateBalance) == 0);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateUserAccountWithWrongParam() {
+        bookingFacade.updateUserAccount(null);
+        verify(mockAccountService).updateUserAccount(null);
+    }
+
     @Test
     public void testDeleteUserAccount() {
-        when(mockAccountService.deleteUserAccount(-1L)).thenReturn(Boolean.FALSE);
-        assertEquals(false, bookingFacade.deleteUserAccount(-1L));
-
-        when(mockUserService.deleteUser(0L)).thenReturn(Boolean.FALSE);
-        assertEquals(false, bookingFacade.deleteUserAccount(0L));
-
         when(mockAccountService.deleteUserAccount(1L)).thenReturn(Boolean.TRUE);
         assertEquals(true, bookingFacade.deleteUserAccount(1L));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteUserAccountWithWrongParam() {
+        bookingFacade.deleteUserAccount(-1L);
+        bookingFacade.deleteUserAccount(0L);
     }
 
     @Test
@@ -400,10 +606,43 @@ public class BookingFacadeImplTest {
         verify(mockAccountService).rechargeAccountByAccountId(userAccount.getId(), BigDecimal.TEN);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testRechargeAccountByAccountIdWithWrongParam() {
+        userAccount.setId(1);
+        bookingFacade.rechargeAccountByAccountId(userAccount.getId(), BigDecimal.ZERO);
+        verify(mockAccountService).rechargeAccountByAccountId(userAccount.getId(), BigDecimal.ZERO);
+
+        bookingFacade.rechargeAccountByAccountId(0L, BigDecimal.ZERO);
+        verify(mockAccountService).rechargeAccountByAccountId(0L, BigDecimal.ZERO);
+
+        bookingFacade.rechargeAccountByAccountId(0L, BigDecimal.TEN);
+        verify(mockAccountService).rechargeAccountByAccountId(0L, BigDecimal.TEN);
+
+        bookingFacade.rechargeAccountByAccountId(-1L, BigDecimal.ONE);
+        verify(mockAccountService).rechargeAccountByAccountId(-1L, BigDecimal.ONE);
+    }
+
     @Test
     public void testRechargeAccountByUserId() {
         userAccount.setUserId(1L);
         bookingFacade.rechargeAccountByUserId(userAccount.getUserId(), BigDecimal.TEN);
         verify(mockAccountService).rechargeAccountByUserId(userAccount.getUserId(), BigDecimal.TEN);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testRechargeAccountByUserIdWithWrongParam() {
+        userAccount.setUserId(1);
+        bookingFacade.rechargeAccountByUserId(userAccount.getUserId(), BigDecimal.ZERO);
+        verify(mockAccountService).rechargeAccountByUserId(userAccount.getUserId(), BigDecimal.ZERO);
+
+        bookingFacade.rechargeAccountByUserId(0L, BigDecimal.ZERO);
+        verify(mockAccountService).rechargeAccountByUserId(0L, BigDecimal.ZERO);
+
+        bookingFacade.rechargeAccountByUserId(0L, BigDecimal.TEN);
+        verify(mockAccountService).rechargeAccountByUserId(0L, BigDecimal.TEN);
+
+        bookingFacade.rechargeAccountByUserId(-1L, BigDecimal.TEN);
+        verify(mockAccountService).rechargeAccountByUserId(-1L, BigDecimal.TEN);
+
     }
 }

@@ -99,16 +99,6 @@ public class TicketServiceTest {
     }
 
     @Test
-    public void testGetBookedByUserTicketsWithWrongPagination() {
-        User receivedUser = userService.getUserById(1);
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(receivedUser, 0, 0));
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(receivedUser, 1, 0));
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(receivedUser, 0, 1));
-
-        assertEquals(Collections.emptyList(), ticketService.getBookedTickets(receivedUser, -1, 1));
-    }
-
-    @Test
     public void testGetBookedByEventTickets() {
         Event bookedEvent = eventService.getEventById(1);
 

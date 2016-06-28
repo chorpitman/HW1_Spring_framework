@@ -90,9 +90,6 @@ public class EventServiceTest {
 
         assertEquals(title, createdEvent.getTitle());
 
-        assertEquals(Collections.emptyList(), eventService.getEventsByTitle(title, 0, 0));
-        assertEquals(Collections.emptyList(), eventService.getEventsByTitle(title, 1, 0));
-        assertEquals(Collections.emptyList(), eventService.getEventsByTitle(title, 0, 1));
         assertEquals(Arrays.asList(createdEvent), eventService.getEventsByTitle(title, 1, 1));
     }
 
@@ -102,9 +99,6 @@ public class EventServiceTest {
         Event createdEvent = eventService.createEvent(event);
 
         assertEquals(date, createdEvent.getDate());
-        assertEquals(Collections.emptyList(), eventService.getEventsForDay(date, 0, 0));
-        assertEquals(Collections.emptyList(), eventService.getEventsForDay(date, 1, 0));
-        assertEquals(Collections.emptyList(), eventService.getEventsForDay(date, 0, 1));
         assertEquals(Arrays.asList(createdEvent), eventService.getEventsForDay(date, 1, 1));
     }
 }

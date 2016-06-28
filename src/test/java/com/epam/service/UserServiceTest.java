@@ -61,7 +61,7 @@ public class UserServiceTest {
 
     @Test
     public void testGetUserByEmail() {
-        String userEmail = user.getEmail();
+        final String userEmail = user.getEmail();
         assertNotNull(userEmail);
 
         User createdUser = userService.createUser(user);
@@ -124,17 +124,5 @@ public class UserServiceTest {
         assertEquals(receivedUser.size(), 1);
         System.out.println(receivedUser);
         assertEquals(receivedUser, Arrays.asList(userService.getUserById(7)));
-    }
-
-    @Test
-    public void testGetUserByNameWithWrongParameters() {
-        userService.createUser(user);
-        assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 0, 0));
-        assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 1, 0));
-        assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 0, 1));
-        assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), -1, 0));
-        assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), -1, 1));
-        assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 1, -1));
-        assertEquals(Collections.emptyList(), userService.getUsersByName(user.getName(), 0, -1));
     }
 }
