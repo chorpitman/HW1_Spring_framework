@@ -66,6 +66,9 @@ public class BookingFacadeImplTest {
     @Before
     public void init() {
         bookingFacade = new BookingFacadeImpl(mockUserService, mockEventService, mockTicketService, mockAccountService);
+        user = new UserImpl(1L, "Dexter", "Dexter@i.ua");
+        event = new EventImpl(1L, "Basketball", new Date(), BigDecimal.TEN);
+        userAccount = new UserAccountImpl(1L, 1L, BigDecimal.ZERO);
     }
 
     //    EVENT
@@ -88,7 +91,6 @@ public class BookingFacadeImplTest {
 
     @Test
     public void testGetEventsByTitle() {
-        event.setTitle("Programming day");
         List<Event> eventList = Arrays.asList(event);
 
         when(mockEventService.getEventsByTitle(event.getTitle(), 1, 1)).thenReturn(eventList);
@@ -97,7 +99,6 @@ public class BookingFacadeImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetEventsByTitleWithWrongParam() {
-        event.setTitle("Programming");
         String eventTitle = event.getTitle();
         bookingFacade.getEventsByTitle(eventTitle, 0, 0);
         verify(mockEventService).getEventsByTitle(eventTitle, 0, 0);
@@ -120,7 +121,6 @@ public class BookingFacadeImplTest {
 
     @Test
     public void testGetEventsForDay() {
-        event = new EventImpl("Programming", new Date(), BigDecimal.TEN);
         List<Event> eventList = Arrays.asList(event);
 
         when(mockEventService.getEventsForDay(event.getDate(), 1, 1)).thenReturn(eventList);
@@ -129,8 +129,6 @@ public class BookingFacadeImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetEventsForDayWithWrongParam() {
-        event.setDate(new Date());
-
         bookingFacade.getEventsForDay(event.getDate(), 0, 0);
         verify(mockEventService).getEventsForDay(event.getDate(), 0, 0);
 
@@ -172,7 +170,7 @@ public class BookingFacadeImplTest {
 
     @Test
     public void testUpdateEvent() {
-        Event eventUpdt = new EventImpl(event.getTitle() + " with ball", new Date(), BigDecimal.TEN);
+        Event eventUpdt = new EventImpl(3L, event.getTitle() + " with ball", new Date(), BigDecimal.TEN);
 
         when(mockEventService.createEvent(event)).thenReturn(event);
 
@@ -239,10 +237,6 @@ public class BookingFacadeImplTest {
 
     @Test
     public void testGetUserByEmail() {
-        user.setId(1);
-        user.setName("Gleb");
-        user.setEmail("Gleb@i.ua");
-
         when(mockUserService.getUserByEmail(user.getEmail())).thenReturn(user);
         User receivedUser = bookingFacade.getUserByEmail(user.getEmail());
         verify(mockUserService).getUserByEmail(user.getEmail());
@@ -261,7 +255,6 @@ public class BookingFacadeImplTest {
         int pageSize = 1;
         int pageNum = 1;
 
-        user = new UserImpl("Dexter", "Dexter@gmail.com");
         List<User> userList = Arrays.asList(user);
 
         when(mockUserService.getUsersByName(user.getName(), pageSize, pageNum)).thenReturn(userList);
@@ -338,7 +331,7 @@ public class BookingFacadeImplTest {
 
         String userName = "Joshua Bloch";
         String userEmail = "Joshua_Bloch@i.ua";
-        User userUpd = new UserImpl(userName, userEmail);
+        User userUpd = new UserImpl(1L, userName, userEmail);
 
         when(bookingFacade.updateUser(userUpd)).thenReturn(userUpd);
         User receivedUser = bookingFacade.updateUser(userUpd);
@@ -548,8 +541,6 @@ public class BookingFacadeImplTest {
 
     @Test
     public void testGetUserAccountByUserId() {
-        userAccount.setUserId(1);
-
         when(mockAccountService.getUserAccountByUserId(userAccount.getUserId())).thenReturn(userAccount);
         UserAccount receivedUserAccount = bookingFacade.getUserAccountByUserId(userAccount.getUserId());
         verify(mockAccountService).getUserAccountByUserId(userAccount.getUserId());
@@ -570,7 +561,6 @@ public class BookingFacadeImplTest {
 
     @Test
     public void testUpdateUserAccount() {
-        userAccount.setId(1);
         BigDecimal updateBalance = new BigDecimal(3000);
         when(mockAccountService.getUserAccountById(userAccount.getId())).thenReturn(userAccount);
         UserAccount receivedUserAccount = bookingFacade.getUserAccountById(userAccount.getId());
@@ -597,7 +587,10 @@ public class BookingFacadeImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testDeleteUserAccountWithWrongParam() {
         bookingFacade.deleteUserAccount(-1L);
+        verify(mockAccountService).deleteUserAccount(-1L);
+
         bookingFacade.deleteUserAccount(0L);
+        verify(mockAccountService).deleteUserAccount(0L);
     }
 
     @Test
@@ -608,7 +601,6 @@ public class BookingFacadeImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testRechargeAccountByAccountIdWithWrongParam() {
-        userAccount.setId(1);
         bookingFacade.rechargeAccountByAccountId(userAccount.getId(), BigDecimal.ZERO);
         verify(mockAccountService).rechargeAccountByAccountId(userAccount.getId(), BigDecimal.ZERO);
 
@@ -624,14 +616,12 @@ public class BookingFacadeImplTest {
 
     @Test
     public void testRechargeAccountByUserId() {
-        userAccount.setUserId(1L);
         bookingFacade.rechargeAccountByUserId(userAccount.getUserId(), BigDecimal.TEN);
         verify(mockAccountService).rechargeAccountByUserId(userAccount.getUserId(), BigDecimal.TEN);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testRechargeAccountByUserIdWithWrongParam() {
-        userAccount.setUserId(1);
         bookingFacade.rechargeAccountByUserId(userAccount.getUserId(), BigDecimal.ZERO);
         verify(mockAccountService).rechargeAccountByUserId(userAccount.getUserId(), BigDecimal.ZERO);
 

@@ -14,11 +14,11 @@ public class EventImpl implements Event {
     private BigDecimal ticketPrice;
 
     public EventImpl() {
-        this.id = ++counterId;
+
     }
 
-    public EventImpl(String title, Date date, BigDecimal ticketPrice) {
-        this.id = ++counterId;
+    public EventImpl(long id, String title, Date date, BigDecimal ticketPrice) {
+        this.id = id;
         this.title = title;
         this.date = date;
         this.ticketPrice = ticketPrice;

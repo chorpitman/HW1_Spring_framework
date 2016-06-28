@@ -12,11 +12,10 @@ public class UserAccountImpl implements UserAccount {
     private BigDecimal amount;
 
     public UserAccountImpl() {
-        this.id = ++counterId;
     }
 
-    public UserAccountImpl(long userId, BigDecimal amount) {
-        this.id = ++counterId;
+    public UserAccountImpl(long accountId,long userId, BigDecimal amount) {
+        this.id = accountId;
         this.userId = userId;
         this.amount = amount;
     }

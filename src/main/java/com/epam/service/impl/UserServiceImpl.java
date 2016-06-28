@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user) {
         User createdUser = userDao.createUser(user);
         long idCreatedUser = createdUser.getId();
-        userAccountDao.createUserAccount(new UserAccountImpl(idCreatedUser, BigDecimal.ZERO));
+        userAccountDao.createUserAccount(new UserAccountImpl(20L,idCreatedUser, BigDecimal.ZERO));
         return createdUser;
     }
 

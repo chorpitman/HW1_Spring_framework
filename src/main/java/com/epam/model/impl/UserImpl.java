@@ -10,11 +10,11 @@ public class UserImpl implements User {
     private String email;
 
     public UserImpl() {
-        this.id = ++counterId;
+//        this.id = ++counterId;
     }
 
-    public UserImpl(String name, String email) {
-        this.id = ++counterId;
+    public UserImpl(long id, String name, String email) {
+        this.id = id;
         this.name = name;
         this.email = email;
     }

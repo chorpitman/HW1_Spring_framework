@@ -34,7 +34,7 @@ public class EventServiceTest {
 
     @Before
     public void init() {
-        event = new EventImpl("golf", new Date(2016, 06, 10), new BigDecimal(1500));
+        event = new EventImpl(1L, "golf", new Date(2016, 06, 10), new BigDecimal(1500));
     }
 
     @Test

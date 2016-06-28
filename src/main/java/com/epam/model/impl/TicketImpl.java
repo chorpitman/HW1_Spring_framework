@@ -12,11 +12,10 @@ public class TicketImpl implements Ticket {
     private Category category;
 
     public TicketImpl() {
-        this.id = ++counterId;
     }
 
-    public TicketImpl(Category category, long eventId, long userId, int place) {
-        this.id = ++counterId;
+    public TicketImpl(long id, Category category, long eventId, long userId, int place) {
+        this.id = id;
         this.eventId = eventId;
         this.userId = userId;
         this.place = place;
