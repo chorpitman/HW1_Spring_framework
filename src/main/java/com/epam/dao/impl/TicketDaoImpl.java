@@ -56,13 +56,12 @@ public class TicketDaoImpl implements TicketDao {
     @Override
     public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
         logger.debug("getBookedTickets " + " user:" + " pageSize:" + pageSize + " pageNum:");
-        int start = pageSize;
         int finish = (pageNum - 1) * pageSize;
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("userId", user.getId());
         namedParameters.put("pageSize", pageSize);
         namedParameters.put("pageNum", pageNum);
-        namedParameters.put("start", start);
+        namedParameters.put("start", pageSize);
         namedParameters.put("finish", finish);
         return jdbcTemplate.query(BOOKED_TICKETS_BY_USER, new MapSqlParameterSource(namedParameters), new TicketMapper());
     }
@@ -70,13 +69,12 @@ public class TicketDaoImpl implements TicketDao {
     @Override
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
         logger.debug("getBookedTickets " + " event:" + " pageSize:" + " pageNum:" + pageNum);
-        int start = pageSize;
         int finish = (pageNum - 1) * pageSize;
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("eventId", event.getId());
         namedParameters.put("pageSize", pageSize);
         namedParameters.put("pageNum", pageNum);
-        namedParameters.put("start", start);
+        namedParameters.put("start", pageSize);
         namedParameters.put("finish", finish);
         return jdbcTemplate.query(BOOKED_TICKETS_BY_EVENT, new MapSqlParameterSource(namedParameters), new TicketMapper());
     }

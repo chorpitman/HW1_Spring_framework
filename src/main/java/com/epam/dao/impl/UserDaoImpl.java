@@ -74,11 +74,10 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
         log.debug("getUsersByName:" + name + " " + "pageSize:" + pageSize + " pageNum:" + pageNum);
-        int start = pageSize;
         int finish = (pageNum - 1) * pageSize;
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("name", name);
-        namedParameters.put("start", start);
+        namedParameters.put("start", pageSize);
         namedParameters.put("finish", finish);
         return jdbcTemplate.query(GET_USER_BY_NAME, new MapSqlParameterSource(namedParameters), new UserMapper());
     }

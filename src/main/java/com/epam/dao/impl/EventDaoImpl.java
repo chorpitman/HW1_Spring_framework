@@ -44,11 +44,10 @@ public class EventDaoImpl implements EventDao {
     @Override
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
         log.debug("getEventsByTitle:" + title + " pageSize:" + pageSize + " pageNum:" + pageNum);
-        int start = pageSize;
         int finish = (pageNum - 1) * pageSize;
         Map<String, Object> nameParameters = new HashMap<>();
         nameParameters.put("title", title);
-        nameParameters.put("start", start);
+        nameParameters.put("start", pageSize);
         nameParameters.put("finish", finish);
         return jdbcTemplate.query(GET_EVENTS_BY_TITLE, new MapSqlParameterSource(nameParameters), new EventMapper());
     }
@@ -56,13 +55,11 @@ public class EventDaoImpl implements EventDao {
     @Override
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
         log.debug("getEventsForDay:" + day + " pageSize:" + pageSize + " pageNum:" + pageNum);
-        int start = pageSize;
         int finish = (pageNum - 1) * pageSize;
         Map<String, Object> nameParameters = new HashMap<>();
         nameParameters.put("date", day);
-        nameParameters.put("start", start);
+        nameParameters.put("start", pageSize);
         nameParameters.put("finish", finish);
-//        String sql = GET_EVENTS_FOR_DAY + " LIMIT " + start + " OFFSET " + finish;
         return jdbcTemplate.query(GET_EVENTS_FOR_DAY, new MapSqlParameterSource(nameParameters), new EventMapper());
     }
 
