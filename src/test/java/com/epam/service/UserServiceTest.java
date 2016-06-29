@@ -14,10 +14,11 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ServiceTestConfig.class})
@@ -31,7 +32,7 @@ public class UserServiceTest {
 
     @Before
     public void init() {
-        user = new UserImpl(1L, "Dima", "Dima@i.ua");
+        user = new UserImpl(1L, "Bob", "bob@i.ua");
     }
 
     @Test

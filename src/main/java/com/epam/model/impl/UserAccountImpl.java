@@ -5,8 +5,6 @@ import com.epam.model.UserAccount;
 import java.math.BigDecimal;
 
 public class UserAccountImpl implements UserAccount {
-    private static long counterId = 0;
-
     private long id;
     private long userId;
     private BigDecimal amount;
@@ -14,7 +12,7 @@ public class UserAccountImpl implements UserAccount {
     public UserAccountImpl() {
     }
 
-    public UserAccountImpl(long accountId,long userId, BigDecimal amount) {
+    public UserAccountImpl(long accountId, long userId, BigDecimal amount) {
         this.id = accountId;
         this.userId = userId;
         this.amount = amount;

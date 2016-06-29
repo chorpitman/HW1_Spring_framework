@@ -23,7 +23,7 @@ public class UserDaoImpl implements UserDao {
     private static final String DELETE_USER = "DELETE FROM user WHERE id =:id";
     private static final String UPDATE_USER = "UPDATE user SET name = :name, email = :email WHERE id = :id";
     private static final String GET_USER_BY_ID = "SELECT * FROM user WHERE id = :id";
-    private static final String GET_USER_BY_NAME = "SELECT * FROM user WHERE name = :name";
+    private static final String GET_USER_BY_NAME = "SELECT * FROM user WHERE name = :name LIMIT :start OFFSET :finish";
     private static final String GET_USER_BY_EMAIL = "SELECT * FROM user WHERE email = :email";
 
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -36,7 +36,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User createUser(User user) {
         log.debug("createUser-" + user);
-        Map<String, String> nameParameters = new HashMap<>();
+        Map<String, Object> nameParameters = new HashMap<>();
         nameParameters.put("name", user.getName());
         nameParameters.put("email", user.getEmail());
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -76,8 +76,11 @@ public class UserDaoImpl implements UserDao {
         log.debug("getUsersByName:" + name + " " + "pageSize:" + pageSize + " pageNum:" + pageNum);
         int start = pageSize;
         int finish = (pageNum - 1) * pageSize;
-        String sql = GET_USER_BY_NAME + " LIMIT " + start + " OFFSET " + finish;
-        return jdbcTemplate.query(sql, Collections.singletonMap("name", name), new UserMapper());
+        Map<String, Object> namedParameters = new HashMap<>();
+        namedParameters.put("name", name);
+        namedParameters.put("start", start);
+        namedParameters.put("finish", finish);
+        return jdbcTemplate.query(GET_USER_BY_NAME, new MapSqlParameterSource(namedParameters), new UserMapper());
     }
 
     @Override

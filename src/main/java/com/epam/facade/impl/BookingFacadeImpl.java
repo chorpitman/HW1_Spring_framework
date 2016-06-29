@@ -146,7 +146,7 @@ public class BookingFacadeImpl implements BookingFacade {
 
     @Override
     public boolean deleteUserAccount(long accountId) {
-        Validator.checkExpression(accountId <= 0, "ccountId must be more than 0");
+        Validator.checkExpression(accountId <= 0, "accountId must be more than 0");
         return userAccountService.deleteUserAccount(accountId);
     }
 

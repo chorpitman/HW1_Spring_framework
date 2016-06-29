@@ -3,8 +3,6 @@ package com.epam.model.impl;
 import com.epam.model.Ticket;
 
 public class TicketImpl implements Ticket {
-    private static long counterId = 0;
-
     private long id;
     private long eventId;
     private long userId;

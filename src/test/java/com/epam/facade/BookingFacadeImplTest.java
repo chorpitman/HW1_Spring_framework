@@ -25,12 +25,13 @@ import org.springframework.context.annotation.Profile;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyVararg;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -170,7 +171,7 @@ public class BookingFacadeImplTest {
 
     @Test
     public void testUpdateEvent() {
-        Event eventUpdt = new EventImpl(3L, event.getTitle() + " with ball", new Date(), BigDecimal.TEN);
+        Event eventForUpdate = new EventImpl(3L, event.getTitle() + " with ball", new Date(), BigDecimal.TEN);
 
         when(mockEventService.createEvent(event)).thenReturn(event);
 
@@ -179,14 +180,14 @@ public class BookingFacadeImplTest {
         assertNotNull(createdEvent);
         assertEquals(event, createdEvent);
 
-        when(mockEventService.updateEvent(eventUpdt)).thenReturn(eventUpdt);
+        when(mockEventService.updateEvent(eventForUpdate)).thenReturn(eventForUpdate);
 
-        Event updatedEvent = bookingFacade.updateEvent(eventUpdt);
+        Event updatedEvent = bookingFacade.updateEvent(eventForUpdate);
         assertNotNull(updatedEvent);
         assertNotSame(createdEvent, updatedEvent);
-        assertEquals(eventUpdt.getId(), updatedEvent.getId());
-        assertEquals(eventUpdt.getTitle(), updatedEvent.getTitle());
-        assertEquals(eventUpdt.getDate(), updatedEvent.getDate());
+        assertEquals(eventForUpdate.getId(), updatedEvent.getId());
+        assertEquals(eventForUpdate.getTitle(), updatedEvent.getTitle());
+        assertEquals(eventForUpdate.getDate(), updatedEvent.getDate());
         assertNotSame(event.getDate(), updatedEvent.getDate());
     }
 

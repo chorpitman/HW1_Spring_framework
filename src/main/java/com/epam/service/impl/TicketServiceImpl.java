@@ -31,7 +31,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {
-        //check for existing ticket todo think about this methods and about approach which can test Ticketservic --> bookTicket
+        //check for existing ticket todo think about this methods and about approach which can test Ticket service --> bookTicket
 //        if (ticketDao.bookTicket(userId, eventId, place, category) != null) {
 //            throw new IllegalArgumentException("ticket already booked");
 //        }

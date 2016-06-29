@@ -43,7 +43,7 @@
         <constructor-arg ref="dbInMemory"/>
     </bean>
 
-    <!--Transacton-->
+    <!--Transaction-->
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <constructor-arg ref="dbInMemory"/>
     </bean>

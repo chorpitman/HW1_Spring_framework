@@ -3,14 +3,11 @@ package com.epam.model.impl;
 import com.epam.model.User;
 
 public class UserImpl implements User {
-    private static long counterId = 0;
-
     private long id;
     private String name;
     private String email;
 
     public UserImpl() {
-//        this.id = ++counterId;
     }
 
     public UserImpl(long id, String name, String email) {

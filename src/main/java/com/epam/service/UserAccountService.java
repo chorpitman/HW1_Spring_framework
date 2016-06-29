@@ -4,9 +4,6 @@ import com.epam.model.UserAccount;
 
 import java.math.BigDecimal;
 
-/**
- * Created by Oleg_Chorpita on 6/1/2016.
- */
 public interface UserAccountService {
     UserAccount createUserAccount(UserAccount account);
 

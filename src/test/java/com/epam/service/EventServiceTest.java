@@ -13,8 +13,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
@@ -34,7 +34,7 @@ public class EventServiceTest {
 
     @Before
     public void init() {
-        event = new EventImpl(1L, "golf", new Date(2016, 06, 10), new BigDecimal(1500));
+        event = new EventImpl(1L, "golf", new Date(), new BigDecimal(1500));
     }
 
     @Test
@@ -76,29 +76,22 @@ public class EventServiceTest {
         assertEquals(true, eventService.deleteEvent(createdEvent.getId()));
     }
 
-    @Test(/*expected = IllegalArgumentException.class*/)
-    public void testDeleteEventWithWrongId() {
-        assertEquals(false, eventService.deleteEvent(0));
-        assertEquals(false, eventService.deleteEvent(-1));
-        assertEquals(false, eventService.deleteEvent(100));
-    }
-
     @Test
     public void testGetEventsByTitle() {
         String title = event.getTitle();
         Event createdEvent = eventService.createEvent(event);
 
         assertEquals(title, createdEvent.getTitle());
-
         assertEquals(Arrays.asList(createdEvent), eventService.getEventsByTitle(title, 1, 1));
     }
 
     @Test
     public void testGetEventsForDay() {
         Date date = event.getDate();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Event createdEvent = eventService.createEvent(event);
 
-        assertEquals(date, createdEvent.getDate());
+        assertEquals(dateFormat.format(date), dateFormat.format(createdEvent.getDate()));
         assertEquals(Arrays.asList(createdEvent), eventService.getEventsForDay(date, 1, 1));
     }
 }

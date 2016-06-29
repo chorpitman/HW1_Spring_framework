@@ -11,7 +11,11 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class EventDaoImpl implements EventDao {
     private static Logger log = Logger.getLogger(EventDaoImpl.class.getName());
@@ -19,11 +23,11 @@ public class EventDaoImpl implements EventDao {
     private static final String CREATE_EVENT = "INSERT INTO event (date, title, ticketPrice) " +
             "VALUES (:date, :title, :ticketPrice)";
     private static final String GET_EVENT_BY_ID = "SELECT * FROM event WHERE id = :id";
-    private static final String UDATE_EVENT = "UPDATE event SET " +
+    private static final String UPDATE_EVENT = "UPDATE event SET " +
             "date = :date, title = :title, ticketPrice = :ticketPrice WHERE id = :id";
     private static final String DELETE_EVENT = "DELETE FROM event WHERE id =:id";
-    private static final String GET_EVENTS_BY_TITLE = "SELECT * FROM event WHERE title = :title";
-    private static final String GET_EVENTS_FOR_DAY = "SELECT * FROM event WHERE date = :date";
+    private static final String GET_EVENTS_BY_TITLE = "SELECT * FROM event WHERE title = :title LIMIT :start OFFSET :finish";
+    private static final String GET_EVENTS_FOR_DAY = "SELECT * FROM event WHERE date = :date LIMIT :start OFFSET :finish";
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -42,17 +46,24 @@ public class EventDaoImpl implements EventDao {
         log.debug("getEventsByTitle:" + title + " pageSize:" + pageSize + " pageNum:" + pageNum);
         int start = pageSize;
         int finish = (pageNum - 1) * pageSize;
-        String sql = GET_EVENTS_BY_TITLE + " LIMIT " + start + " OFFSET " + finish;
-        return jdbcTemplate.query(sql, Collections.singletonMap("title", title), new EventMapper());
+        Map<String, Object> nameParameters = new HashMap<>();
+        nameParameters.put("title", title);
+        nameParameters.put("start", start);
+        nameParameters.put("finish", finish);
+        return jdbcTemplate.query(GET_EVENTS_BY_TITLE, new MapSqlParameterSource(nameParameters), new EventMapper());
     }
 
     @Override
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
         log.debug("getEventsForDay:" + day + " pageSize:" + pageSize + " pageNum:" + pageNum);
         int start = pageSize;
-        int fiish = (pageNum - 1) * pageSize;
-        String sql = GET_EVENTS_FOR_DAY + " LIMIT " + start + " OFFSET " + fiish;
-        return jdbcTemplate.query(sql, Collections.singletonMap("date", day), new EventMapper());
+        int finish = (pageNum - 1) * pageSize;
+        Map<String, Object> nameParameters = new HashMap<>();
+        nameParameters.put("date", day);
+        nameParameters.put("start", start);
+        nameParameters.put("finish", finish);
+//        String sql = GET_EVENTS_FOR_DAY + " LIMIT " + start + " OFFSET " + finish;
+        return jdbcTemplate.query(GET_EVENTS_FOR_DAY, new MapSqlParameterSource(nameParameters), new EventMapper());
     }
 
     @Override
@@ -76,7 +87,7 @@ public class EventDaoImpl implements EventDao {
         nameParameters.put("date", event.getDate());
         nameParameters.put("title", event.getTitle());
         nameParameters.put("ticketPrice", event.getTicketPrice());
-        jdbcTemplate.update(UDATE_EVENT, nameParameters);
+        jdbcTemplate.update(UPDATE_EVENT, nameParameters);
         return event;
     }
 
