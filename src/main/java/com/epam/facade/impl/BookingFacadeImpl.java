@@ -32,19 +32,19 @@ public class BookingFacadeImpl implements BookingFacade {
 
     // START EVENT
     public Event getEventById(long eventId) {
-        Validator.checkExpression(eventId <= 0, " eventID must be more then 0");
+        Validator.checkExpression(eventId <= 0, " eventID must be more than 0");
         return eventService.getEventById(eventId);
     }
 
     public List<Event> getEventsByTitle(String title, int pageSize, int pageNum) {
         Validator.checkExpression(title == null || pageNum <= 0 || pageNum <= 0, "title can't be null or pageSize " +
-                "and pageNum must be more then 0");
+                "and pageNum must be more than 0");
         return eventService.getEventsByTitle(title, pageSize, pageNum);
     }
 
     public List<Event> getEventsForDay(Date day, int pageSize, int pageNum) {
         Validator.checkExpression(day == null || pageSize <= 0 || pageNum <= 0, "day can't be null or pageSize " +
-                "and pageNum must be more then 0");
+                "and pageNum must be more than 0");
         return eventService.getEventsForDay(day, pageSize, pageNum);
     }
 
@@ -59,13 +59,13 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     public boolean deleteEvent(long eventId) {
-        Validator.checkExpression(eventId <= 0, " eventId must be more then 0");
+        Validator.checkExpression(eventId <= 0, " eventId must be more than 0");
         return eventService.deleteEvent(eventId);
     }
 
     // START USER
     public User getUserById(long userId) {
-        Validator.checkExpression(userId <= 0, " userId must be more then 0");
+        Validator.checkExpression(userId <= 0, " userId must be more than 0");
         return userService.getUserById(userId);
     }
 
@@ -76,7 +76,7 @@ public class BookingFacadeImpl implements BookingFacade {
 
     public List<User> getUsersByName(String name, int pageSize, int pageNum) {
         Validator.checkExpression(name == null || pageSize <= 0 || pageNum <= 0, "name can't be null or pageSize " +
-                "and pageNum must be more then 0");
+                "and pageNum must be more than 0");
         return userService.getUsersByName(name, pageSize, pageNum);
     }
 
@@ -91,31 +91,31 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     public boolean deleteUser(long userId) {
-        Validator.checkExpression(userId <= 0, " userId must be more then 0");
+        Validator.checkExpression(userId <= 0, " userId must be more than 0");
         return userService.deleteUser(userId);
     }
 
     // START Ticket
     public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {
         Validator.checkExpression(userId <= 0 || eventId <= 0 || place <= 0 || category == null, "place or category " +
-                "can't be null or pageSize, and pageNum must be more then 0");
+                "can't be null or pageSize, and pageNum must be more than 0");
         return ticketService.bookTicket(userId, eventId, place, category);
     }
 
     public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
         Validator.checkExpression(user == null || pageSize <= 0 || pageNum <= 0, "user can't be null or pageSize " +
-                "and pageNum must be more then 0");
+                "and pageNum must be more than 0");
         return ticketService.getBookedTickets(user, pageSize, pageNum);
     }
 
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
         Validator.checkExpression(event == null || pageSize <= 0 || pageNum <= 0, "event can't be null or pageSize " +
-                "and pageNum must be more then 0");
+                "and pageNum must be more than 0");
         return ticketService.getBookedTickets(event, pageSize, pageNum);
     }
 
     public boolean cancelTicket(long ticketId) {
-        Validator.checkExpression(ticketId <= 0, "ticketId must be more then 0");
+        Validator.checkExpression(ticketId <= 0, "ticketId must be more than 0");
         return ticketService.cancelTicket(ticketId);
     }
 
@@ -128,13 +128,13 @@ public class BookingFacadeImpl implements BookingFacade {
 
     @Override
     public UserAccount getUserAccountById(long accountId) {
-        Validator.checkExpression(accountId <= 0, "AccountId must be more then 0");
+        Validator.checkExpression(accountId <= 0, "AccountId must be more than 0");
         return userAccountService.getUserAccountById(accountId);
     }
 
     @Override
     public UserAccount getUserAccountByUserId(long userAccountId) {
-        Validator.checkExpression(userAccountId <= 0, "AccountId must be more then 0");
+        Validator.checkExpression(userAccountId <= 0, "AccountId must be more than 0");
         return userAccountService.getUserAccountByUserId(userAccountId);
     }
 
@@ -146,21 +146,21 @@ public class BookingFacadeImpl implements BookingFacade {
 
     @Override
     public boolean deleteUserAccount(long accountId) {
-        Validator.checkExpression(accountId <= 0, "ccountId must be more then 0");
+        Validator.checkExpression(accountId <= 0, "ccountId must be more than 0");
         return userAccountService.deleteUserAccount(accountId);
     }
 
     @Override
     public void rechargeAccountByAccountId(long accountId, BigDecimal amount) {
         Validator.checkExpression(accountId <= 0 || amount.compareTo(new BigDecimal(0)) <= 0, "accountId and amount " +
-                "must be more then 0");
+                "must be more than 0");
         userAccountService.rechargeAccountByAccountId(accountId, amount);
     }
 
     @Override
     public void rechargeAccountByUserId(long userId, BigDecimal amount) {
         Validator.checkExpression(userId <= 0 || amount.compareTo(new BigDecimal(0)) <= 0, "userId and amount " +
-                "must be more then 0");
+                "must be more than 0");
         userAccountService.rechargeAccountByUserId(userId, amount);
     }
 }
