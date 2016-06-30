@@ -86,9 +86,9 @@ public class UserServiceTest {
 
     @Test
     public void testDeleteUser() {
-        User receivedUser = userService.createUser(user);
-        userService.deleteUser(receivedUser.getId());
-        assertEquals(false, userService.deleteUser(receivedUser.getId()));
+        User createdUser = userService.createUser(user);
+        userService.deleteUser(createdUser.getId());
+        assertEquals(false, userService.deleteUser(createdUser.getId()));
     }
 
     @Test
