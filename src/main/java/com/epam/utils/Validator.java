@@ -11,7 +11,7 @@ public final class Validator {
         }
     }
 
-    static void checkExpression(boolean expression, String msg) {
+    public static void checkExpression(boolean expression, String msg) {
         if (expression) {
             throw new IllegalArgumentException("wrong parameter: " + msg);
         }
