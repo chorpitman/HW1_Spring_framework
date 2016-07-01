@@ -19,9 +19,9 @@ import org.junit.runners.Suite;
         EventDaoTest.class,
         TicketDaoTest.class,
         UserServiceTest.class,
+        UserAccountServiceImplTest.class,
         EventServiceTest.class,
         TicketServiceTest.class,
-        UserAccountServiceImplTest.class,
         BookingFacadeImplTest.class,
 })
 public class RunAllTests {
