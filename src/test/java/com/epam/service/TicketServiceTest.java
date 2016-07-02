@@ -1,130 +1,112 @@
 package com.epam.service;
 
-import com.epam.config.ServiceTestConfig;
-import com.epam.model.Event;
+import com.epam.dao.EventDao;
+import com.epam.dao.TicketDao;
+import com.epam.dao.UserAccountDao;
+import com.epam.dao.UserDao;
 import com.epam.model.Ticket;
-import com.epam.model.User;
+import com.epam.model.impl.EventImpl;
+import com.epam.model.impl.TicketImpl;
+import com.epam.model.impl.UserAccountImpl;
+import com.epam.model.impl.UserImpl;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.TransactionStatus;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ServiceTestConfig.class})
-@ActiveProfiles("test")
-@Sql(scripts = {"classpath:sql/drop.sql", "classpath:sql/ddl_in_memory.sql", "classpath:sql/dml_in_memory.sql"})
+@Configuration
+@ImportResource("classpath:app-context.xml")
+@Profile("test")
+@RunWith(MockitoJUnitRunner.class)
 public class TicketServiceTest {
+    @InjectMocks
+    UserImpl user;
+    @InjectMocks
+    EventImpl event;
+    @InjectMocks
+    UserAccountImpl userAccount;
+    @InjectMocks
+    TicketImpl ticket;
 
-    @Autowired
-    private TicketService ticketService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private EventService eventService;
-
-    @Autowired
-    private UserAccountService userAccountService;
-
-    @Autowired
+    @Mock
+    private TicketDao mockTicketDao;
+    @Mock
+    private UserDao userDao;
+    @Mock
+    private EventDao eventDao;
+    @Mock
+    private UserAccountDao accountDao;
+    @Mock
     private TransactionTemplate transactionTemplate;
 
+    @Before
+    public void init() {
+        user = new UserImpl(1L, "Dexter", "d@i.ua");
+        event = new EventImpl(1L, "Opera", new Date(), BigDecimal.ONE);
+        userAccount = new UserAccountImpl(1L, 1L, BigDecimal.ZERO);
+        ticket = new TicketImpl(1L, Ticket.Category.PREMIUM, 1L, 1L, 1);
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void testBookTicketException() {
         //not enough money on balance
-        ticketService.bookTicket(1, 1, 10, Ticket.Category.PREMIUM);
+        when(mockTicketDao.bookTicket(user.getId(), event.getId(), 1, Ticket.Category.PREMIUM)).thenThrow(new IllegalArgumentException());
+        mockTicketDao.bookTicket(user.getId(), event.getId(), 1, Ticket.Category.PREMIUM);
+        verify(mockTicketDao).bookTicket(user.getId(), event.getId(), 1, Ticket.Category.PREMIUM);
     }
 
     @Test
     public void testBookTicket() {
-        userAccountService.rechargeAccountByUserId(2, new BigDecimal(201));
-        Ticket bookedTicket = ticketService.bookTicket(2, 2, 20, Ticket.Category.BAR);
-        assertNotNull(bookedTicket);
-
-        Event receivedEvent = eventService.getEventById(2);
-        assertEquals(new BigDecimal(201), receivedEvent.getTicketPrice());
-    }
-
-    @Test
-    public void testTxBookTicketException() {
-        TransactionStatus transactionStatus = transactionTemplate.getTransactionManager().getTransaction(transactionTemplate);
-        userAccountService.rechargeAccountByUserId(2, new BigDecimal(100));
-        try {
-            Ticket bookedTicket = ticketService.bookTicket(2, 2, 20, Ticket.Category.BAR);
-        } catch (Exception e) {
-            assertTrue(transactionStatus.isRollbackOnly());
-        }
-        transactionTemplate.getTransactionManager().rollback(transactionStatus);
-    }
-
-    @Test
-    public void testTxBookTicket() {
-        TransactionStatus transactionStatus = transactionTemplate.getTransactionManager().getTransaction(transactionTemplate);
-        userAccountService.rechargeAccountByUserId(2, new BigDecimal(301));
-        try {
-            Ticket bookedTicket = ticketService.bookTicket(2, 2, 20, Ticket.Category.BAR);
-        } catch (Exception e) {
-            assertFalse(transactionStatus.isRollbackOnly());
-        } finally {
-            transactionTemplate.getTransactionManager().rollback(transactionStatus);
-        }
+        when(mockTicketDao.bookTicket(user.getId(), event.getId(), 1, Ticket.Category.PREMIUM)).thenReturn(ticket);
+        Ticket bookTicket = mockTicketDao.bookTicket(user.getId(), event.getId(), 1, Ticket.Category.PREMIUM);
+        verify(mockTicketDao).bookTicket(user.getId(), event.getId(), 1, Ticket.Category.PREMIUM);
+        assertNotNull(bookTicket);
     }
 
     @Test
     public void testGetBookedByUserTickets() {
-        User receivedUser = userService.getUserById(1);
-        List<Ticket> bookedTickets = ticketService.getBookedTickets(receivedUser, 1, 1);
-        assertEquals(Arrays.asList(ticketService.bookedTicketById(1)), bookedTickets);
+        int pageSize = 1;
+        int pageNum = 1;
 
-        List<Ticket> bookedTickets1 = ticketService.getBookedTickets(receivedUser, 1, 2);
-        assertEquals(Arrays.asList(ticketService.bookedTicketById(4)), bookedTickets1);
-
-        List<Ticket> bookedTickets2 = ticketService.getBookedTickets(receivedUser, 2, 1);
-        assertEquals(Arrays.asList(ticketService.bookedTicketById(1), ticketService.bookedTicketById(4)), bookedTickets2);
+        when(mockTicketDao.getBookedTickets(user, pageSize, pageNum)).thenReturn(Arrays.asList(ticket));
+        assertEquals(mockTicketDao.getBookedTickets(user, 1, 1), Arrays.asList(ticket));
+        verify(mockTicketDao).getBookedTickets(user, 1, 1);
     }
 
     @Test
     public void testGetBookedByEventTickets() {
-        Event bookedEvent = eventService.getEventById(1);
+        int pageSize = 1;
+        int pageNum = 1;
 
-        List<Ticket> bookedTickets = ticketService.getBookedTickets(bookedEvent, 2, 1);
-        assertEquals(bookedTickets, Arrays.asList(ticketService.bookedTicketById(1), ticketService.bookedTicketById(2)));
-
-        List<Ticket> bookedTickets1 = ticketService.getBookedTickets(bookedEvent, 1, 1);
-        assertEquals(Arrays.asList(ticketService.bookedTicketById(1)), bookedTickets1);
-
-        List<Ticket> bookedTickets2 = ticketService.getBookedTickets(bookedEvent, 1, 2);
-        assertEquals(Arrays.asList(ticketService.bookedTicketById(2)), bookedTickets2);
+        when(mockTicketDao.getBookedTickets(event, pageSize, pageNum)).thenReturn(Arrays.asList(ticket));
+        assertEquals(mockTicketDao.getBookedTickets(event, 1, 1), Arrays.asList(ticket));
+        verify(mockTicketDao).getBookedTickets(event, 1, 1);
     }
 
     @Test
     public void testCancelTicket() {
-        assertEquals(true, ticketService.cancelTicket(1));
-        assertEquals(true, ticketService.cancelTicket(2));
-        assertEquals(true, ticketService.cancelTicket(3));
-    }
-
-    @Test
-    public void testCancelTicketWithWrongId() {
-        assertEquals(false, ticketService.cancelTicket(100));
-        assertEquals(false, ticketService.cancelTicket(0));
-        assertEquals(false, ticketService.cancelTicket(-1));
+        long ticketId = 1L;
+        when(mockTicketDao.cancelTicket(ticketId)).thenReturn(Boolean.TRUE);
+        assertEquals(true, mockTicketDao.cancelTicket(ticketId));
+        assertEquals(false, mockTicketDao.cancelTicket(0));
+        assertEquals(false, mockTicketDao.cancelTicket(-1));
+        assertEquals(false, mockTicketDao.cancelTicket(100));
+        verify(mockTicketDao).cancelTicket(ticketId);
     }
 }

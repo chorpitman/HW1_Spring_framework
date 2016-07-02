@@ -78,10 +78,7 @@ public class TicketDaoImpl implements TicketDao {
     @Override
     public boolean cancelTicket(long ticketId) {
         logger.debug("cancelTicket " + " ticketId");
-        if (jdbcTemplate.update(CANCEL_TICKET, Collections.singletonMap("id", ticketId)) > 0) {
-            return true;
-        }
-        return false;
+        return jdbcTemplate.update(CANCEL_TICKET, Collections.singletonMap("id", ticketId)) > 0;
     }
 
     private static final class TicketMapper implements RowMapper<Ticket> {

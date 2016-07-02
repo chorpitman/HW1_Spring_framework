@@ -1,17 +1,17 @@
 package com.epam.service;
 
-import com.epam.config.ServiceTestConfig;
+import com.epam.dao.UserDao;
 import com.epam.model.User;
 import com.epam.model.impl.UserImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.Profile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,16 +19,22 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ServiceTestConfig.class})
-@ActiveProfiles("test")
-@Sql(scripts = {"classpath:sql/drop.sql", "classpath:sql/ddl_in_memory.sql", "classpath:sql/dml_in_memory.sql"})
+
+@Configuration
+@ImportResource("classpath:app-context.xml")
+@Profile("test")
+@RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
-    private User user;
 
-    @Autowired
-    private UserService userService;
+    @InjectMocks
+    private UserImpl user;
+
+    @Mock
+    private UserDao mockUserDao;
 
     @Before
     public void init() {
@@ -37,9 +43,11 @@ public class UserServiceTest {
 
     @Test
     public void testCreateUser() {
-        User createdUser = userService.createUser(user);
-
+        when(mockUserDao.createUser(user)).thenReturn(user);
+        User createdUser = mockUserDao.createUser(user);
+        verify(mockUserDao).createUser(user);
         assertNotNull(createdUser);
+
         assertNotSame(0, createdUser.getId());
         assertEquals(user.getName(), createdUser.getName());
         assertEquals(user.getEmail(), createdUser.getEmail());
@@ -47,13 +55,17 @@ public class UserServiceTest {
 
     @Test
     public void testGetUserById() {
-        User createdUser = userService.createUser(user);
+        when(mockUserDao.createUser(user)).thenReturn(user);
+        User createdUser = mockUserDao.createUser(user);
+        verify(mockUserDao).createUser(user);
         assertNotSame(null, createdUser.getId());
 
         assertEquals(createdUser.getName(), user.getName());
         assertEquals(createdUser.getEmail(), user.getEmail());
 
-        User receivedUser = userService.getUserById(createdUser.getId());
+        when(mockUserDao.getUserById(user.getId())).thenReturn(user);
+        User receivedUser = mockUserDao.getUserById(createdUser.getId());
+        verify(mockUserDao).getUserById(user.getId());
 
         assertEquals(user.getName(), receivedUser.getName());
         assertEquals(user.getEmail(), receivedUser.getEmail());
@@ -62,12 +74,15 @@ public class UserServiceTest {
 
     @Test
     public void testGetUserByEmail() {
-        final String userEmail = user.getEmail();
-        assertNotNull(userEmail);
-
-        User createdUser = userService.createUser(user);
+        when(mockUserDao.createUser(user)).thenReturn(user);
+        User createdUser = mockUserDao.createUser(user);
+        verify(mockUserDao).createUser(user);
         assertNotSame(null, createdUser.getEmail());
-        assertEquals(userEmail, createdUser.getEmail());
+
+        when(mockUserDao.getUserByEmail(user.getEmail())).thenReturn(user);
+        assertNotNull(user.getEmail());
+        assertEquals(mockUserDao.getUserByEmail(user.getEmail()).getEmail(), createdUser.getEmail());
+        verify(mockUserDao).getUserByEmail(user.getEmail());
     }
 
     @Test
@@ -75,55 +90,53 @@ public class UserServiceTest {
         final String name = "Jack";
         final String email = "Jack@i.ua";
 
-        userService.createUser(user);
-        user.setName(name);
-        user.setEmail(email);
+        when(mockUserDao.createUser(user)).thenReturn(user);
+        User createdUser = mockUserDao.createUser(user);
+        verify(mockUserDao).createUser(user);
+        assertNotSame(null, createdUser);
 
-        User updatedUser = userService.updateUser(user);
+        user.setEmail(email);
+        user.setName(name);
+
+        when(mockUserDao.update(user)).thenReturn(user);
+        User updatedUser = mockUserDao.update(user);
+        verify(mockUserDao).update(user);
+
         assertEquals(name, updatedUser.getName());
         assertEquals(email, updatedUser.getEmail());
     }
 
     @Test
     public void testDeleteUser() {
-        User createdUser = userService.createUser(user);
-        userService.deleteUser(createdUser.getId());
-        assertEquals(false, userService.deleteUser(createdUser.getId()));
+        long userId = 2L;
+        when(mockUserDao.deleteUser(userId)).thenReturn(Boolean.TRUE);
+        assertEquals(true, mockUserDao.deleteUser(userId));
+        assertEquals(false, mockUserDao.deleteUser(0));
+        assertEquals(false, mockUserDao.deleteUser(-1));
+        assertEquals(false, mockUserDao.deleteUser(100));
+        verify(mockUserDao).deleteUser(userId);
     }
 
     @Test
     public void testDeleteUserWithWrongId() {
-        assertEquals(false, userService.deleteUser(0));
-        assertEquals(false, userService.deleteUser(-1));
-        assertEquals(false, userService.deleteUser(100));
-    }
+        assertEquals(false, mockUserDao.deleteUser(0));
+        verify(mockUserDao).deleteUser(0);
 
-    @Test(expected = DataAccessException.class)
-    public void testDeleteUserException() {
-        User receivedUser = userService.createUser(user);
-        userService.deleteUser(receivedUser.getId());
-        assertEquals(receivedUser, userService.getUserById(receivedUser.getId()));
+        assertEquals(false, mockUserDao.deleteUser(-1));
+        verify(mockUserDao).deleteUser(-1);
+
+        assertEquals(false, mockUserDao.deleteUser(100));
+        verify(mockUserDao).deleteUser(100);
     }
 
     @Test
     public void testGetUsersByName() {
-        final String userName = "John";
-        List<User> receivedUser = userService.getUsersByName(userName, 5, 1);
+        when(mockUserDao.getUsersByName(user.getName(), 1, 1)).thenReturn(Arrays.asList(user));
+        List<User> receivedUser = mockUserDao.getUsersByName(user.getName(), 1, 1);
+        verify(mockUserDao).getUsersByName(user.getName(), 1, 1);
 
         assertNotNull(receivedUser);
-        assertEquals(userName, receivedUser.get(1).getName());
-        assertEquals(receivedUser.size(), 5);
-
-        assertEquals(receivedUser.get(0), userService.getUserById(3));
-        assertEquals(receivedUser.get(2), userService.getUserById(5));
-        assertEquals(receivedUser.get(4), userService.getUserById(7));
-
-        receivedUser = userService.getUsersByName(userName, 2, 2);
-        assertEquals(receivedUser.size(), 2);
-
-        receivedUser = userService.getUsersByName(userName, 2, 3);
-        assertEquals(receivedUser.size(), 1);
-        System.out.println(receivedUser);
-        assertEquals(receivedUser, Arrays.asList(userService.getUserById(7)));
+        assertEquals(user.getName(), receivedUser.get(0).getName());
+        assertTrue(receivedUser.containsAll(Arrays.asList(user)));
     }
 }

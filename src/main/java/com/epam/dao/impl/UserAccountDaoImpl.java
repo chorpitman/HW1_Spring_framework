@@ -64,10 +64,7 @@ public class UserAccountDaoImpl implements UserAccountDao {
 
     @Override
     public boolean deleteUserAccount(long uAccountId) {
-        if (jdbcTemplate.update(DELETE_USER_ACCOUNT, Collections.singletonMap("id", uAccountId)) > 0) {
-            return true;
-        }
-        return false;
+        return jdbcTemplate.update(DELETE_USER_ACCOUNT, Collections.singletonMap("id", uAccountId)) > 0;
     }
 
     private static final class UserAccountMapper implements RowMapper<UserAccount> {

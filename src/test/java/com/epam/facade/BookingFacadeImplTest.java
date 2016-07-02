@@ -41,28 +41,27 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class BookingFacadeImplTest {
 
-    @Mock
-    private UserService mockUserService;
-    @Mock
-    private EventService mockEventService;
-    @Mock
-    private TicketService mockTicketService;
-    @Mock
-    private UserAccountService mockAccountService;
-
     private BookingFacade bookingFacade;
-
     @InjectMocks
     private EventImpl event;
-
     @InjectMocks
     private UserImpl user;
-
     @InjectMocks
     private TicketImpl ticket;
-
     @InjectMocks
     private UserAccountImpl userAccount;
+
+    @Mock
+    private UserService mockUserService;
+
+    @Mock
+    private EventService mockEventService;
+
+    @Mock
+    private TicketService mockTicketService;
+
+    @Mock
+    private UserAccountService mockAccountService;
 
     @Before
     public void init() {

@@ -3,7 +3,10 @@ package com.epam.dao.impl;
 import com.epam.dao.UserDao;
 import com.epam.model.User;
 import com.epam.model.impl.UserImpl;
+import com.epam.utils.UserException;
+import com.epam.utils.Validator;
 import org.apache.log4j.Logger;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -40,9 +43,15 @@ public class UserDaoImpl implements UserDao {
         nameParameters.put("name", user.getName());
         nameParameters.put("email", user.getEmail());
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(CREATE_USER, new MapSqlParameterSource(nameParameters), keyHolder);
+        try {
+            jdbcTemplate.update(CREATE_USER, new MapSqlParameterSource(nameParameters), keyHolder);
+        } catch (DataAccessException e) {
+            throw new UserException("You try create not unique user with [name]: " + user.getName() + " [email]: " + user.getEmail());
+        }
         int lastUserId = keyHolder.getKey().intValue();
-        return jdbcTemplate.queryForObject(GET_USER_BY_ID, Collections.singletonMap("id", lastUserId), new UserMapper());
+        User createdUser = jdbcTemplate.queryForObject(GET_USER_BY_ID, Collections.singletonMap("id", lastUserId), new UserMapper());
+        Validator.checkNotNull(createdUser);
+        return createdUser;
     }
 
     @Override
@@ -52,23 +61,36 @@ public class UserDaoImpl implements UserDao {
         nameParameters.put("id", user.getId());
         nameParameters.put("name", user.getName());
         nameParameters.put("email", user.getEmail());
-        jdbcTemplate.update(UPDATE_USER, nameParameters);
+        System.out.println(user);
+        try {
+            // TODO: 02.07.16 doent work
+            jdbcTemplate.update(UPDATE_USER, nameParameters);
+        } catch (DataAccessException e) {
+            throw new UserException("you can't update " + user);
+        }
+        System.out.println();
         return user;
     }
 
     @Override
     public boolean deleteUser(long userId) {
         log.debug("deleteUser - " + userId);
-        if (jdbcTemplate.update(DELETE_USER, Collections.singletonMap("id", userId)) > 0) {
-            return true;
-        }
-        return false;
+        return jdbcTemplate.update(DELETE_USER, Collections.singletonMap("id", userId)) > 0;
     }
 
     @Override
     public User getUserById(long userId) {
         log.debug("getUserById-" + userId);
-        return jdbcTemplate.queryForObject(GET_USER_BY_ID, Collections.singletonMap("id", userId), new UserMapper());
+        User receivedUser;
+
+        try {
+            receivedUser = jdbcTemplate.queryForObject(GET_USER_BY_ID, Collections.singletonMap("id", userId), new UserMapper());
+        } catch (DataAccessException e) {
+            throw new UserException("user with [id]:" + userId + " doesn't exist");
+        }
+
+        Validator.checkNotNull(receivedUser);
+        return receivedUser;
     }
 
     @Override
@@ -79,13 +101,31 @@ public class UserDaoImpl implements UserDao {
         namedParameters.put("name", name);
         namedParameters.put("start", pageSize);
         namedParameters.put("finish", finish);
-        return jdbcTemplate.query(GET_USER_BY_NAME, new MapSqlParameterSource(namedParameters), new UserMapper());
+        List<User> receivedUser;
+
+        try {
+            receivedUser = jdbcTemplate.query(GET_USER_BY_NAME, new MapSqlParameterSource(namedParameters), new UserMapper());
+        } catch (DataAccessException e) {
+            // TODO: 02.07.16 talks with alex about this case. Return empty Collection or Exceptions
+            throw new UserException("users with [name]:" + name + " doesn't exist");
+        }
+//        Validator.checkExpression(receivedUser.isEmpty(), "users with [name]:" + name + " doesn't exist");
+        return receivedUser;
     }
 
     @Override
     public User getUserByEmail(String email) {
         log.debug("getUserByEmail:" + email);
-        return jdbcTemplate.queryForObject(GET_USER_BY_EMAIL, Collections.singletonMap("email", email), new UserMapper());
+        User receivedUser;
+
+        try {
+            receivedUser = jdbcTemplate.queryForObject(GET_USER_BY_EMAIL, Collections.singletonMap("email", email), new UserMapper());
+        } catch (DataAccessException e) {
+            throw new UserException("user with [email]:" + email + " doesn't exist");
+        }
+
+        Validator.checkNotNull(receivedUser);
+        return receivedUser;
     }
 
     private static final class UserMapper implements RowMapper<User> {

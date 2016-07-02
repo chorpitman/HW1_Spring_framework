@@ -3,12 +3,11 @@ package com.epam.dao;
 import com.epam.config.ServiceTestConfig;
 import com.epam.model.User;
 import com.epam.model.impl.UserImpl;
+import com.epam.utils.UserException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -45,6 +44,13 @@ public class UserDaoTest {
         assertEquals(user.getEmail(), createdUser.getEmail());
     }
 
+    @Test(expected = UserException.class)
+    public void testCreateUserExistUser() {
+        User existUser = userDao.getUserById(1L);
+        assertNotNull(existUser);
+        userDao.createUser(existUser);
+    }
+
     @Test
     public void testUpdate() {
         final String name = "Sam";
@@ -60,6 +66,20 @@ public class UserDaoTest {
     }
 
     @Test
+    public void testUpdateException() {
+//        final String name = "Sam";
+//        final String email = "Sam@i.ua";
+//
+//        User createdUser = userDao.createUser(user);
+//        createdUser.setName(name);
+//        createdUser.setEmail(email);
+          User user1 = new UserImpl(2L, "x", "y");
+        User updatedUser = userDao.update(user1);
+//        assertEquals(name, updatedUser.getName());
+//        assertEquals(email, updatedUser.getEmail());
+    }
+
+    @Test
     public void testDeleteUser() {
         User createdUser = userDao.createUser(user);
         assertEquals(true, userDao.deleteUser(createdUser.getId()));
@@ -72,7 +92,7 @@ public class UserDaoTest {
         assertEquals(false, userDao.deleteUser(100));
     }
 
-    @Test(expected = DataAccessException.class)
+    @Test(expected = UserException.class)
     public void testDeleteUserException() {
         User createdUser = userDao.createUser(user);
         userDao.deleteUser(createdUser.getId());
@@ -86,7 +106,7 @@ public class UserDaoTest {
         assertNotNull(userDao.getUserById(userId));
     }
 
-    @Test(expected = EmptyResultDataAccessException.class)
+    @Test(expected = UserException.class)
     public void testGetUserByIdWrongParam() {
         long userId = 0L;
         assertNotNull(userDao.getUserById(userId));
@@ -121,12 +141,45 @@ public class UserDaoTest {
     }
 
     @Test
-    public void testGetUserByEmail() {
+    public void testGetUsersByNameException() {
+        final String userName = "Google";
+        System.out.println(userDao.getUsersByName(userName, 1, 1));
+
+//        assertEquals(userName, receivedUser.get(1).getName());
+//        assertEquals(receivedUser.size(), 5);
+//        assertNotNull(receivedUser);
+//
+//        assertEquals(receivedUser.get(0), userDao.getUserById(3));
+//        assertEquals(receivedUser.get(2), userDao.getUserById(5));
+//        assertEquals(receivedUser.get(4), userDao.getUserById(7));
+//
+//        receivedUser = userDao.getUsersByName(userName, 2, 2);
+//        assertEquals(receivedUser.size(), 2);
+//
+//        receivedUser = userDao.getUsersByName(userName, 2, 3);
+//        assertEquals(receivedUser.size(), 1);
+//        System.out.println(receivedUser);
+//        assertEquals(receivedUser, Arrays.asList(userDao.getUserById(7)));
+    }
+
+    @Test(expected = UserException.class)
+    public void testGetUserByEmailException() {
         final String userEmail = user.getEmail();
         assertNotNull(userEmail);
 
-        User createdUser = userDao.createUser(user);
-        assertEquals(userEmail, createdUser.getEmail());
-        assertNotSame(null, createdUser.getEmail());
+        User receivedUser = userDao.getUserByEmail(userEmail);
+        assertEquals(userEmail, receivedUser.getEmail());
+        assertNotSame(null, receivedUser.getEmail());
+    }
+
+    @Test
+    public void testGetUserByEmail() {
+        userDao.createUser(user);
+        final String userEmail = user.getEmail();
+        assertNotNull(userEmail);
+
+        User receivedUser = userDao.getUserByEmail(userEmail);
+        assertEquals(userEmail, receivedUser.getEmail());
+        assertNotSame(null, receivedUser.getEmail());
     }
 }

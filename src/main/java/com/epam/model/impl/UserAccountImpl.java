@@ -57,9 +57,8 @@ public class UserAccountImpl implements UserAccount {
 
         if (id != that.id) return false;
         if (userId != that.userId) return false;
-        if (amount != null ? !amount.equals(that.amount) : that.amount != null) return false;
+        return amount != null ? amount.equals(that.amount) : that.amount == null;
 
-        return true;
     }
 
     @Override
