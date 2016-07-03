@@ -3,6 +3,7 @@ package com.epam.dao;
 import com.epam.config.ServiceTestConfig;
 import com.epam.model.UserAccount;
 import com.epam.model.impl.UserAccountImpl;
+import com.epam.utils.UserAccountException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,9 +64,18 @@ public class UserAccountDaoTest {
     @Test
     public void testDeleteUserAccount() {
         assertEquals(true, accountDao.deleteUserAccount(1L));
-        assertEquals(false, accountDao.deleteUserAccount(1L));
+    }
 
-        assertEquals(false, accountDao.deleteUserAccount(0L));
+    @Test(expected = UserAccountException.class)
+    public void testDeleteUserAccountWithWrongUserAccount() {
         assertEquals(false, accountDao.deleteUserAccount(-1L));
+        assertEquals(false, accountDao.deleteUserAccount(0L));
+        assertEquals(false, accountDao.deleteUserAccount(100L));
+    }
+
+    @Test(expected = UserAccountException.class)
+    public void testDeleteUserAccountNotExistUserAccount() {
+        assertEquals(true, accountDao.deleteUserAccount(1L));
+        assertEquals(false, accountDao.deleteUserAccount(1L));
     }
 }
