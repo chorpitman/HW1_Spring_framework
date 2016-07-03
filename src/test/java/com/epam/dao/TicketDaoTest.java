@@ -4,7 +4,10 @@ import com.epam.config.ServiceTestConfig;
 import com.epam.model.Event;
 import com.epam.model.Ticket;
 import com.epam.model.User;
+import com.epam.model.impl.EventImpl;
 import com.epam.model.impl.TicketImpl;
+import com.epam.model.impl.UserImpl;
+import com.epam.utils.TicketException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +17,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -38,7 +43,7 @@ public class TicketDaoTest {
     EventDao eventDao;
 
     @Before
-    public void setUp() {
+    public void init() {
         ticket = new TicketImpl(1L, Ticket.Category.STANDARD, 4, 7, 1);
     }
 
@@ -46,6 +51,14 @@ public class TicketDaoTest {
     public void testBookedTicketById() {
         assertNotNull(ticketDao.bookedTicketById(1L));
     }
+
+    @Test(expected = TicketException.class)
+    public void testBookedTicketByIdWrongId() {
+        assertNotNull(ticketDao.bookedTicketById(-1L));
+        assertNotNull(ticketDao.bookedTicketById(0L));
+        assertNotNull(ticketDao.bookedTicketById(100L));
+    }
+
 
     @Test
     public void testBookTicket() {
@@ -67,8 +80,19 @@ public class TicketDaoTest {
 
         receivedTicket = ticketDao.getBookedTickets(user, 1, 2);
         assertEquals(1, receivedTicket.size());
+    }
 
-        receivedTicket = ticketDao.getBookedTickets(user, 0, 0);
+    @Test(expected = TicketException.class)
+    public void testGetBookedTicketsByUserWrongUser() {
+        user = new UserImpl(100L, "Alex", "Alex@i.ua");
+        assertNotNull(user);
+        ticketDao.getBookedTickets(user, 2, 1);
+
+        user = userDao.getUserById(1L);
+        assertNotNull(user);
+
+        List<Ticket> receivedTicket = ticketDao.getBookedTickets(user, 0, 0);
+        assertNotNull(receivedTicket);
         assertEquals(0, receivedTicket.size());
 
         receivedTicket = ticketDao.getBookedTickets(user, -1, -1);
@@ -86,8 +110,17 @@ public class TicketDaoTest {
 
         receivedTicket = ticketDao.getBookedTickets(event, 1, 2);
         assertEquals(1, receivedTicket.size());
+    }
 
-        receivedTicket = ticketDao.getBookedTickets(event, 0, 0);
+    @Test(expected = TicketException.class)
+    public void testGetBookedTicketsByEventWrongEvent() {
+        event = new EventImpl(100L, "Moulin Rouge", new Date(), BigDecimal.ZERO);
+        assertNotNull(event);
+        ticketDao.getBookedTickets(event, 1, 1);
+
+        event = eventDao.getEventById(1L);
+        List<Ticket> receivedTicket = ticketDao.getBookedTickets(event, 0, 0);
+        assertNotNull(receivedTicket);
         assertEquals(0, receivedTicket.size());
 
         receivedTicket = ticketDao.getBookedTickets(event, -1, -1);
@@ -97,9 +130,18 @@ public class TicketDaoTest {
     @Test
     public void testCancelTicket() {
         assertEquals(true, ticketDao.cancelTicket(1L));
-        assertEquals(false, ticketDao.cancelTicket(1L));
+    }
 
-        assertEquals(false, ticketDao.cancelTicket(0L));
+    @Test(expected = TicketException.class)
+    public void testCancelTicketWrongParam() {
         assertEquals(false, ticketDao.cancelTicket(-1L));
+        assertEquals(false, ticketDao.cancelTicket(0L));
+        assertEquals(false, ticketDao.cancelTicket(-100L));
+    }
+
+    @Test(expected = TicketException.class)
+    public void testCancelTickettesNotExistTicket() {
+        assertEquals(true, ticketDao.cancelTicket(1L));
+        assertEquals(false, ticketDao.cancelTicket(1L));
     }
 }
