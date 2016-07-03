@@ -57,24 +57,20 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User update(User user) {
         log.debug("updateUser-" + user + "with id " + user.getId());
+        // check user in DB
+        getUserById(user.getId());
         Map<String, Object> nameParameters = new HashMap<>();
         nameParameters.put("id", user.getId());
         nameParameters.put("name", user.getName());
         nameParameters.put("email", user.getEmail());
-        System.out.println(user);
-        try {
-            // TODO: 02.07.16 doent work
-            jdbcTemplate.update(UPDATE_USER, nameParameters);
-        } catch (DataAccessException e) {
-            throw new UserException("you can't update " + user);
-        }
-        System.out.println();
         return user;
     }
 
     @Override
     public boolean deleteUser(long userId) {
         log.debug("deleteUser - " + userId);
+        // check user in DB
+        getUserById(userId);
         return jdbcTemplate.update(DELETE_USER, Collections.singletonMap("id", userId)) > 0;
     }
 
@@ -82,13 +78,11 @@ public class UserDaoImpl implements UserDao {
     public User getUserById(long userId) {
         log.debug("getUserById-" + userId);
         User receivedUser;
-
         try {
             receivedUser = jdbcTemplate.queryForObject(GET_USER_BY_ID, Collections.singletonMap("id", userId), new UserMapper());
         } catch (DataAccessException e) {
             throw new UserException("user with [id]:" + userId + " doesn't exist");
         }
-
         Validator.checkNotNull(receivedUser);
         return receivedUser;
     }
@@ -101,15 +95,11 @@ public class UserDaoImpl implements UserDao {
         namedParameters.put("name", name);
         namedParameters.put("start", pageSize);
         namedParameters.put("finish", finish);
-        List<User> receivedUser;
-
-        try {
-            receivedUser = jdbcTemplate.query(GET_USER_BY_NAME, new MapSqlParameterSource(namedParameters), new UserMapper());
-        } catch (DataAccessException e) {
-            // TODO: 02.07.16 talks with alex about this case. Return empty Collection or Exceptions
+        List<User> receivedUser = jdbcTemplate.query(GET_USER_BY_NAME, new MapSqlParameterSource(namedParameters), new UserMapper());
+        if (receivedUser.isEmpty()) {
             throw new UserException("users with [name]:" + name + " doesn't exist");
         }
-//        Validator.checkExpression(receivedUser.isEmpty(), "users with [name]:" + name + " doesn't exist");
+        Validator.checkNotNull(receivedUser);
         return receivedUser;
     }
 
@@ -117,13 +107,11 @@ public class UserDaoImpl implements UserDao {
     public User getUserByEmail(String email) {
         log.debug("getUserByEmail:" + email);
         User receivedUser;
-
         try {
             receivedUser = jdbcTemplate.queryForObject(GET_USER_BY_EMAIL, Collections.singletonMap("email", email), new UserMapper());
         } catch (DataAccessException e) {
             throw new UserException("user with [email]:" + email + " doesn't exist");
         }
-
         Validator.checkNotNull(receivedUser);
         return receivedUser;
     }
@@ -131,6 +119,7 @@ public class UserDaoImpl implements UserDao {
     private static final class UserMapper implements RowMapper<User> {
         @Override
         public User mapRow(ResultSet resultSet, int i) throws SQLException {
+            log.debug("mapRow:" + resultSet + " " + i);
             User user = new UserImpl();
             user.setId(resultSet.getLong("id"));
             user.setName(resultSet.getString("name"));
