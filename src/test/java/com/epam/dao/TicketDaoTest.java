@@ -139,7 +139,7 @@ public class TicketDaoTest {
     }
 
     @Test(expected = TicketException.class)
-    public void testCancelTickettesNotExistTicket() {
+    public void testCancelTicketsNotExistTicket() {
         assertEquals(true, ticketDao.cancelTicket(1L));
         assertEquals(false, ticketDao.cancelTicket(1L));
     }
