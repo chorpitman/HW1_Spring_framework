@@ -31,19 +31,12 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {
-        //check for existing ticket todo think about this methods and about approach which can test Ticket service --> bookTicket
-//        if (ticketDao.bookTicket(userId, eventId, place, category) != null) {
-//            throw new IllegalArgumentException("ticket already booked");
-//        }
         //check userAccountDao for money
         UserAccount userAccount = userAccountDao.getUserAccountByUserId(userId);
         Event event = eventDao.getEventById(eventId);
 
-        //todo
-        Validator.checkExpression(userAccount.getAmount().compareTo(event.getTicketPrice()) == -1, "User don't have enough money on his balance");
-//        if (userAccount.getAmount().compareTo(event.getTicketPrice()) == -1) {
-//            throw new IllegalArgumentException("User don't have enough money on his balance");
-//        }
+        Validator.checkExpression(userAccount.getAmount().compareTo(event.getTicketPrice()) == -1, "User don't " +
+                "have enough money on his balance");
         //withdraw money from, user account
         userAccount.setAmount(userAccount.getAmount().subtract(event.getTicketPrice()));
         System.out.println("BALANCE AFTER BUYING TICKET -->>>" + userAccount.getAmount());

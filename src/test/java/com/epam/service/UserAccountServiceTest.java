@@ -3,7 +3,6 @@ package com.epam.service;
 import com.epam.dao.UserAccountDao;
 import com.epam.model.UserAccount;
 import com.epam.model.impl.UserAccountImpl;
-import com.epam.service.UserAccountService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -107,56 +106,4 @@ public class UserAccountServiceTest {
         assertEquals(false, mockUserAccountDao.deleteUserAccount(-1));
         assertEquals(false, mockUserAccountDao.deleteUserAccount(100));
     }
-// TODO: 02.07.16 сделать отдельный класс, который будет содержать ниже идущие по контексту методы
-//    @Test
-//    public void testRechargeAccountByUserIdWithZeroStartBalance() {
-//        long userId = 2L;
-//        BigDecimal rechargeBalance = BigDecimal.TEN;
-//
-//        mockUserAccount = mockUserAccountDao.getUserAccountByUserId(userId);
-//        assertTrue(mockUserAccount.getAmount().compareTo(BigDecimal.ZERO) == 0);
-//
-//        mockUserAccountDao.rechargeAccountByUserId(userId, rechargeBalance);
-//        mockUserAccount = mockUserAccountDao.getUserAccountByUserId(userId);
-//        assertTrue(mockUserAccount.getAmount().compareTo(rechargeBalance) == 0);
-//    }
-//
-//    @Test
-//    public void testRechargeAccountByUserIdWithSomeStartBalance() {
-//        long userId = 1L;
-//        BigDecimal rechargeBalance = BigDecimal.TEN;
-//
-//        mockUserAccount = mockUserAccountDao.getUserAccountByUserId(userId);
-//        assertTrue(mockUserAccount.getAmount().compareTo(BigDecimal.ZERO) == 1);
-//
-//        mockUserAccountDao.rechargeAccountByUserId(userId, rechargeBalance);
-//        mockUserAccount = mockUserAccountDao.getUserAccountByUserId(userId);
-//        assertTrue(mockUserAccount.getAmount().compareTo(rechargeBalance) == 1);
-//    }
-//
-//    @Test
-//    public void testRechargeAccountByAccountIdWithZeroStartBalance() {
-//        long accountId = 2L;
-//        BigDecimal rechargeBalance = BigDecimal.TEN;
-//
-//        mockUserAccount = mockUserAccountDao.getUserAccountByUserId(accountId);
-//        assertTrue(mockUserAccount.getAmount().compareTo(BigDecimal.ZERO) == 0);
-//
-//        mockUserAccountDao.rechargeAccountByAccountId(accountId, rechargeBalance);
-//        mockUserAccount = mockUserAccountDao.getUserAccountByUserId(accountId);
-//        assertTrue(mockUserAccount.getAmount().compareTo(rechargeBalance) == 0);
-//    }
-//
-//    @Test
-//    public void testRechargeAccountByAccountId() {
-//        long accountId = 1L;
-//        BigDecimal rechargeBalance = BigDecimal.ONE;
-//
-//        mockUserAccount = mockUserAccountDao.getUserAccountByUserId(accountId);
-//        assertTrue(mockUserAccount.getAmount().compareTo(BigDecimal.ZERO) == 1);
-//
-//        mockUserAccountDao.rechargeAccountByAccountId(accountId, rechargeBalance);
-//        mockUserAccount = mockUserAccountDao.getUserAccountByUserId(accountId);
-//        assertTrue(mockUserAccount.getAmount().compareTo(rechargeBalance) == 1);
-//    }
-    }
+}

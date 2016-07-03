@@ -2,8 +2,6 @@ package com.epam.service;
 
 import com.epam.config.ServiceTestConfig;
 import com.epam.model.Ticket;
-import com.epam.service.TicketService;
-import com.epam.service.UserAccountService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
