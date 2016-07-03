@@ -3,6 +3,7 @@ package com.epam.dao;
 import com.epam.config.ServiceTestConfig;
 import com.epam.model.Event;
 import com.epam.model.impl.EventImpl;
+import com.epam.utils.EventException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,14 +15,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
-
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ServiceTestConfig.class})
@@ -43,28 +42,39 @@ public class EventDaoTest {
         assertNotNull(eventDao.getEventById(1L));
     }
 
+    @Test(expected = EventException.class)
+    public void testGetEventByIdWithWrongParam() {
+        assertNotNull(eventDao.getEventById(-1L));
+        assertNotNull(eventDao.getEventById(0L));
+        assertNotNull(eventDao.getEventById(100L));
+    }
+
     @Test
     public void testGetEventsByTitle() {
-        List<Event> eventList = eventDao.getEventsByTitle("VELODAY", 3, 1);
+        final String title = "VELODAY";
+        List<Event> eventList = eventDao.getEventsByTitle(title, 3, 1);
         assertEquals(3, eventList.size());
 
-        eventList = eventDao.getEventsByTitle("VELODAY", 1, 1);
+        eventList = eventDao.getEventsByTitle(title, 1, 1);
         assertEquals(1, eventList.size());
 
-        eventList = eventDao.getEventsByTitle("VELODAY", 1, 2);
+        eventList = eventDao.getEventsByTitle(title, 1, 2);
         assertEquals(1, eventList.size());
 
-        eventList = eventDao.getEventsByTitle("VELODAY", 1, 3);
+        eventList = eventDao.getEventsByTitle(title, 1, 3);
         assertEquals(1, eventList.size());
 
-        eventList = eventDao.getEventsByTitle("VELODAY", 2, 1);
+        eventList = eventDao.getEventsByTitle(title, 2, 1);
         assertEquals(2, eventList.size());
 
-        eventList = eventDao.getEventsByTitle("VELODAY", 2, 2);
+        eventList = eventDao.getEventsByTitle(title, 2, 2);
         assertEquals(1, eventList.size());
+    }
 
-        eventList = eventDao.getEventsByTitle("VELODAY", 0, 0);
-        assertEquals(Collections.EMPTY_LIST, eventList);
+    @Test(expected = EventException.class)
+    public void testGetEventsByTitleWrongTitle() {
+        final String title = "Moulin Rouge";
+        eventDao.getEventsByTitle(title, 1, 1);
     }
 
     @Test
@@ -73,6 +83,13 @@ public class EventDaoTest {
         List<Event> receivedEvent = eventDao.getEventsForDay(event.getDate(), 1, 1);
         assertNotNull(receivedEvent);
         assertEquals(1, receivedEvent.size());
+    }
+
+    @Test(expected = EventException.class)
+    public void testGetEventsForWrongDay() {
+        Event createdEvent = eventDao.createEvent(event);
+        createdEvent.setDate(new Date(1499040000000L));
+        eventDao.getEventsForDay(new Date(1499040000000L), 1, 1);
     }
 
     @Test
@@ -108,12 +125,29 @@ public class EventDaoTest {
         assertEquals(date, updateEvent.getDate());
     }
 
-    @Test
-    public void testDeleteEvent() throws Exception {
-        assertEquals(true, eventDao.deleteEvent(1L));
-        assertEquals(false, eventDao.deleteEvent(1L));
+    @Test(expected = EventException.class)
+    public void testUpdateEventException() {
+        event = new EventImpl(100L, "DnB Party", event.getDate(), BigDecimal.ONE);
+        eventDao.updateEvent(event);
+    }
 
+    @Test
+    public void testDeleteEvent() {
+        assertEquals(true, eventDao.deleteEvent(1L));
+    }
+
+    @Test(expected = EventException.class)
+    public void testDeleteEventWithWrongId() {
         assertEquals(false, eventDao.deleteEvent(-1L));
         assertEquals(false, eventDao.deleteEvent(0L));
+        assertEquals(false, eventDao.deleteEvent(100L));
+    }
+
+    @Test(expected = EventException.class)
+    public void testDeleteNotExistEvent() {
+        Event createdEvent = eventDao.createEvent(event);
+        assertEquals(createdEvent, eventDao.getEventById(createdEvent.getId()));
+        assertEquals(true, eventDao.deleteEvent(createdEvent.getId()));
+        eventDao.deleteEvent(createdEvent.getId());
     }
 }
