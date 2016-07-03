@@ -59,7 +59,6 @@ public class TicketDaoTest {
         assertNotNull(ticketDao.bookedTicketById(100L));
     }
 
-
     @Test
     public void testBookTicket() {
         Ticket bookTicket = ticketDao.bookTicket(ticket.getId(), ticket.getEventId(), ticket.getPlace(), ticket.getCategory());
