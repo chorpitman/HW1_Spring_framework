@@ -21,3 +21,7 @@ out
 gen
 
 target/
+#.profile#
+.sonar/
+sonar-project.properties
+src/main/java/com/epam/controller/
