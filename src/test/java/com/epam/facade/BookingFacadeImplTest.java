@@ -1,5 +1,6 @@
 package com.epam.facade;
 
+import com.epam.config.ServiceTestConfig;
 import com.epam.facade.impl.BookingFacadeImpl;
 import com.epam.model.Event;
 import com.epam.model.Ticket;
@@ -20,25 +21,23 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Configuration
-@ImportResource("classpath:app-context.xml")
-@Profile("test")
 @RunWith(MockitoJUnitRunner.class)
+@ContextConfiguration(classes = {ServiceTestConfig.class})
+//@ImportResource("classpath:app-context.xml")
+@Profile("test")
 public class BookingFacadeImplTest {
 
     private BookingFacade bookingFacade;

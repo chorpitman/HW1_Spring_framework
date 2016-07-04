@@ -16,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -31,7 +30,7 @@ import static org.mockito.Mockito.when;
 
 
 @Configuration
-@ImportResource("classpath:app-context.xml")
+//@ImportResource("classpath:app-context.xml")
 @Profile("test")
 @RunWith(MockitoJUnitRunner.class)
 public class TicketServiceTest {

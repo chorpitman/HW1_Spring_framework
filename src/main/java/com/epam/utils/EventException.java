@@ -2,6 +2,7 @@ package com.epam.utils;
 
 public class EventException extends RuntimeException {
 
+    //    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Employee Not Found") //404
     public EventException() {
 
     }
