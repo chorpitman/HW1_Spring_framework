@@ -74,14 +74,16 @@
             <artifactId>aspectjweaver</artifactId>
             <version>1.8.9</version>
         </dependency>
-
-
     </dependencies>
 
     <!--Spring version-->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.springframework-version>4.2.5.RELEASE</org.springframework-version>
+        <!--sonar properties-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.junit.reportsPath>target/surefire-reports</sonar.junit.reportsPath>
+        <sonar.cobertura.reportPath>target/cobertura/cobertura.ser</sonar.cobertura.reportPath>
     </properties>
 
     <!--Build version-->
@@ -98,5 +100,16 @@
             </plugin>
         </plugins>
     </build>
+
+    <!--reports for sonar-->
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.6</version>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>
