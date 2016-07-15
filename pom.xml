@@ -121,7 +121,8 @@
         </plugins>
     </build>
 
-    <!--reports for sonar-->
+    <!--reports for sonar doesnt work-->
+    <!--todo-->
     <reporting>
         <plugins>
             <plugin>

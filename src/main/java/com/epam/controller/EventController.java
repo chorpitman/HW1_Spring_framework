@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.Date;
 import java.util.List;
 
+@RequestMapping(value = {"/event"})
 @Controller
-@RequestMapping(value = {"/event", "/Event"})
 public class EventController {
     private static Logger log = Logger.getLogger(EventController.class.getName());
 
@@ -47,7 +47,7 @@ public class EventController {
     }
 
     @RequestMapping(value = "/delete/", method = RequestMethod.GET)
-    // TODO: 14.07.16 think about methods
+    // TODO: 14.07.16 think about request method
     public boolean deleteEvent(long eventId) {
         return facade.deleteEvent(eventId);
     }
