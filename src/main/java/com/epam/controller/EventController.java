@@ -5,7 +5,10 @@ import com.epam.model.Event;
 import com.epam.model.impl.EventImpl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Date;
 import java.util.List;
 
-@RequestMapping(value = {"/event"}, consumes ="application/json")
+@RequestMapping(value = {"/event"}/*, consumes ="application/json"*/)
 @Controller
 public class EventController {
     private static Logger log = Logger.getLogger(EventController.class.getName());
@@ -32,16 +35,15 @@ public class EventController {
     // ресурс должен быть преобразован в формат в соответствии с содержимым
     // заголовка Accept. Если в запросе отсутствует заголовок Accept,
     // тогда предполагается, что клиент способен принимать ресурсы в любом формате.
-    public Event getEventById(@PathVariable("id") long id) {
-        log.info("getEventById: " + id);
+    public Event getEventById(@PathVariable(value = "id") long id) {
+        log.info("[getEventById] : " + id);
         return facade.getEventById(id);
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
     public Event createEvent(@RequestBody EventImpl event) {
-        log.info("createEvent" + event);
-        facade.createEvent(event);
+        log.info("[createEvent] : " + event);
         return facade.createEvent(event);
         // для преобразования данных HTTP-запроса в Java- объекты, передаваемые
         // методам-обработчикам контроллера, можно воспользоваться
@@ -51,9 +53,9 @@ public class EventController {
     @RequestMapping(value = "/title", method = RequestMethod.GET)
     @ResponseBody
     public List<Event> getEventsByTitle(@RequestParam String title,
-                                        @RequestParam("pageSize") int pageSize,
+                                        @RequestParam(value = "pageSize") int pageSize,
                                         @RequestParam("pageNum") int pageNum) {
-        log.info("getEventsByTitle: " + title + ";" + pageSize + ";" + pageNum);
+        log.info("[getEventsByTitle] : " + title + ";" + pageSize + ";" + pageNum);
         return facade.getEventsByTitle(title, pageSize, pageNum);
     }
 
@@ -62,21 +64,26 @@ public class EventController {
     public List<Event> getEventsForDay(@RequestParam("day") Date day,
                                        @RequestParam("pageSize") int pageSize,
                                        @RequestParam("pageNum") int pageNum) {
-        log.info("getEventsForDay: " + day + ";" + pageSize + ";" + pageNum);
+        log.info("[getEventsForDay] : " + day + ";" + pageSize + ";" + pageNum);
         return facade.getEventsForDay(day, pageSize, pageNum);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     @ResponseBody
     public Event updateEvent(@RequestBody EventImpl event) {
-        log.info("updateEvent: " + event);
+        log.info("[updateEvent] : " + event);
         return facade.updateEvent(event);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public boolean deleteEvent(@RequestParam("id") long eventId) {
-        log.info("deleteEvent: " + eventId);
+        log.info("[deleteEvent] : " + eventId);
         return facade.deleteEvent(eventId);
+    }
+
+    @InitBinder //при каждом запросе преобразуется Дата.
+    protected void initBinder(WebDataBinder binder) {
+        binder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm"));
     }
 }
