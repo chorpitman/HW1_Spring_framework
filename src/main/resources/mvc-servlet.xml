@@ -21,6 +21,16 @@
     <!--исп все аннотации, имеющиеся в Spring MVC, поддержка аннотаций JSR-303-->
     <mvc:annotation-driven/>
 
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper" ref="jacksonObjectMapper"/>
+            </bean>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.FormHttpMessageConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
     <!--исп для обнаружения и регистрации класса контроллеров-->
     <!--подсказываем где искать контроллеры с аннотацией Controller-->
     <context:component-scan base-package="com.epam.controller"/>
@@ -31,15 +41,27 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <!---->
-    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
-        <property name="mediaTypes">
-            <value>
-                json=application/json
-                xml=application/xml
-            </value>
-        </property>
-    </bean>
+    <bean id="jacksonObjectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"/>
 
+    <!---->
+    <!--<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">-->
+        <!--<property name="mediaTypes">-->
+            <!--<value>-->
+                <!--json=application/json-->
+                <!--xml=application/xml-->
+            <!--</value>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+
+
+
+    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="favorPathExtension" value="false"/>
+        <property name="favorParameter" value="true"/>
+        <property name="parameterName" value="mediaType"/>
+        <property name="ignoreAcceptHeader" value="true"/>
+        <property name="defaultContentType" value="application/json"/>
+    </bean>
 
 </beans>
