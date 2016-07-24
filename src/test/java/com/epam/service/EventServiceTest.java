@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Configuration
-@ImportResource("classpath:app-context.xml")
+//@ImportResource("classpath:app-context.xml")
 @Profile("test")
 @RunWith(MockitoJUnitRunner.class)
 public class EventServiceTest {

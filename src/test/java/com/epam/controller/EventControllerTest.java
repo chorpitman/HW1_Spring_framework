@@ -6,16 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -25,17 +20,14 @@ import org.springframework.web.context.WebApplicationContext;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(MockitoJUnitRunner.class)
-@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:root-context.xml")
+@WebAppConfiguration
 @Sql(scripts = {"classpath:sql/drop.sql", "classpath:sql/ddl_in_memory.sql", "classpath:sql/dml_in_memory.sql"})
-
-
-//@Configuration
-//@ImportResource("classpath:app-context.xml")
-//@Profile("test")
 public class EventControllerTest {
 
     @Autowired
@@ -45,9 +37,6 @@ public class EventControllerTest {
     private ObjectMapper objectMapper;
 
     private MockMvc mockMvc;
-
-    @Mock
-    EventController mockEventController;
 
     Event event;
 
@@ -72,7 +61,7 @@ public class EventControllerTest {
 
     @Test
     public void testCreateEvent() throws Exception {
-        event = new EventImpl(1L, "ACDC", new Date(), new BigDecimal(20));
+        event = new EventImpl(1L, "Dinner with Queen", new Date(), BigDecimal.ONE);
         mockMvc.perform(MockMvcRequestBuilders.post("/event/create/").content(objectMapper.writeValueAsString(event))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -80,11 +69,16 @@ public class EventControllerTest {
 
     @Test
     public void testUpdateEvent() throws Exception {
-
+        event = new EventImpl(1L, "Dinner with Queen", new Date(), BigDecimal.ONE);
+        mockMvc.perform(MockMvcRequestBuilders.put("/event/update/").content(objectMapper.writeValueAsString(event))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
     public void testDeleteEvent() throws Exception {
-
+        long eventId = 1L;
+        mockMvc.perform(delete("/event/delete/").param("id", String.valueOf(eventId)))
+                .andExpect(status().isOk());
     }
 }
