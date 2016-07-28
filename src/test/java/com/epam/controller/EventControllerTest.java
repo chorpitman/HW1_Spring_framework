@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
@@ -24,9 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:root-context.xml")
@@ -54,26 +51,36 @@ public class EventControllerTest {
 
     @Test
     public void testGetEventsByTitle() throws Exception {
-        Event event = new EventImpl();
+        event = new EventImpl();
         event.setTitle("Queen dinner");
         event.setDate(new Date());
         event.setTicketPrice(BigDecimal.ONE);
 
         event = facade.createEvent(event);
 
-        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-        mockMvc.perform(get("/event/title", event.getTitle()))
-                .andExpect(jsonPath("$.id").value(Math.toIntExact(event.getId())))
-                .andExpect(jsonPath("$.title").value(event.getTitle()))
-                .andExpect(jsonPath("$.date").value(formatter.format(event.getDate())))
-                .andExpect(jsonPath("$.ticketPrice").value(event.getTicketPrice().intValue()))
+        mockMvc.perform(get("/event/title")
+                .param("title", event.getTitle())
+                .param("pageSize", String.valueOf(1))
+                .param("pageNum", String.valueOf(1)))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void testGetEventsForDay() throws Exception {
+        event = new EventImpl();
+        event.setTitle("Queen dinner");
+        event.setDate(new Date());
+        event.setTicketPrice(BigDecimal.ONE);
 
+        event = facade.createEvent(event);
+
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+
+        mockMvc.perform(get("/event/day")
+                .param("day", ft.format(event.getDate()))
+                .param("pageSize", String.valueOf(1))
+                .param("pageNum", String.valueOf(1)))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -85,7 +92,7 @@ public class EventControllerTest {
 
         event = facade.createEvent(event);
 
-        String newTitle ="King dinner";
+        String newTitle = "King dinner";
         Date newDate = new Date(1499040000000L);
         BigDecimal newPrice = BigDecimal.TEN;
 

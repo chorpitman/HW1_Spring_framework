@@ -54,16 +54,16 @@ public class EventController {
     @ResponseBody
     public List<Event> getEventsByTitle(@RequestParam String title,
                                         @RequestParam(value = "pageSize") int pageSize,
-                                        @RequestParam("pageNum") int pageNum) {
+                                        @RequestParam(value = "pageNum") int pageNum) {
         log.info("[getEventsByTitle] : " + title + ";" + pageSize + ";" + pageNum);
         return facade.getEventsByTitle(title, pageSize, pageNum);
     }
 
     @RequestMapping(value = "/day", method = RequestMethod.GET)
     @ResponseBody
-    public List<Event> getEventsForDay(@RequestParam("day") Date day,
-                                       @RequestParam("pageSize") int pageSize,
-                                       @RequestParam("pageNum") int pageNum) {
+    public List<Event> getEventsForDay(@RequestParam(value = "day") Date day,
+                                       @RequestParam(value = "pageSize") int pageSize,
+                                       @RequestParam(value = "pageNum") int pageNum) {
         log.info("[getEventsForDay] : " + day + ";" + pageSize + ";" + pageNum);
         return facade.getEventsForDay(day, pageSize, pageNum);
     }
