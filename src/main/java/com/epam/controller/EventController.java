@@ -52,9 +52,9 @@ public class EventController {
 
     @RequestMapping(value = "/title", method = RequestMethod.GET)
     @ResponseBody
-    public List<Event> getEventsByTitle(@RequestParam String title,
-                                        @RequestParam(value = "pageSize") int pageSize,
-                                        @RequestParam(value = "pageNum") int pageNum) {
+    public List<Event> getEventsByTitle(@RequestParam(value = "title") String title,
+                                        @RequestParam(value = "pageSize", defaultValue ="1") int pageSize,
+                                        @RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
         log.info("[getEventsByTitle] : " + title + ";" + pageSize + ";" + pageNum);
         return facade.getEventsByTitle(title, pageSize, pageNum);
     }
