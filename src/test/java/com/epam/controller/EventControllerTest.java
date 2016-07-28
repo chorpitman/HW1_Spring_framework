@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
@@ -74,6 +75,32 @@ public class EventControllerTest {
     @Test
     public void testGetEventsForDay() throws Exception {
 
+    }
+
+    @Test
+    public void testUpdateEvent() throws Exception {
+        Event event = new EventImpl();
+        event.setTitle("Queen dinner");
+        event.setDate(new Date());
+        event.setTicketPrice(BigDecimal.ONE);
+
+        event = facade.createEvent(event);
+
+        String newTitle ="King dinner";
+        Date newDate = new Date();
+        BigDecimal newPrice = BigDecimal.TEN;
+
+        event.setTitle(newTitle);
+        event.setDate(newDate);
+        event.setTicketPrice(newPrice);
+
+        mockMvc.perform(patch("event/update").content(objectMapper.writeValueAsString(event))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value((Math.toIntExact(event.getId()))))
+                .andExpect(jsonPath("$.title").value(newTitle))
+                .andExpect(jsonPath("$.date").value(newDate))
+                .andExpect(jsonPath("$.ticketPrice").value(newPrice))
+                .andExpect(status().isOk());
     }
 
     @Test
