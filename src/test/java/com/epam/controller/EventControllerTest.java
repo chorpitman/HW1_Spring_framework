@@ -47,7 +47,6 @@ public class EventControllerTest {
 
     Event event;
 
-
     @Before
     public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
@@ -87,19 +86,19 @@ public class EventControllerTest {
         event = facade.createEvent(event);
 
         String newTitle ="King dinner";
-        Date newDate = new Date();
+        Date newDate = new Date(1499040000000L);
         BigDecimal newPrice = BigDecimal.TEN;
 
         event.setTitle(newTitle);
         event.setDate(newDate);
         event.setTicketPrice(newPrice);
 
-        mockMvc.perform(patch("event/update").content(objectMapper.writeValueAsString(event))
+        mockMvc.perform(put("/event/update/").content(objectMapper.writeValueAsString(event))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value((Math.toIntExact(event.getId()))))
                 .andExpect(jsonPath("$.title").value(newTitle))
-                .andExpect(jsonPath("$.date").value(newDate))
-                .andExpect(jsonPath("$.ticketPrice").value(newPrice))
+                .andExpect(jsonPath("$.date").value(1499040000000L))
+                .andExpect(jsonPath("$.ticketPrice").value(newPrice.intValue()))
                 .andExpect(status().isOk());
     }
 
@@ -131,7 +130,6 @@ public class EventControllerTest {
         event.setTicketPrice(BigDecimal.ONE);
 
         event = facade.createEvent(event);
-        System.out.println(event);
 
         mockMvc.perform(delete("/event/delete/{id}", event.getId()))
                 .andExpect(content().string("true"))
