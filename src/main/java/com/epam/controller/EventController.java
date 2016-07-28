@@ -77,7 +77,7 @@ public class EventController {
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public boolean deleteEvent(@RequestParam("id") long eventId) {
+    public boolean deleteEvent(@PathVariable("id") long eventId) {
         log.info("[deleteEvent] : " + eventId);
         return facade.deleteEvent(eventId);
     }
