@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -62,6 +63,7 @@ public class EventControllerTest {
                 .param("title", event.getTitle())
                 .param("pageSize", String.valueOf(1))
                 .param("pageNum", String.valueOf(1)))
+                .andDo(print())
                 .andExpect(status().isOk());
     }
 
@@ -73,14 +75,18 @@ public class EventControllerTest {
         event.setTicketPrice(BigDecimal.ONE);
 
         event = facade.createEvent(event);
-
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println(facade.getEventById(event.getId()));
+//        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
 
         mockMvc.perform(get("/event/day")
-                .param("day", ft.format(event.getDate()))
+//                .param("day", ft.format(event.getDate()))
+                .param("day", "2016-05-01")
                 .param("pageSize", String.valueOf(1))
                 .param("pageNum", String.valueOf(1)))
+                .andDo(print())
                 .andExpect(status().isOk());
+
+
     }
 
     @Test

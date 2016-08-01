@@ -62,8 +62,8 @@ public class EventController {
     @RequestMapping(value = "/day", method = RequestMethod.GET)
     @ResponseBody
     public List<Event> getEventsForDay(@RequestParam(value = "day") Date day,
-                                       @RequestParam(value = "pageSize") int pageSize,
-                                       @RequestParam(value = "pageNum") int pageNum) {
+                                       @RequestParam(value = "pageSize", defaultValue = "1") int pageSize,
+                                       @RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
         log.info("[getEventsForDay] : " + day + ";" + pageSize + ";" + pageNum);
         return facade.getEventsForDay(day, pageSize, pageNum);
     }
@@ -82,8 +82,8 @@ public class EventController {
         return facade.deleteEvent(eventId);
     }
 
-    @InitBinder //при каждом запросе преобразуется Дата.
-    protected void initBinder(WebDataBinder binder) {
-        binder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm"));
-    }
+//    @InitBinder //при каждом запросе преобразуется Дата.
+//    protected void initBinder(WebDataBinder binder) {
+//        binder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm"));
+//    }
 }
