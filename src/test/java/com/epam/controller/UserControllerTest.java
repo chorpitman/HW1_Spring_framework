@@ -1,16 +1,8 @@
 package com.epam.controller;
 
+import com.epam.facade.BookingFacade;
 import com.epam.model.User;
 import com.epam.model.impl.UserImpl;
-import com.epam.utils.Validator;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
-import com.epam.facade.BookingFacade;
-import com.epam.model.Event;
-import com.epam.model.impl.EventImpl;
-import com.epam.utils.EventException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,11 +16,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.math.BigDecimal;
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -87,15 +74,12 @@ public class UserControllerTest {
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
         System.out.println(user.getId());
-//        facade.createUser(user);
-//        System.out.println(user);
 
         mockMvc.perform(post("/user/create/").content(objectMapper.writeValueAsString(user))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(Math.toIntExact(user.getId())))
                 .andExpect(jsonPath("$.name").value(user.getName()))
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 
     @Test(expected = Exception.class)
@@ -103,6 +87,7 @@ public class UserControllerTest {
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
         user = facade.createUser(user);
+
         mockMvc.perform(post("/user/create/").content(objectMapper.writeValueAsString(user))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(Math.toIntExact(user.getId())))
@@ -113,7 +98,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getUsersByName() throws Exception {
+    public void testGetUsersByName() throws Exception {
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
         user = facade.createUser(user);
@@ -125,25 +110,75 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    public void getUserByEmail() throws Exception {
-//        user.setEmail("Queen@dinner.com");
-//        user.setName("Inga");
-//        user = facade.createUser(user);
-//
-//        mockMvc.perform(get("/user/email")
-//                .param("email", user.getEmail())
-//                .andExpect(status().isOk());
+    @Test(expected = Exception.class)
+    public void testGetUsersByWrongName() throws Exception {
+        user.setEmail("Queen@dinner.com");
+        user.setName("Inga");
+
+        mockMvc.perform(get("/user/name")
+                .param("name", user.getName())
+                .param("pageSize", String.valueOf(1))
+                .param("pageNum", String.valueOf(1)))
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void updateUser() throws Exception {
+    public void testGetUserByEmail() throws Exception {
+        user.setEmail("Queen@dinner.com");
+        user.setName("Inga");
+        user = facade.createUser(user);
 
+        mockMvc.perform(get("/user/email")
+                .param("email", user.getEmail()))
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void deleteUser() throws Exception {
+    public void testUpdateUser() throws Exception {
+        user.setEmail("Queen@dinner.com");
+        user.setName("Inga");
+        user = facade.createUser(user);
 
+        user.setName("newName");
+        user.setEmail("newEmail");
+        mockMvc.perform(put("/user/update")
+                .content(objectMapper.writeValueAsString(user))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value((Math.toIntExact(user.getId()))))
+                .andExpect(jsonPath("$.name").value(user.getName()))
+                .andExpect(jsonPath("$.email").value(user.getEmail()))
+                .andExpect(status().isOk());
     }
 
+    @Test
+    public void testDeleteUser() throws Exception {
+        user.setEmail("Queen@dinner.com");
+        user.setName("Inga");
+        user = facade.createUser(user);
+
+        mockMvc.perform(delete("/user/delete/{id}", user.getId()))
+                .andExpect(content().string("true"))
+                .andExpect(status().isOk());
+    }
+
+    @Test(expected = Exception.class)
+    public void testDeleteUserWrongId1() throws Exception {
+        user.setEmail("Queen@dinner.com");
+        user.setName("Inga");
+
+        mockMvc.perform(delete("/user/delete/{id}", user.getId()))
+                .andExpect(content().string("true"))
+                .andExpect(status().isOk());
+    }
+
+    @Test(expected = Exception.class)
+    public void testDeleteUserWrongId2() throws Exception {
+        user.setEmail("Queen@dinner.com");
+        user.setName("Inga");
+        user = facade.createUser(user);
+
+        mockMvc.perform(delete("/user/delete/{id}", user.getId() + 100L))
+                .andExpect(content().string("true"))
+                .andExpect(status().isOk());
+    }
 }

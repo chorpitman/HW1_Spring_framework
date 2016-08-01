@@ -44,7 +44,7 @@ public class UserController {
 
     @RequestMapping(value = "/email", method = RequestMethod.GET)
     @ResponseBody
-    public User getUserByEmail(@PathVariable("email") String email) {
+    public User getUserByEmail(@RequestParam(value = "email") String email) {
         log.info("[getUserByEmail] : " + email);
         return facade.getUserByEmail(email);
     }

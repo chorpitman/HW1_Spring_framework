@@ -64,7 +64,6 @@ public class EventControllerTest {
 
         mockMvc.perform(post("/event/create/").content(objectMapper.writeValueAsString(event))
                 .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.id").value(Math.toIntExact(event.getId())))
                 .andExpect(jsonPath("$.title").value(event.getTitle()))
                 .andExpect(jsonPath("$.date").value(formatter.format(event.getDate())))
                 .andExpect(jsonPath("$.ticketPrice").value(event.getTicketPrice().intValue()))
