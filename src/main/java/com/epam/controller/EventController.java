@@ -5,6 +5,7 @@ import com.epam.model.Event;
 import com.epam.model.impl.EventImpl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -53,7 +55,7 @@ public class EventController {
     @RequestMapping(value = "/title", method = RequestMethod.GET)
     @ResponseBody
     public List<Event> getEventsByTitle(@RequestParam(value = "title") String title,
-                                        @RequestParam(value = "pageSize", defaultValue ="1") int pageSize,
+                                        @RequestParam(value = "pageSize", defaultValue = "1") int pageSize,
                                         @RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
         log.info("[getEventsByTitle] : " + title + ";" + pageSize + ";" + pageNum);
         return facade.getEventsByTitle(title, pageSize, pageNum);
@@ -82,8 +84,10 @@ public class EventController {
         return facade.deleteEvent(eventId);
     }
 
-//    @InitBinder //при каждом запросе преобразуется Дата.
-//    protected void initBinder(WebDataBinder binder) {
-//        binder.addCustomFormatter(new DateFormatter("yyyy-MM-dd HH:mm"));
-//    }
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(
+                dateFormat, false));
+    }
 }

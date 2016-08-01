@@ -3,6 +3,7 @@ package com.epam.controller;
 import com.epam.facade.BookingFacade;
 import com.epam.model.Event;
 import com.epam.model.impl.EventImpl;
+import com.epam.utils.EventException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,13 +47,60 @@ public class EventControllerTest {
     Event event;
 
     @Before
-    public void setup() {
+    public void init() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+        event = new EventImpl();
+    }
+
+    @Test
+    public void testCreateEvent() throws Exception {
+        event.setTitle("Queen dinner");
+        event.setDate(new Date());
+        event.setTicketPrice(BigDecimal.ONE);
+
+        event = facade.createEvent(event);
+
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        mockMvc.perform(post("/event/create/").content(objectMapper.writeValueAsString(event))
+                .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(jsonPath("$.id").value(Math.toIntExact(event.getId())))
+                .andExpect(jsonPath("$.title").value(event.getTitle()))
+                .andExpect(jsonPath("$.date").value(formatter.format(event.getDate())))
+                .andExpect(jsonPath("$.ticketPrice").value(event.getTicketPrice().intValue()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testGetEventById() throws Exception {
+        event.setTitle("Queen dinner");
+        event.setDate(new Date());
+        event.setTicketPrice(BigDecimal.ONE);
+
+        event = facade.createEvent(event);
+
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        mockMvc.perform(get("/event/get/{id}", event.getId()))
+                .andExpect(jsonPath("$.id").value(Math.toIntExact(event.getId())))
+                .andExpect(jsonPath("$.title").value(event.getTitle()))
+                .andExpect(jsonPath("$.date").value(formatter.format(event.getDate())))
+                .andExpect(jsonPath("$.ticketPrice").value(event.getTicketPrice().intValue()))
+                .andExpect(status().isOk());
+    }
+
+    @Test(expected = EventException.class)
+    public void testEventNotExists() throws Exception {
+        event.setTitle("Queen dinner");
+        event.setDate(new Date());
+        event.setTicketPrice(BigDecimal.ONE);
+        event = facade.createEvent(event);
+        mockMvc.perform(get("/event/get/{id}", event.getId() + 100L))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     public void testGetEventsByTitle() throws Exception {
-        event = new EventImpl();
         event.setTitle("Queen dinner");
         event.setDate(new Date());
         event.setTicketPrice(BigDecimal.ONE);
@@ -63,35 +111,27 @@ public class EventControllerTest {
                 .param("title", event.getTitle())
                 .param("pageSize", String.valueOf(1))
                 .param("pageNum", String.valueOf(1)))
-                .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
     public void testGetEventsForDay() throws Exception {
-        event = new EventImpl();
         event.setTitle("Queen dinner");
         event.setDate(new Date());
         event.setTicketPrice(BigDecimal.ONE);
 
         event = facade.createEvent(event);
-        System.out.println(facade.getEventById(event.getId()));
-//        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
 
         mockMvc.perform(get("/event/day")
-//                .param("day", ft.format(event.getDate()))
-                .param("day", "2016-05-01")
+                .param("day", String.valueOf(event.getDate()))
                 .param("pageSize", String.valueOf(1))
                 .param("pageNum", String.valueOf(1)))
                 .andDo(print())
                 .andExpect(status().isOk());
-
-
     }
 
     @Test
     public void testUpdateEvent() throws Exception {
-        Event event = new EventImpl();
         event.setTitle("Queen dinner");
         event.setDate(new Date());
         event.setTicketPrice(BigDecimal.ONE);
@@ -116,28 +156,7 @@ public class EventControllerTest {
     }
 
     @Test
-    public void testCreateEvent() throws Exception {
-        Event event = new EventImpl();
-        event.setTitle("Queen dinner");
-        event.setDate(new Date());
-        event.setTicketPrice(BigDecimal.ONE);
-
-        event = facade.createEvent(event);
-
-        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-        mockMvc.perform(post("/event/create/").content(objectMapper.writeValueAsString(event))
-                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.id").value(Math.toIntExact(event.getId())))
-                .andExpect(jsonPath("$.title").value(event.getTitle()))
-                .andExpect(jsonPath("$.date").value(formatter.format(event.getDate())))
-                .andExpect(jsonPath("$.ticketPrice").value(event.getTicketPrice().intValue()))
-                .andExpect(status().isOk());
-    }
-
-    @Test
     public void testDeleteEvent() throws Exception {
-        Event event = new EventImpl();
         event.setTitle("Queen dinner");
         event.setDate(new Date());
         event.setTicketPrice(BigDecimal.ONE);
@@ -149,22 +168,16 @@ public class EventControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    public void testGetEventById() throws Exception {
-        Event event = new EventImpl();
+    @Test(expected = Exception.class)
+    public void testDeleteEventWithWrongId() throws Exception {
         event.setTitle("Queen dinner");
         event.setDate(new Date());
         event.setTicketPrice(BigDecimal.ONE);
 
         event = facade.createEvent(event);
 
-        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-        mockMvc.perform(get("/event/get/{id}", event.getId()))
-                .andExpect(jsonPath("$.id").value(Math.toIntExact(event.getId())))
-                .andExpect(jsonPath("$.title").value(event.getTitle()))
-                .andExpect(jsonPath("$.date").value(formatter.format(event.getDate())))
-                .andExpect(jsonPath("$.ticketPrice").value(event.getTicketPrice().intValue()))
-                .andExpect(status().isOk());
+        mockMvc.perform(delete("/event/delete/{id}", event.getId() + 100L))
+                .andExpect(content().string("true"))
+                .andExpect(status().isBadRequest());
     }
 }

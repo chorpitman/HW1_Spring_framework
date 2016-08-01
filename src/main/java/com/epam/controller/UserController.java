@@ -6,11 +6,7 @@ import com.epam.model.impl.UserImpl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,9 +35,9 @@ public class UserController {
 
     @RequestMapping(value = "/name", method = RequestMethod.GET)
     @ResponseBody
-    public List<User> getUsersByName(@PathVariable("name") String name,
-                                     @PathVariable("pageSize") int pageSize,
-                                     @PathVariable("pageNum") int pageNum) {
+    public List<User> getUsersByName(@RequestParam(value = "name") String name,
+                                     @RequestParam(value = "pageSize", defaultValue = "1") int pageSize,
+                                     @RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
         log.info("[getUsersByName] : " + "userName " + name + ";" + pageSize + ";" + pageNum);
         return facade.getUsersByName(name, pageSize, pageNum);
     }

@@ -16,4 +16,13 @@ public final class Validator {
             throw new IllegalArgumentException("mistake parameter: " + msg);
         }
     }
+
+    public static long greaterThan (int number) {
+        if (number > 1) {
+            return number;
+        } else {
+            return 0;
+        }
+    }
+
 }
