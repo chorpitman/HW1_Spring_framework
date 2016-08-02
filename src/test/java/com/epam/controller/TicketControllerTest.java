@@ -1,14 +1,10 @@
 package com.epam.controller;
 
-import com.epam.model.Ticket;
-import com.epam.model.impl.TicketImpl;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 import com.epam.facade.BookingFacade;
+import com.epam.model.Event;
+import com.epam.model.Ticket;
 import com.epam.model.User;
-import com.epam.model.impl.UserImpl;
+import com.epam.model.UserAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,9 +19,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.math.BigDecimal;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:root-context.xml")
@@ -43,42 +41,105 @@ public class TicketControllerTest {
 
     private MockMvc mockMvc;
 
-    Ticket ticket;
+    private User user;
+
+    private Event event;
+
+    private UserAccount account;
 
     @Before
     public void init() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-        ticket = new TicketImpl();
     }
 
     @Test
     public void testBookTicket() throws Exception {
-        ticket.setCategory(Ticket.Category.BAR);
-        ticket.setPlace(5);
-        ticket.setUserId(1);
-        ticket.setEventId(1);
-        System.out.println(ticket.getId());
+        user = facade.getUserById(1L);
+        event = facade.getEventById(1L);
+        facade.rechargeAccountByUserId(user.getId(), new BigDecimal(100));
 
-        mockMvc.perform(post("/ticket/bookTicket/").content(objectMapper.writeValueAsString(ticket))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.name").value(ticket.getName()))
-                .andExpect(jsonPath("$.email").value(ticket.getEmail()))
+        mockMvc.perform(post("/ticket/bookTicket/")
+                .param("userId", String.valueOf(1L))
+                .param("eventId", String.valueOf(1L))
+                .param("place", String.valueOf(1))
+                .param("category", String.valueOf(Ticket.Category.BAR)))
+                .andExpect(status().isOk());
+    }
+
+    @Test(expected = Exception.class)
+    public void testBookTicketDeficitUserBalance() throws Exception {
+        user = facade.getUserById(1L);
+        event = facade.getEventById(1L);
+
+        mockMvc.perform(post("/ticket/bookTicket/")
+                .param("userId", String.valueOf(1L))
+                .param("eventId", String.valueOf(1L))
+                .param("place", String.valueOf(1))
+                .param("category", String.valueOf(Ticket.Category.BAR)))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void testGetBookedTickets() throws Exception {
+    public void testGetBookedTicketsByUser() throws Exception {
+        user = facade.getUserById(1L);
 
+        mockMvc.perform(get("/ticket/bookedUserTicket/")
+                .content(objectMapper.writeValueAsString(user))
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("pageSize", String.valueOf(1L))
+                .param("pageNum", String.valueOf(1L)))
+                .andExpect(status().isOk());
+    }
+
+    @Test(expected = Exception.class)
+    public void testGetBookedTicketsByUserWrongUserId() throws Exception {
+        User wrongUserId = facade.getUserById(4L);
+
+        mockMvc.perform(get("/ticket/bookedUserTicket/")
+                .content(objectMapper.writeValueAsString(wrongUserId))
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("pageSize", String.valueOf(1L))
+                .param("pageNum", String.valueOf(1L)))
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void testGetBookedTickets1() throws Exception {
+    public void testGetBookedTicketsByEvent() throws Exception {
+        event = facade.getEventById(1L);
 
+        mockMvc.perform(get("/ticket/bookedEventTicket/")
+                .content(objectMapper.writeValueAsString(event))
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("pageSize", String.valueOf(1L))
+                .param("pageNum", String.valueOf(1L)))
+                .andExpect(status().isOk());
+    }
+
+    @Test(expected = Exception.class)
+    public void testGetBookedTicketsByEventWrongEventId() throws Exception {
+        Event wrongEvent = facade.getEventById(4L);
+
+        mockMvc.perform(get("/ticket/bookedEventTicket/")
+                .content(objectMapper.writeValueAsString(wrongEvent))
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("pageSize", String.valueOf(1L))
+                .param("pageNum", String.valueOf(1L)))
+                .andExpect(status().isOk());
     }
 
     @Test
     public void testCancelTicket() throws Exception {
-
+        int existTicketId = 1;
+        mockMvc.perform(delete("/ticket//cancel/{id}", existTicketId))
+                .andExpect(content().string("true"))
+                .andExpect(status().isOk());
     }
 
+    @Test(expected = Exception.class)
+    public void testCancelTicketWrongId() throws Exception {
+        int nonExistTicketId = 10;
+        mockMvc.perform(delete("/ticket//cancel/{id}", nonExistTicketId))
+                .andExpect(content().string("true"))
+                .andExpect(status().isOk());
+    }
 }

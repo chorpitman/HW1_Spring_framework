@@ -42,7 +42,6 @@ public class UserControllerTest {
     @Before
     public void init() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-        user = new UserImpl();
     }
 
     @Test
@@ -88,7 +87,8 @@ public class UserControllerTest {
         user.setName("Inga");
         user = facade.createUser(user);
 
-        mockMvc.perform(post("/user/create/").content(objectMapper.writeValueAsString(user))
+        mockMvc.perform(post("/user/create/")
+                .content(objectMapper.writeValueAsString(user))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(Math.toIntExact(user.getId())))
                 .andExpect(jsonPath("$.name").value(user.getName()))
@@ -157,8 +157,7 @@ public class UserControllerTest {
         user = facade.createUser(user);
 
         mockMvc.perform(delete("/user/delete/{id}", user.getId()))
-                .andExpect(content().string("true"))
-                .andExpect(status().isOk());
+                 .andExpect(status().isOk());
     }
 
     @Test(expected = Exception.class)

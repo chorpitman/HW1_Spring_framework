@@ -23,7 +23,7 @@ public class UserAccountController {
     @Autowired
     BookingFacade facade;
 
-    @RequestMapping(value = {"/create"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/create"}, method = RequestMethod.POST)
     @ResponseBody
     public UserAccount createUserAccount(@RequestBody UserAccountImpl account) {
         log.info("[createUserAccount] : " + account);
@@ -58,7 +58,7 @@ public class UserAccountController {
         return facade.deleteUserAccount(accountId);
     }
 
-    @RequestMapping(value = {"/rechargeAccountByAccountId/{id}"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/rechargeAccountByAccountId/{id}"}, method = RequestMethod.PUT)
     @ResponseBody
     public void rechargeAccountByAccountId(@PathVariable(value = "id") long accountId,
                                            @PathVariable(value = "amount") BigDecimal amount) {
@@ -66,7 +66,7 @@ public class UserAccountController {
         facade.rechargeAccountByAccountId(accountId, amount);
     }
 
-    @RequestMapping(value = {"/rechargeAccountByUserId/{id}"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/rechargeAccountByUserId/{id}"}, method = RequestMethod.PUT)
     @ResponseBody
     public void rechargeAccountByUserId(@PathVariable(value = "id") long userId,
                                         @PathVariable(value = "amount") BigDecimal amount) {

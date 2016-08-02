@@ -7,11 +7,7 @@ import com.epam.model.impl.UserImpl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,12 +19,12 @@ public class TicketController {
     @Autowired
     BookingFacade facade;
 
-    @RequestMapping(value = {"/bookTicket"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/bookTicket"}, method = RequestMethod.POST)
     @ResponseBody
-    public Ticket bookTicket(@PathVariable(value = "userId") long userId,
-                             @PathVariable(value = "eventId") long eventId,
-                             @PathVariable(value = "place") int place,
-                             @PathVariable(value = "category") Ticket.Category category) {
+    public Ticket bookTicket(@RequestParam(value = "userId") long userId,
+                             @RequestParam(value = "eventId") long eventId,
+                             @RequestParam(value = "place") int place,
+                             @RequestParam(value = "category") Ticket.Category category) {
         log.info("[bookTicket] : " + userId + ";" + eventId + ";" + category);
         return facade.bookTicket(userId, eventId, place, category);
     }
@@ -36,8 +32,8 @@ public class TicketController {
     @RequestMapping(value = {"/bookedUserTicket"}, method = RequestMethod.GET)
     @ResponseBody
     public List<Ticket> getBookedTickets(@RequestBody UserImpl user,
-                                         @PathVariable(value = "pageSize") int pageSize,
-                                         @PathVariable(value = "pageNum") int pageNum) {
+                                         @RequestParam(value = "pageSize") int pageSize,
+                                         @RequestParam(value = "pageNum") int pageNum) {
         log.info("[bookedUserTicket] : " + user + ";" + pageSize + ";" + pageNum);
         return facade.getBookedTickets(user, pageSize, pageNum);
     }
@@ -45,8 +41,8 @@ public class TicketController {
     @RequestMapping(value = {"/bookedEventTicket"}, method = RequestMethod.GET)
     @ResponseBody
     public List<Ticket> getBookedTickets(@RequestBody EventImpl event,
-                                         @PathVariable(value = "pageSize") int pageSize,
-                                         @PathVariable(value = "pageNum") int pageNum) {
+                                         @RequestParam(value = "pageSize") int pageSize,
+                                         @RequestParam(value = "pageNum") int pageNum) {
         log.info("[bookedEventTicket] : " + event + ";" + pageSize + ";" + pageNum);
         return facade.getBookedTickets(event, pageSize, pageNum);
     }
