@@ -57,12 +57,12 @@ public class TicketControllerTest {
         ticket.setPlace(5);
         ticket.setUserId(1);
         ticket.setEventId(1);
-                System.out.println(user.getId());
+        System.out.println(ticket.getId());
 
-        mockMvc.perform(post("/user/create/").content(objectMapper.writeValueAsString(user))
+        mockMvc.perform(post("/ticket/bookTicket/").content(objectMapper.writeValueAsString(ticket))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.name").value(user.getName()))
-                .andExpect(jsonPath("$.email").value(user.getEmail()))
+                .andExpect(jsonPath("$.name").value(ticket.getName()))
+                .andExpect(jsonPath("$.email").value(ticket.getEmail()))
                 .andExpect(status().isOk());
     }
 
