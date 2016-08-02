@@ -77,11 +77,13 @@ public class UserAccountControllerTest {
         user.setEmail("Queen@i.ua");
         User createdUser = facade.createUser(user);
 
+        System.out.println(createdUser);
         UserAccount account = new UserAccountImpl();
         account.setUserId(createdUser.getId());
         account.setAmount(BigDecimal.TEN);
 
         account = facade.createUserAccount(account);
+        System.out.println(account);
 
         mockMvc.perform(get("/account/get/{id}", account.getId()))
                 .andExpect(jsonPath("$.id").value(Math.toIntExact(account.getId())))
@@ -91,7 +93,7 @@ public class UserAccountControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
+    @Test  // TODO: 02.08.2016 fix test 
     public void getUserAccountByUserId() throws Exception {
         User user = new UserImpl();
         user.setName("Queen");
@@ -115,7 +117,7 @@ public class UserAccountControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
+    @Test // TODO: 02.08.2016 fix test 
     public void updateUserAccount() throws Exception {
         UserAccount account = facade.getUserAccountById(1L);
         account.setAmount(BigDecimal.ZERO);
@@ -148,20 +150,22 @@ public class UserAccountControllerTest {
     @Test
     public void rechargeAccountByAccountId() throws Exception {
         UserAccount account = facade.getUserAccountById(1L);
-        account.setAmount(BigDecimal.ZERO);
+        account.setAmount(BigDecimal.ONE);
         System.out.println(account);
-        mockMvc.perform(put("/account/rechargeAccountByAccountId/{id}", account.getId()))
-//                .content(objectMapper.writeValueAsString(account))
-//                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(Math.toIntExact(account.getId())))
-                .andExpect(jsonPath("$.userId").value((Math.toIntExact(account.getUserId()))))
-                .andExpect(jsonPath("$.amount").value(BigDecimal.ZERO.intValue()))
+        mockMvc.perform(put("/account/rechargeAccountByAccountId/")
+                .param("id", String.valueOf(account.getId()))
+                .param("amount", BigDecimal.ONE.toString()))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void rechargeAccountByUserId() throws Exception {
-
+        UserAccount account = facade.getUserAccountById(1L);
+        account.setAmount(BigDecimal.ONE);
+        System.out.println(account);
+        mockMvc.perform(put("/account/rechargeAccountByUserId/")
+                .param("id", String.valueOf(account.getId()))
+                .param("amount", BigDecimal.ONE.toString()))
+                .andExpect(status().isOk());
     }
-
 }

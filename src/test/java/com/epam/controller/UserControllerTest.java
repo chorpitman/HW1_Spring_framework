@@ -46,6 +46,7 @@ public class UserControllerTest {
 
     @Test
     public void testGetUserById() throws Exception {
+        user = new UserImpl();
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
         user = facade.createUser(user);
@@ -54,12 +55,12 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.id").value(Math.toIntExact(user.getId())))
                 .andExpect(jsonPath("$.name").value(user.getName()))
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
-                .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test(expected = Exception.class)
     public void testGetUserByIdWrongId() throws Exception {
+        user = new UserImpl();
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
         user = facade.createUser(user);
@@ -70,6 +71,7 @@ public class UserControllerTest {
 
     @Test
     public void testCreateUser() throws Exception {
+        user = new UserImpl();
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
         System.out.println(user.getId());
@@ -83,6 +85,7 @@ public class UserControllerTest {
 
 //    @Test(expected = Exception.class)
     public void testCreateSameUser() throws Exception {
+        user = new UserImpl();
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
         user = facade.createUser(user);
@@ -99,6 +102,7 @@ public class UserControllerTest {
 
     @Test
     public void testGetUsersByName() throws Exception {
+        user = new UserImpl();
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
         user = facade.createUser(user);
@@ -112,6 +116,7 @@ public class UserControllerTest {
 
     @Test(expected = Exception.class)
     public void testGetUsersByWrongName() throws Exception {
+        user = new UserImpl();
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
 
@@ -124,6 +129,7 @@ public class UserControllerTest {
 
     @Test
     public void testGetUserByEmail() throws Exception {
+        user = new UserImpl();
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
         user = facade.createUser(user);
@@ -134,7 +140,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testUpdateUser() throws Exception {
+    public void testUpdateUser() throws Exception {        user = new UserImpl();
+        user = new UserImpl();
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
         user = facade.createUser(user);
@@ -152,6 +159,7 @@ public class UserControllerTest {
 
     @Test
     public void testDeleteUser() throws Exception {
+        user = new UserImpl();
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
         user = facade.createUser(user);
@@ -162,6 +170,7 @@ public class UserControllerTest {
 
     @Test(expected = Exception.class)
     public void testDeleteUserWrongId1() throws Exception {
+        user = new UserImpl();
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
 
@@ -172,6 +181,7 @@ public class UserControllerTest {
 
     @Test(expected = Exception.class)
     public void testDeleteUserWrongId2() throws Exception {
+        user = new UserImpl();
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
         user = facade.createUser(user);

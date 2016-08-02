@@ -1,5 +1,9 @@
 package com.epam;
 
+import com.epam.controller.EventControllerTest;
+import com.epam.controller.TicketControllerTest;
+import com.epam.controller.UserAccountControllerTest;
+import com.epam.controller.UserControllerTest;
 import com.epam.dao.EventDaoTest;
 import com.epam.dao.TicketDaoTest;
 import com.epam.dao.UserAccountDaoTest;
@@ -27,6 +31,10 @@ import org.junit.runners.Suite;
         TicketServiceTest.class,
         TicketServiceTxTest.class,
         BookingFacadeImplTest.class,
+        UserControllerTest.class,
+        UserAccountControllerTest.class,
+        EventControllerTest.class,
+        TicketControllerTest.class
 })
 public class RunAllTests {
 }
