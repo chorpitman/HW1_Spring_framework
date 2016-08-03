@@ -90,7 +90,7 @@ public class EventControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testEventNotExists() throws Exception {
         event.setTitle("Queen dinner");
         event.setDate(new Date());
@@ -163,7 +163,7 @@ public class EventControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testDeleteEventWithWrongId() throws Exception {
         event.setTitle("Queen dinner");
         event.setDate(new Date());
@@ -172,7 +172,6 @@ public class EventControllerTest {
         event = facade.createEvent(event);
 
         mockMvc.perform(delete("/event/delete/{id}", event.getId() + 100L))
-                .andExpect(content().string("true"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 }

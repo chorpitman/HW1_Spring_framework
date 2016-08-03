@@ -19,13 +19,6 @@ public class UserAccountController {
     @Autowired
     BookingFacade facade;
 
-    @RequestMapping(value = {"/create"}, method = RequestMethod.POST)
-    @ResponseBody
-    public UserAccount createUserAccount(@RequestBody UserAccountImpl account) {
-        log.info("[createUserAccount] : " + account);
-        return facade.createUserAccount(account);
-    }
-
     @RequestMapping(value = {"/get/{id}"}, method = RequestMethod.GET)
     @ResponseBody
     public UserAccount getUserAccountById(@PathVariable(value = "id") long accountId) {

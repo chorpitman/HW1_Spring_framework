@@ -17,7 +17,7 @@ public final class Validator {
         }
     }
 
-    public static long greaterThan (int number) {
+    public static long greaterThan(int number) {
         if (number > 1) {
             return number;
         } else {

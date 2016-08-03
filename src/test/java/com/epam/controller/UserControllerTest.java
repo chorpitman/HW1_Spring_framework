@@ -58,7 +58,7 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testGetUserByIdWrongId() throws Exception {
         user = new UserImpl();
         user.setEmail("Queen@dinner.com");
@@ -66,7 +66,7 @@ public class UserControllerTest {
         user = facade.createUser(user);
 
         mockMvc.perform(get("/user/get/{id}", user.getId() + 100L))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -114,7 +114,7 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testGetUsersByWrongName() throws Exception {
         user = new UserImpl();
         user.setEmail("Queen@dinner.com");
@@ -124,7 +124,7 @@ public class UserControllerTest {
                 .param("name", user.getName())
                 .param("pageSize", String.valueOf(1))
                 .param("pageNum", String.valueOf(1)))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -168,26 +168,14 @@ public class UserControllerTest {
                  .andExpect(status().isOk());
     }
 
-    @Test(expected = Exception.class)
-    public void testDeleteUserWrongId1() throws Exception {
-        user = new UserImpl();
-        user.setEmail("Queen@dinner.com");
-        user.setName("Inga");
-
-        mockMvc.perform(delete("/user/delete/{id}", user.getId()))
-                .andExpect(content().string("true"))
-                .andExpect(status().isOk());
-    }
-
-    @Test(expected = Exception.class)
-    public void testDeleteUserWrongId2() throws Exception {
+    @Test
+    public void testDeleteUserWrongId() throws Exception {
         user = new UserImpl();
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
         user = facade.createUser(user);
 
         mockMvc.perform(delete("/user/delete/{id}", user.getId() + 100L))
-                .andExpect(content().string("true"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
     }
 }

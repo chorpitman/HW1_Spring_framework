@@ -66,7 +66,7 @@ public class TicketControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testBookTicketDeficitUserBalance() throws Exception {
         user = facade.getUserById(1L);
         event = facade.getEventById(1L);
@@ -76,7 +76,7 @@ public class TicketControllerTest {
                 .param("eventId", String.valueOf(1L))
                 .param("place", String.valueOf(1))
                 .param("category", String.valueOf(Ticket.Category.BAR)))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class TicketControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testGetBookedTicketsByUserWrongUserId() throws Exception {
         User wrongUserId = facade.getUserById(4L);
 
@@ -100,7 +100,7 @@ public class TicketControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("pageSize", String.valueOf(1L))
                 .param("pageNum", String.valueOf(1L)))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -115,7 +115,7 @@ public class TicketControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testGetBookedTicketsByEventWrongEventId() throws Exception {
         Event wrongEvent = facade.getEventById(4L);
 
@@ -124,7 +124,7 @@ public class TicketControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("pageSize", String.valueOf(1L))
                 .param("pageNum", String.valueOf(1L)))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -135,11 +135,10 @@ public class TicketControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testCancelTicketWrongId() throws Exception {
         int nonExistTicketId = 10;
         mockMvc.perform(delete("/ticket//cancel/{id}", nonExistTicketId))
-                .andExpect(content().string("true"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
     }
 }
