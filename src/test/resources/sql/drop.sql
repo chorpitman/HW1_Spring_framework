@@ -1,4 +1,4 @@
-DROP table if EXISTS User;
-DROP table if EXISTS Event;
-DROP table if EXISTS Ticket;
-DROP table if EXISTS UserAccount;
+DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Event;
+DROP TABLE IF EXISTS Ticket;
+DROP TABLE IF EXISTS UserAccount;

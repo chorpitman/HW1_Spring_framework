@@ -45,15 +45,13 @@
 
     <!---->
     <!--<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">-->
-        <!--<property name="mediaTypes">-->
-            <!--<value>-->
-                <!--json=application/json-->
-                <!--xml=application/xml-->
-            <!--</value>-->
-        <!--</property>-->
+    <!--<property name="mediaTypes">-->
+    <!--<value>-->
+    <!--json=application/json-->
+    <!--xml=application/xml-->
+    <!--</value>-->
+    <!--</property>-->
     <!--</bean>-->
-
-
 
 
     <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">

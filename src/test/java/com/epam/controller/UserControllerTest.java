@@ -19,7 +19,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:root-context.xml")
@@ -83,7 +84,7 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
-//    @Test(expected = Exception.class)
+    //    @Test(expected = Exception.class)
     public void testCreateSameUser() throws Exception {
         user = new UserImpl();
         user.setEmail("Queen@dinner.com");
@@ -140,7 +141,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testUpdateUser() throws Exception {        user = new UserImpl();
+    public void testUpdateUser() throws Exception {
+        user = new UserImpl();
         user = new UserImpl();
         user.setEmail("Queen@dinner.com");
         user.setName("Inga");
@@ -165,7 +167,7 @@ public class UserControllerTest {
         user = facade.createUser(user);
 
         mockMvc.perform(delete("/user/delete/{id}", user.getId()))
-                 .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test

@@ -1,10 +1,8 @@
 package com.epam.controller;
 
 import com.epam.facade.BookingFacade;
-import com.epam.model.Event;
 import com.epam.model.User;
 import com.epam.model.UserAccount;
-import com.epam.model.impl.UserAccountImpl;
 import com.epam.model.impl.UserImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -21,13 +19,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -95,7 +88,7 @@ public class UserAccountControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test/*(expected = Exception.class)*/
+    @Test
     public void deleteUserAccountWrongAccount() throws Exception {
         int wrongUserAccount = 100;
 

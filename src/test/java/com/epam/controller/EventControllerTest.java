@@ -3,7 +3,6 @@ package com.epam.controller;
 import com.epam.facade.BookingFacade;
 import com.epam.model.Event;
 import com.epam.model.impl.EventImpl;
-import com.epam.utils.EventException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +21,6 @@ import java.math.BigDecimal;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Formatter;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
